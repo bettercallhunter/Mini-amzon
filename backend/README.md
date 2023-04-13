@@ -1,0 +1,1 @@
+protoc compiler version protoc-22.3-osx-x86_64
