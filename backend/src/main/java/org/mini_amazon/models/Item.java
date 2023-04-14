@@ -17,13 +17,14 @@ public class Item {
   private long id;
   private String description;
   // this may not in use
+  @Deprecated
   private double unitPrice;
   private String imgPath;
-//  @ManyToMany(mappedBy = "items", cascade = {CascadeType.PERSIST})
+  //  @ManyToMany(mappedBy = "items", cascade = {CascadeType.PERSIST})
   @OneToMany(mappedBy = "item", cascade = {CascadeType.ALL})
   private Set<Order> orders;
   @ManyToMany(cascade = {CascadeType.ALL})
   private Set<Category> categories;
-      @OneToOne(cascade = {CascadeType.ALL})
+  @OneToOne(cascade = {CascadeType.ALL})
   private User seller;
 }

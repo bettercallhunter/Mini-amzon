@@ -25,8 +25,8 @@ public class Order {
   private double quantity;
   private double unitPrice;
   private double totalPrice;
-  @Enumerated(EnumType.STRING)
-  private OrderStatus status;
+//  @Enumerated(EnumType.STRING)
+//  private OrderStatus status;
   @ManyToOne(cascade = {CascadeType.ALL})
   private Shipment shipment;
   @ManyToOne(cascade = {CascadeType.ALL})
