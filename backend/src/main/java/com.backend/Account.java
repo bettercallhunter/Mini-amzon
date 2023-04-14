@@ -6,7 +6,6 @@ import java.util.Objects;
 @Entity
 public class Account {
     @Id
-    private int id;
     private String email;
 
     private String username;
@@ -64,4 +63,5 @@ public class Account {
                 ", password='" + password + '\'' +
                 '}';
     }
+
 }

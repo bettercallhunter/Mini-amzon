@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+
 const Register = () => {
 
 
@@ -8,28 +9,32 @@ const Register = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [redirect, setRedirect] = useState(false);
     const register = async (e) => {
         e.preventDefault();
-        const response = await fetch("http://localhost:8080/register", {
+        const response = fetch("http://localhost:8000/register", {
             method: "POST",
-            // headers: {
-            //     'Content-Type': 'application/json'
-            // },
-            body: JSON.stringify({
-                username: username,
-                email: email,
-                password: password
-            })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(
+                { username, email, password }),
+            credentials: 'include'
 
         })
-        const data = await response.json();
-        console.log(data)
-        console.log(username)
-        console.log(password)
-        console.log(email)
+        if (response.status = 200) {
+            alert('registration successful');
+            setRedirect(true);
+        }
 
-        return < Navigate to="/login" />
+        // console.log(data)
+        // console.log(username)
+        // console.log(password)
+        // console.log(email)
 
+        // return < Navigate to="/login" />
+
+    }
+    if (redirect) {
+        return <Navigate to='/login' />
     }
 
     return (
