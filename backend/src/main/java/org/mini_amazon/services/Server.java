@@ -46,7 +46,7 @@ public class Server {
 
     }
     try {
-      new SocketClient(this.amazonToWarehouseSocket).send(aConnectBuilder.build());
+      SocketClient.send(this.amazonToWarehouseSocket, aConnectBuilder.build());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

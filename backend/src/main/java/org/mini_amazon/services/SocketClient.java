@@ -36,20 +36,22 @@ public class SocketClient {
 //  private DataInputStream dataInputStream;
 //  private BufferedReader in;
 
-  public SocketClient(Socket client_socket) {
-    try {
-      this.socket = client_socket;
-      final OutputStream outputStream = this.socket.getOutputStream();
-      this.codedOutputStream = CodedOutputStream.newInstance(outputStream);
-    } catch (IOException e) {
-      System.out.println("Failed to create socket client. ");
-      e.printStackTrace();
-    }
-  }
+//  public SocketClient(Socket client_socket) {
+//    try {
+//      this.socket = client_socket;
+//      final OutputStream outputStream = this.socket.getOutputStream();
+//      this.codedOutputStream = CodedOutputStream.newInstance(outputStream);
+//    } catch (IOException e) {
+//      System.out.println("Failed to create socket client. ");
+//      e.printStackTrace();
+//    }
+//  }
 
-  public synchronized void send(Message message) throws IOException {
+  public synchronized static void send(Socket socket, Message message) throws IOException {
+    final OutputStream outputStream = socket.getOutputStream();
+    CodedOutputStream codedOutputStream = CodedOutputStream.newInstance(outputStream);
     int size = message.getSerializedSize();
-    this.codedOutputStream.writeUInt32NoTag(size);
+    codedOutputStream.writeUInt32NoTag(size);
     message.writeTo(codedOutputStream);
     codedOutputStream.flush();
   }
