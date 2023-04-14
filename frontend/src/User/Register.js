@@ -8,12 +8,27 @@ const Register = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const register = (e) => {
+    const register = async (e) => {
         e.preventDefault();
+        const response = await fetch("http://localhost:8080/register", {
+            method: "POST",
+            // headers: {
+            //     'Content-Type': 'application/json'
+            // },
+            body: JSON.stringify({
+                username: username,
+                email: email,
+                password: password
+            })
+
+        })
+        const data = await response.json();
+        console.log(data)
         console.log(username)
         console.log(password)
         console.log(email)
-        return < navigate to="/login" />
+
+        return < Navigate to="/login" />
 
     }
 

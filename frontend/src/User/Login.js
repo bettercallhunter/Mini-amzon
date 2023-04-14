@@ -8,7 +8,6 @@ const Login = () => {
         e.preventDefault();
         console.log(username)
         console.log(password)
-        
     }
     return (
         <React.Fragment>
