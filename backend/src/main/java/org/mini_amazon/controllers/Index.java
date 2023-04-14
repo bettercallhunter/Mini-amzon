@@ -2,6 +2,9 @@ package org.mini_amazon.controllers;
 
 import java.util.List;
 
+import org.mini_amazon.models.User;
+import org.mini_amazon.repositories.UserRepository;
+import org.mini_amazon.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,16 +18,16 @@ import jakarta.annotation.Resource;
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class Index {
 
-  @Autowired
-  private final AccountRepository accountRepository;
+  @Resource
+  private UserRepository userRepository;
 
   public static void main(String[] args) {
     SpringApplication.run(Index.class, args);
   }
 
   @GetMapping("/")
-  public List<Account> getAccounts() {
-    return accountRepository.findAll();
+  public List<User> getAccounts() {
+    return userRepository.findAll();
   }
 
   record registerRequest(String username, String email, String password) {
@@ -32,11 +35,11 @@ public class Index {
 
   @PostMapping("/register")
   public ResponseEntity<String> register(@RequestBody registerRequest request) {
-    Account newAccount = new Account();
-    newAccount.setEmail(request.email());
-    newAccount.setPassword(request.password());
-    newAccount.setUsername(request.username());
-    accountRepository.save(newAccount);
+//    Account newAccount = new Account();
+//    newAccount.setEmail(request.email());
+//    newAccount.setPassword(request.password());
+//    newAccount.setUsername(request.username());
+//    userRepository.save(newAccount);
     return ResponseEntity.ok("niudeniude");
   }
 
@@ -46,7 +49,7 @@ public class Index {
   @PostMapping("/login")
   public ResponseEntity<String> login(@RequestBody loginRequest request) {
     try {
-      Account account = accountRepository.findByUsername(request.username());
+      User account = userRepository.findByUsername(request.username());
       String token = JwtUtil.generateToken(account.getUsername());
       System.out.println(token);
 

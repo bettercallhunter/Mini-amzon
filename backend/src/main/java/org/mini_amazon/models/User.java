@@ -5,19 +5,19 @@ import jakarta.persistence.*;
 import java.util.Objects;
 @Entity
 @Table(name = "users")
-public class Account {
+public class User {
     @Id
     private String email;
 
     private String username;
     private String password;
-    public Account(String email, String username,String password){
+    public User(String email, String username, String password){
         this.email = email;
         this.username =username;
         this.password = password;
 
     }
-    public Account(){}
+    public User(){}
 
     public String getEmail() {
         return email;
@@ -47,7 +47,7 @@ public class Account {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Account user = (Account) o;
+        User user = (User) o;
         return Objects.equals(email, user.email) && Objects.equals(username, user.username) && Objects.equals(password, user.password);
     }
 

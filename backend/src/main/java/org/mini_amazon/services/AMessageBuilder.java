@@ -2,20 +2,26 @@ package org.mini_amazon.services;
 
 import org.mini_amazon.proto.WorldAmazonProtocol;
 import org.springframework.data.util.Pair;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class WarehouseService {
+public class AMessageBuilder {
   public static class AProduct {
     long id;
     String description;
     int count;
   }
 
+  // if worldId is null, then it is a new world
   public static WorldAmazonProtocol.AConnect createNewWorld(Long worldId, List<Pair<Integer, Integer>> positions) {
-    WorldAmazonProtocol.AConnect.Builder aConnect = WorldAmazonProtocol.AConnect.newBuilder().setIsAmazon(true).setWorldid(worldId);
+
+    WorldAmazonProtocol.AConnect.Builder aConnect = WorldAmazonProtocol.AConnect.newBuilder().setIsAmazon(true);
+    if (worldId != null) {
+      aConnect.setWorldid(worldId);
+    }
     for (Pair<Integer, Integer> position : positions) {
       WorldAmazonProtocol.AInitWarehouse.Builder warehouseBuilder = WorldAmazonProtocol.AInitWarehouse.newBuilder();
       warehouseBuilder.setX(position.getFirst());
@@ -70,6 +76,26 @@ public class WarehouseService {
     aProductBuilder.setDescription(product.description);
     aProductBuilder.setCount(product.count);
     return aProductBuilder.build();
+  }
+
+  public static WorldAmazonProtocol.ACommands createACommands(@NonNull List<WorldAmazonProtocol.APurchaseMore> aPurchaseMores, @NonNull List<WorldAmazonProtocol.APack> aPacks, @NonNull List<WorldAmazonProtocol.APutOnTruck> aPutOnTrucks, @NonNull List<WorldAmazonProtocol.AQuery> aQueries, int simspeed, boolean disconnect, List<Long> acks) {
+    WorldAmazonProtocol.ACommands.Builder aCommandsBuilder = WorldAmazonProtocol.ACommands.newBuilder();
+    aCommandsBuilder.setSimspeed(simspeed);
+    aCommandsBuilder.setDisconnect(disconnect);
+    aCommandsBuilder.addAllBuy(aPurchaseMores);
+    aCommandsBuilder.addAllTopack(aPacks);
+    aCommandsBuilder.addAllLoad(aPutOnTrucks);
+    aCommandsBuilder.addAllQueries(aQueries);
+    aCommandsBuilder.addAllAcks(acks);
+    return aCommandsBuilder.build();
+  }
+
+  public static WorldAmazonProtocol.ACommands createACommands(@NonNull List<WorldAmazonProtocol.APurchaseMore> aPurchaseMores, @NonNull List<WorldAmazonProtocol.APack> aPacks, @NonNull List<WorldAmazonProtocol.APutOnTruck> aPutOnTrucks, @NonNull List<WorldAmazonProtocol.AQuery> aQueries, @NonNull List<Long> acks) {
+    return createACommands(aPurchaseMores, aPacks, aPutOnTrucks, aQueries, 100, false, acks);
+  }
+
+  public static WorldAmazonProtocol.ACommands createACommands(@NonNull List<Long> acks) {
+    return createACommands(List.of(), List.of(), List.of(), List.of(), acks);
   }
 
 

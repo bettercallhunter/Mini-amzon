@@ -47,14 +47,7 @@ public class SocketClient {
 //    }
 //  }
 
-  public synchronized static void send(Socket socket, Message message) throws IOException {
-    final OutputStream outputStream = socket.getOutputStream();
-    CodedOutputStream codedOutputStream = CodedOutputStream.newInstance(outputStream);
-    int size = message.getSerializedSize();
-    codedOutputStream.writeUInt32NoTag(size);
-    message.writeTo(codedOutputStream);
-    codedOutputStream.flush();
-  }
+
 
 
 //  public String recv() {
