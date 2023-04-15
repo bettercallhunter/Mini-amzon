@@ -16,6 +16,7 @@ import jakarta.annotation.Resource;
 @SpringBootApplication
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@RequestMapping("/api")
 public class Index {
 
   @Resource
@@ -30,7 +31,7 @@ public class Index {
   record registerRequest(String username, String email, String password) {
   }
 
-  @PostMapping("/api/register")
+  @PostMapping("/register")
   public ResponseEntity<String> register(@RequestBody registerRequest request) {
     User newAccount = new User();
     newAccount.setEmail(request.email());

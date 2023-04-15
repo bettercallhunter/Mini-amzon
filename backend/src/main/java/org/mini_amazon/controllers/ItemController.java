@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @SpringBootApplication
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@RequestMapping("/api")
 public class ItemController {
 
   @Resource
@@ -32,7 +33,7 @@ public class ItemController {
 
   record orderRequest(String address, int Quantity) {}
 
-  @GetMapping("/item/{id}")
+  @PostMapping("/buy/{id}")
   public ResponseEntity<Item> getItemById(
     @PathVariable int id,
     @RequestBody orderRequest request
