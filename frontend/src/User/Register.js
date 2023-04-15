@@ -12,7 +12,7 @@ const Register = () => {
     const [redirect, setRedirect] = useState(false);
     const register = async (e) => {
         e.preventDefault();
-        const response = fetch("http://localhost:8000/register", {
+        const response = await fetch("http://localhost:8000/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(
@@ -20,7 +20,7 @@ const Register = () => {
             credentials: 'include'
 
         })
-        if (response.status = 200) {
+        if (response.status === 200) {
             alert('registration successful');
             setRedirect(true);
         }

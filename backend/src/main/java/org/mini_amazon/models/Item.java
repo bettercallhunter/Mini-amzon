@@ -25,6 +25,35 @@ public class Item {
   private Set<Order> orders;
   @ManyToMany(cascade = {CascadeType.ALL})
   private Set<Category> categories;
-  @OneToOne(cascade = {CascadeType.ALL})
-  private User seller;
+//  @OneToOne(cascade = {CascadeType.ALL})
+//  private User seller;
+  private String seller;
+
+  public long getId() {
+    return id;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public double getUnitPrice() {
+    return unitPrice;
+  }
+
+  public String getImgPath() {
+    return imgPath;
+  }
+
+  public Set<Order> getOrders() {
+    return orders;
+  }
+
+  public Set<Category> getCategories() {
+    return categories;
+  }
+
+  public String getSeller() {
+    return seller;
+  }
 }
