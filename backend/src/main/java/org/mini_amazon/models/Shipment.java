@@ -21,8 +21,8 @@ import jakarta.persistence.Table;
 public class Shipment {
   @Id
   private String id;
-  @OneToMany(mappedBy = "shipment", cascade = {CascadeType.ALL})
-  private Set<Order> orders;
+//  @OneToMany(mappedBy = "shipment", cascade = {CascadeType.ALL})
+//  private Set<Order> orders;
   @Enumerated(EnumType.STRING)
   private ShipmentStatus status;
 
