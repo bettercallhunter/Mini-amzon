@@ -33,6 +33,7 @@ public class Order {
 //  private Shipment shipment;
 //  @ManyToOne(cascade = {CascadeType.ALL})
 //  private User owner;
+  private String address;
 
   public long getId() {
     return id;
@@ -72,6 +73,12 @@ public class Order {
 
   public void setTotalPrice(double totalPrice) {
     this.totalPrice = totalPrice;
+  }
+  public String getAddress(){
+    return address;
+  }
+  public void setAddress(String address){
+    this.address = address;
   }
 
 //  public Shipment getShipment() {

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @SpringBootApplication
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-@RequestMapping("/api")
+//@RequestMapping("/api")
 public class ItemController {
 
   @Resource
@@ -24,24 +24,30 @@ public class ItemController {
   @Resource
   private OrderRepository orderRepository;
 
-  @GetMapping("/")
+  @GetMapping("/api")
   public ResponseEntity<List<Item>> getItems() {
     List<Item> items = itemRepository.findAll();
     System.out.println(items.get(0).getId());
     return ResponseEntity.ok().body(items);
   }
 
-  record orderRequest(String address, int Quantity) {}
+  record orderRequest(String address, int quantity) {}
 
-  @PostMapping("/buy/{id}")
+  @PostMapping("/api/buy/{id}")
   public ResponseEntity<Item> getItemById(
     @PathVariable int id,
     @RequestBody orderRequest request
   ) {
+    System.out.println(request.quantity());
     Item item = itemRepository.findById(id);
     Order new_order = new Order();
     new_order.setItem(item);
-    new_order.setQuantity(request.Quantity());
+    new_order.setQuantity(request.quantity());
+    new_order.setAddress(request.address());
+
+    Order last_order = orderRepository.findFirstByOrderByIdDesc();
+    long last_id =  last_order.getId();
+    new_order.setId(last_id+1);
     orderRepository.save(new_order);
 
     return ResponseEntity.ok().body(item);

@@ -21,10 +21,10 @@ public class Item {
   private double unitPrice;
   private String imgPath;
   //  @ManyToMany(mappedBy = "items", cascade = {CascadeType.PERSIST})
-  @OneToMany(mappedBy = "item", cascade = {CascadeType.ALL})
-  private Set<Order> orders;
-  @ManyToMany(cascade = {CascadeType.ALL})
-  private Set<Category> categories;
+//  @OneToMany(mappedBy = "item", cascade = {CascadeType.ALL})
+//  private Set<Order> orders;
+//  @ManyToMany(cascade = {CascadeType.ALL})
+//  private Set<Category> categories;
 //  @OneToOne(cascade = {CascadeType.ALL})
 //  private User seller;
   private String seller;
@@ -45,13 +45,13 @@ public class Item {
     return imgPath;
   }
 
-  public Set<Order> getOrders() {
-    return orders;
-  }
-
-  public Set<Category> getCategories() {
-    return categories;
-  }
+//  public Set<Order> getOrders() {
+//    return orders;
+//  }
+//
+//  public Set<Category> getCategories() {
+//    return categories;
+//  }
 
   public String getSeller() {
     return seller;

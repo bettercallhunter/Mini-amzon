@@ -1,12 +1,15 @@
 import React, { useEffect } from "react"
 import logo from '../logo.svg';
 import Item from "../Item";
+import { Navigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import IconSearch from "../Templates/SearchButton";
 
 const Index = () => {
     const [items, setItems] = React.useState([]);
     useEffect(() => {
         const fetchItem = async () => {
-            const response = await fetch('http://localhost:8000', {
+            const response = await fetch('http://localhost:8000/api', {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: 'include'
@@ -22,6 +25,10 @@ const Index = () => {
         <React.Fragment>
             < h1 > Welcome</h1>
             {items.length >= 1 && items.map(items => <Item {...items} />)}
+            <Link to={"/orders"}>
+                <IconSearch />
+                Check Orders
+            </Link>
         </React.Fragment >
 
 
