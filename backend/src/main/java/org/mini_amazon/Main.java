@@ -1,12 +1,10 @@
 package org.mini_amazon;
 
-import org.mini_amazon.services.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.http.converter.protobuf.ProtobufHttpMessageConverter;
 
-import java.io.IOException;
 
 /**
  * @Configuration: Tags the class as a source of bean definitions for the application context.
