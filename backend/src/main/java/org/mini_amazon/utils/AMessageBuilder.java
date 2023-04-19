@@ -1,4 +1,4 @@
-package org.mini_amazon.services;
+package org.mini_amazon.utils;
 
 import org.mini_amazon.proto.WorldAmazonProtocol;
 import org.springframework.data.util.Pair;

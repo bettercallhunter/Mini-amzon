@@ -6,6 +6,7 @@ import com.google.protobuf.Message;
 import org.mini_amazon.proto.WorldAmazonProtocol;
 import org.mini_amazon.utils.AErrConsumer;
 import org.mini_amazon.utils.ALoadedConsumer;
+import org.mini_amazon.utils.AMessageBuilder;
 import org.mini_amazon.utils.APackageConsumer;
 import org.mini_amazon.utils.APackedConsumer;
 import org.mini_amazon.utils.APurchaseMoreConsumer;
