@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import logo from '../logo.svg';
-import Item from "../Item";
+import Item from "../Elements/Item";
 import { Navigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import IconSearch from "../Templates/SearchButton";
@@ -24,7 +24,9 @@ const Index = () => {
     return (
         <React.Fragment>
             < h1 > Welcome</h1>
+
             {items.length >= 1 && items.map(items => <Item {...items} />)}
+
             <Link to={"/orders"}>
                 <IconSearch />
                 Check Orders

@@ -1,12 +1,12 @@
 package org.mini_amazon;
 
-import org.mini_amazon.services.Server;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.http.converter.protobuf.ProtobufHttpMessageConverter;
 
 import java.io.IOException;
+import org.mini_amazon.services.Server;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @Configuration: Tags the class as a source of bean definitions for the application context.
@@ -20,16 +20,14 @@ import java.io.IOException;
 @SpringBootApplication
 public class Main {
 
-//  @Bean
-//  ProtobufHttpMessageConverter protobufHttpMessageConverter() {
-//    return new ProtobufHttpMessageConverter();
-//  }
+  //  @Bean
+  //  ProtobufHttpMessageConverter protobufHttpMessageConverter() {
+  //    return new ProtobufHttpMessageConverter();
+  //  }
 
-    public static void main(String[] args) {
-//      System.out.println("Hello World");
-
+  public static void main(String[] args) {
+    //      System.out.println("Hello World");
 
     SpringApplication.run(Main.class, args);
   }
-
 }

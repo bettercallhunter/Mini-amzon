@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import Order from "../Order";
+import Order from "../Elements/Order";
 import { Link } from "react-router-dom";
 const Orders = () => {
     const [orders, setOrders] = useState([])

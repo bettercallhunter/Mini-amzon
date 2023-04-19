@@ -38,6 +38,9 @@ const Buy = () => {
                 <label htmlFor="address">Address</label>
                 <input type="text" placeholder="Address" id="address" value={address} onChange={ev => setAddress(ev.target.value)} />
                 <br />
+                <label htmlFor="cardNumber">Card Number: </label>
+                <input type="text" placeholder="Card" id="cardNumber" />
+                <br />
                 <button type="submit">Buy</button>
             </form>
             <Link to={"/"}>
