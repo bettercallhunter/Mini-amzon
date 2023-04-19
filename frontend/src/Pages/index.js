@@ -1,25 +1,39 @@
-import React from "react"
+import React, { useEffect } from "react"
 import logo from '../logo.svg';
+import Item from "../Elements/Item";
+import { Navigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import IconSearch from "../Templates/SearchButton";
 
 const Index = () => {
-    return (
+    const [items, setItems] = React.useState([]);
+    useEffect(() => {
+        const fetchItem = async () => {
+            const response = await fetch('http://localhost:8000/api', {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+                credentials: 'include'
+            })
+            const item = await response.json();
+            setItems(item);
+        }
+        fetchItem();
+    }, [])
 
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-        </div>
+    console.log(items)
+    return (
+        <React.Fragment>
+            < h1 > Welcome</h1>
+
+            {items.length >= 1 && items.map(items => <Item {...items} />)}
+
+            <Link to={"/orders"}>
+                <IconSearch />
+                Check Orders
+            </Link>
+        </React.Fragment >
+
+
     )
 }
 export default Index 

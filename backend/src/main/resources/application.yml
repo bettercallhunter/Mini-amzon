@@ -4,11 +4,12 @@ server:
 spring:
   datasource:
     url: jdbc://postgresql://localhost:5432/amazon
+    # url: jdbc://postgresql://vcm-32277.vm.duke.edu:5432/amazon
     username: postgres
     password: 0000
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

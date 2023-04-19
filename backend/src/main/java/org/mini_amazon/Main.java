@@ -18,16 +18,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Main {
 
-//  @Bean
-//  ProtobufHttpMessageConverter protobufHttpMessageConverter() {
-//    return new ProtobufHttpMessageConverter();
-//  }
+  //  @Bean
+  //  ProtobufHttpMessageConverter protobufHttpMessageConverter() {
+  //    return new ProtobufHttpMessageConverter();
+  //  }
 
-    public static void main(String[] args) {
-//      System.out.println("Hello World");
-
+  public static void main(String[] args) {
+    //      System.out.println("Hello World");
 
     SpringApplication.run(Main.class, args);
   }
-
 }

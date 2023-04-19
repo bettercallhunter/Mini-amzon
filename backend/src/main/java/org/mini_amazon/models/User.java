@@ -1,68 +1,105 @@
 package org.mini_amazon.models;
 
+import com.google.common.hash.Hashing;
 import jakarta.persistence.*;
-
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Objects;
+import java.util.Random;
+
 @Entity
 @Table(name = "users")
 public class User {
-    @Id
-    private String email;
 
-    private String username;
-    private String password;
-    public User(String email, String username, String password){
-        this.email = email;
-        this.username =username;
-        this.password = password;
+  @Id
+  private String email;
 
-    }
-    public User(){}
+  private String username;
+  private String password;
+  private String salt;
 
-    public String getEmail() {
-        return email;
-    }
+  public User(String email, String username, String password) {
+    this.email = email;
+    this.username = username;
+    this.password = password;
+    Random r = new SecureRandom();
+    byte[] Salt = new byte[20];
+    r.nextBytes(Salt);
+    this.salt = Base64.getEncoder().encodeToString(Salt);
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public User() {
+    Random r = new SecureRandom();
+    byte[] Salt = new byte[20];
+    r.nextBytes(Salt);
+    this.salt = Base64.getEncoder().encodeToString(Salt);
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(email, user.email) && Objects.equals(username, user.username) && Objects.equals(password, user.password);
-    }
+  public boolean verifyPassword(String password) {
+    final String hashed = Hashing
+      .sha256()
+      .hashString(password + salt, StandardCharsets.UTF_8)
+      .toString();
+    return hashed.equals(this.password);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(email, username, password);
-    }
+  public void setPassword(String password) {
+    final String hashed = Hashing
+      .sha256()
+      .hashString(password + salt, StandardCharsets.UTF_8)
+      .toString();
+    this.password = hashed;
+  }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "email='" + email + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    User user = (User) o;
+    return (
+      Objects.equals(email, user.email) &&
+      Objects.equals(username, user.username) &&
+      Objects.equals(password, user.password) &&
+      Objects.equals(salt, user.salt)
+    );
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(email, username, password);
+  }
+
+  @Override
+  public String toString() {
+    return (
+      "User{" +
+      "email='" +
+      email +
+      '\'' +
+      ", username='" +
+      username +
+      '\'' +
+      ", password='" +
+      password +
+      '\'' +
+      '}'
+    );
+  }
 }

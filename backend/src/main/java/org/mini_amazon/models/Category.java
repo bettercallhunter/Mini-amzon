@@ -15,6 +15,6 @@ public class Category {
   private int id;
   private String name;
   private String description; // optional
-  @ManyToMany(mappedBy = "categories", cascade = {CascadeType.ALL})
-  private Set<Item> itemSet;
+//  @ManyToMany(mappedBy = "categories", cascade = {CascadeType.ALL})
+//  private Set<Item> itemSet;
 }
