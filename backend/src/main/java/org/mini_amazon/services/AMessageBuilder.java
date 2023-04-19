@@ -9,37 +9,42 @@ import java.util.List;
 
 @Service
 public class AMessageBuilder {
-  public static class AProduct {
-    long id;
-    String description;
-    int count;
-  }
+//  public static class AProduct {
+//    long id;
+//    String description;
+//    int count;
+//  }
+//
+//  public static class WareHouse {
+//    int id;
+//    int x;
+//    int y;
+//
+//    public WareHouse(int id, int x, int y) {
+//      this.id = id;
+//      this.x = x;
+//      this.y = y;
+//    }
+//  }
 
   // if worldId is null, then it is a new world
-  public static WorldAmazonProtocol.AConnect createNewWorld(Long worldId, List<Pair<Integer, Integer>> positions) {
+  public static WorldAmazonProtocol.AConnect createNewWorld(Long worldId, List<WorldAmazonProtocol.AInitWarehouse> wareHouses) {
 
     WorldAmazonProtocol.AConnect.Builder aConnect = WorldAmazonProtocol.AConnect.newBuilder().setIsAmazon(true);
     if (worldId != null) {
       aConnect.setWorldid(worldId);
     }
-    for (Pair<Integer, Integer> position : positions) {
-      WorldAmazonProtocol.AInitWarehouse.Builder warehouseBuilder = WorldAmazonProtocol.AInitWarehouse.newBuilder();
-      warehouseBuilder.setX(position.getFirst());
-      warehouseBuilder.setY(position.getSecond());
-      aConnect.addInitwh(warehouseBuilder);
-    }
+
+    aConnect.addAllInitwh(wareHouses);
     return aConnect.build();
   }
 
-  public static WorldAmazonProtocol.APack createAPack(int warehouseId, List<AProduct> products, long shipId, long seqNum) {
+  public static WorldAmazonProtocol.APack createAPack(int warehouseId, List<WorldAmazonProtocol.AProduct> products, long shipId, long seqNum) {
     WorldAmazonProtocol.APack.Builder aPackBuilder = WorldAmazonProtocol.APack.newBuilder();
     aPackBuilder.setWhnum(warehouseId);
     aPackBuilder.setShipid(shipId);
     aPackBuilder.setSeqnum(seqNum);
-    for (AProduct product : products) {
-      WorldAmazonProtocol.AProduct aProduct = createAProduct(product);
-      aPackBuilder.addThings(aProduct);
-    }
+    aPackBuilder.addAllThings(products);
     return aPackBuilder.build();
   }
 
@@ -59,22 +64,19 @@ public class AMessageBuilder {
     return aQueryBuilder.build();
   }
 
-  public static WorldAmazonProtocol.APurchaseMore createAPurchaseMore(int warehouseId, List<AProduct> products, long seqNum) {
+  public static WorldAmazonProtocol.APurchaseMore createAPurchaseMore(int warehouseId, List<WorldAmazonProtocol.AProduct> products, long seqNum) {
     WorldAmazonProtocol.APurchaseMore.Builder aPurchaseMoreBuilder = WorldAmazonProtocol.APurchaseMore.newBuilder();
     aPurchaseMoreBuilder.setWhnum(warehouseId);
     aPurchaseMoreBuilder.setSeqnum(seqNum);
-    for (AProduct product : products) {
-      WorldAmazonProtocol.AProduct aProduct = createAProduct(product);
-      aPurchaseMoreBuilder.addThings(aProduct);
-    }
+    aPurchaseMoreBuilder.addAllThings(products);
     return aPurchaseMoreBuilder.build();
   }
 
-  private static WorldAmazonProtocol.AProduct createAProduct(AProduct product) {
+  private static WorldAmazonProtocol.AProduct createAProduct(long id, String description, int count) {
     WorldAmazonProtocol.AProduct.Builder aProductBuilder = WorldAmazonProtocol.AProduct.newBuilder();
-    aProductBuilder.setId(product.id);
-    aProductBuilder.setDescription(product.description);
-    aProductBuilder.setCount(product.count);
+    aProductBuilder.setId(id);
+    aProductBuilder.setDescription(description);
+    aProductBuilder.setCount(count);
     return aProductBuilder.build();
   }
 
