@@ -30,7 +30,6 @@ public class Order {
   @Enumerated(EnumType.STRING)
   private OrderStatus status;
 
-  //temp remove these for testing
   @ManyToOne(cascade = { CascadeType.ALL })
   private Shipment shipment;
 
@@ -86,8 +85,6 @@ public class Order {
   public void setAddress(String address) {
     this.address = address;
   }
-
-
 
   //
   //  public User getOwner() {

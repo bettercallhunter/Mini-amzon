@@ -9,7 +9,7 @@ const Index = () => {
     const [items, setItems] = React.useState([]);
     useEffect(() => {
         const fetchItem = async () => {
-            const response = await fetch('http://localhost:8000/api', {
+            const response = await fetch('/api', {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: 'include'

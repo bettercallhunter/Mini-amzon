@@ -1,16 +1,18 @@
 package org.mini_amazon.utils;
 
+import java.util.Date;
+import java.util.Map;
+
+import javax.crypto.SecretKey;
+
+import org.mini_amazon.models.User;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import javax.crypto.SecretKey;
-import org.mini_amazon.models.User;
-import org.springframework.http.ResponseCookie;
 
 public class JwtTokenUtil {
 
