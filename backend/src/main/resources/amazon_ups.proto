@@ -24,6 +24,17 @@ message Response {
   repeated Err error = 4;
 }
 
+message UAConnect {
+  required int64 worldid =1;
+  required int64 seqNum =2;
+}
+
+message AUConnected{
+  required int64 worldid = 1;
+  required int64 seqNum = 2;
+
+}
+
 
 // Amazon to UPS: when Amazon received a Buy command, it send APickupRequest to UPS to prepare a truck sent to target warehouse
 message AUPickupRequest{
