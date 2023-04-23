@@ -265,7 +265,7 @@ public class AmazonDaemon {
   }
 
   private void sendToUPS(AmazonUPSProtocol.AUCommand command) {
-    sendTo(command, this.AUOutputStream);
+    this.sendTo(command, this.AUOutputStream);
   }
 
   private void sendToUPS(AmazonUPSProtocol.AUCommand command, long seq) {
