@@ -1,15 +1,25 @@
 package org.mini_amazon.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+
 import org.mini_amazon.enums.ShipmentStatus;
 
 @Entity
@@ -17,70 +27,125 @@ import org.mini_amazon.enums.ShipmentStatus;
 public class Shipment {
 
   @Id
-  // @Column(name = "id", columnDefinition = "BIGINT")
-  private long id;
+  @GeneratedValue
+  private Long id;
 
-  private String address;
+  // destination
+//  private String address;
+  @Column(nullable = false)
+  private double totalPrice;
 
-  @OneToMany(mappedBy = "shipment", cascade = { CascadeType.ALL })
-  @JsonIgnore
-  private Set<Order> orders;
+  @Column(nullable = false)
+  private int destinationX;
+  @Column(nullable = false)
+  private int destinationY;
+  @ManyToOne
+//  @JsonIgnore
+//  @Column(nullable = false)
+  private Warehouse warehouse;
+
+  @OneToMany(mappedBy = "shipment", cascade = {CascadeType.ALL})
+  @Column(nullable = false)
+  private List<Order> orders;
+
+  @ManyToOne(cascade = {CascadeType.ALL})
+  private User owner;
 
   @Enumerated(EnumType.STRING)
   private ShipmentStatus status;
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public Set<Order> getOrders() {
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public double getTotalPrice() {
+    return totalPrice;
+  }
+
+  public void setTotalPrice(double totalPrice) {
+    this.totalPrice = totalPrice;
+  }
+
+  public int getDestinationX() {
+    return destinationX;
+  }
+
+  public void setDestinationX(int destinationX) {
+    this.destinationX = destinationX;
+  }
+
+  public int getDestinationY() {
+    return destinationY;
+  }
+
+  public void setDestinationY(int destinationY) {
+    this.destinationY = destinationY;
+  }
+
+  public Warehouse getWarehouse() {
+    return warehouse;
+  }
+
+  public void setWarehouse(Warehouse warehouse) {
+    this.warehouse = warehouse;
+  }
+
+  public List<Order> getOrders() {
     return orders;
+  }
+
+  public void setOrders(List<Order> orders) {
+    this.orders = orders;
   }
 
   public ShipmentStatus getStatus() {
     return status;
   }
 
-  public String getAddress() {
-    return address;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-  public void setOrders(Set<Order> orders) {
-    this.orders = orders;
-  }
-
   public void setStatus(ShipmentStatus status) {
     this.status = status;
   }
 
-  public Shipment(
-    long id,
-    String address,
-    Set<Order> orders,
-    ShipmentStatus status
-  ) {
-    this.id = id;
-    this.address = address;
-    this.orders = orders;
-    this.status = status;
+  public User getOwner() {
+    return owner;
   }
 
-  public void addOrder(Order order) {
-    order.setShipment(this);
-    this.orders.add(order);
+  public void setOwner(User owner) {
+    this.owner = owner;
   }
 
   public Shipment() {
-    Set<Order> orders = new HashSet<>();
-    this.orders = orders;
+    this.orders = new ArrayList<>();
     this.status = ShipmentStatus.PENDING;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Shipment shipment = (Shipment) o;
+    return destinationX == shipment.destinationX && destinationY == shipment.destinationY
+           && Objects.equals(id, shipment.id)
+           && Objects.equals(orders, shipment.orders) && status == shipment.status;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, destinationX, destinationY, orders, status);
+  }
+
+  @Override
+  public String toString() {
+    return "Shipment{" +
+           "id=" + id +
+           ", destinationX=" + destinationX +
+           ", destinationY=" + destinationY +
+           ", orders=" + orders +
+           ", status=" + status +
+           '}';
   }
 }

@@ -1,49 +1,59 @@
 package org.mini_amazon.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 import org.mini_amazon.enums.OrderStatus;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "orders")
 public class Order {
 
   @Id
-  private long id;
+  @GeneratedValue
+  private Long id;
 
   @ManyToOne
   private Item item;
 
-  private double quantity;
+  private int quantity;
 
-  @Deprecated
-  private double unitPrice;
-
-  @Deprecated
-  private double totalPrice;
+//  @Deprecated
+//  private double unitPrice;
+//
+//  @Deprecated
+//  private double totalPrice;
 
   @Enumerated(EnumType.STRING)
   private OrderStatus status;
 
   //temp remove these for testing
-  @ManyToOne(cascade = { CascadeType.ALL })
+  @JsonIgnore
+  @ManyToOne(cascade = {CascadeType.ALL})
   private Shipment shipment;
 
-  @ManyToOne(cascade = { CascadeType.ALL })
-  private User owner;
+//  @ManyToOne(cascade = {CascadeType.ALL})
+//  private User owner;
 
-  private String address;
+//  private String address;
 
-  public long getId() {
+
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -55,48 +65,14 @@ public class Order {
     this.item = item;
   }
 
-  public double getQuantity() {
+  public int getQuantity() {
     return quantity;
   }
 
-  public void setQuantity(double quantity) {
+  public void setQuantity(int quantity) {
     this.quantity = quantity;
   }
 
-  public double getUnitPrice() {
-    return unitPrice;
-  }
-
-  public void setUnitPrice(double unitPrice) {
-    this.unitPrice = unitPrice;
-  }
-
-  public double getTotalPrice() {
-    return totalPrice;
-  }
-
-  public void setTotalPrice(double totalPrice) {
-    this.totalPrice = totalPrice;
-  }
-
-  public String getAddress() {
-    return address;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-
-
-  //
-  //  public User getOwner() {
-  //    return owner;
-  //  }
-  //
-  //  public void setOwner(User owner) {
-  //    this.owner = owner;
-  //  }
   public OrderStatus getStatus() {
     return status;
   }
@@ -111,5 +87,31 @@ public class Order {
 
   public void setShipment(Shipment shipment) {
     this.shipment = shipment;
+  }
+
+  @Override
+  public String toString() {
+    return "Order{" +
+           "id=" + id +
+           ", item=" + item +
+           ", quantity=" + quantity +
+           ", status=" + status +
+           ", shipment=" + shipment +
+           '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Order order = (Order) o;
+    return quantity == order.quantity && Objects.equals(id, order.id)
+           && Objects.equals(item, order.item) && status == order.status
+           && Objects.equals(shipment, order.shipment);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, item, quantity, status, shipment);
   }
 }

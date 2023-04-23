@@ -2,9 +2,7 @@ package org.mini_amazon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.http.converter.protobuf.ProtobufHttpMessageConverter;
-
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * @Configuration: Tags the class as a source of bean definitions for the application context.
@@ -16,18 +14,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * com/example package, letting it find the controllers.
  */
 @SpringBootApplication
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//@EnableAsync
 public class Main {
 
-  //  @Bean
-  //  ProtobufHttpMessageConverter protobufHttpMessageConverter() {
-  //    return new ProtobufHttpMessageConverter();
-  //  }
-
   public static void main(String[] args) {
-    //      System.out.println("Hello World");
-
-
-    // server singleton
-    SpringApplication.run(Main.class, args);
+    ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
   }
 }

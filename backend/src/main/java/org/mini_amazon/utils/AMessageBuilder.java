@@ -9,23 +9,6 @@ import java.util.List;
 
 @Service
 public class AMessageBuilder {
-//  public static class AProduct {
-//    long id;
-//    String description;
-//    int count;
-//  }
-//
-//  public static class WareHouse {
-//    int id;
-//    int x;
-//    int y;
-//
-//    public WareHouse(int id, int x, int y) {
-//      this.id = id;
-//      this.x = x;
-//      this.y = y;
-//    }
-//  }
 
   // if worldId is null, then it is a new world
   public static WorldAmazonProtocol.AConnect createNewWorld(Long worldId, List<WorldAmazonProtocol.AInitWarehouse> wareHouses) {

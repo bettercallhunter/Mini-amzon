@@ -65,6 +65,47 @@ public final class AmazonUPSProtocol {
      */
     org.mini_amazon.proto.AmazonUPSProtocol.AUDeliverRequestOrBuilder getDeliverRequestsOrBuilder(
         int index);
+
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @return A list containing the acks.
+     */
+    java.util.List<java.lang.Long> getAcksList();
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @return The count of acks.
+     */
+    int getAcksCount();
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @param index The index of the element to return.
+     * @return The acks at the given index.
+     */
+    long getAcks(int index);
+
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> 
+        getErrorList();
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    org.mini_amazon.proto.AmazonUPSProtocol.Err getError(int index);
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    int getErrorCount();
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    java.util.List<? extends org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder> 
+        getErrorOrBuilderList();
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder getErrorOrBuilder(
+        int index);
   }
   /**
    * <pre>
@@ -85,6 +126,8 @@ public final class AmazonUPSProtocol {
     private AUCommand() {
       pickupRequests_ = java.util.Collections.emptyList();
       deliverRequests_ = java.util.Collections.emptyList();
+      acks_ = emptyLongList();
+      error_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -189,6 +232,75 @@ public final class AmazonUPSProtocol {
       return deliverRequests_.get(index);
     }
 
+    public static final int ACKS_FIELD_NUMBER = 3;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.Internal.LongList acks_;
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @return A list containing the acks.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Long>
+        getAcksList() {
+      return acks_;
+    }
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @return The count of acks.
+     */
+    public int getAcksCount() {
+      return acks_.size();
+    }
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @param index The index of the element to return.
+     * @return The acks at the given index.
+     */
+    public long getAcks(int index) {
+      return acks_.getLong(index);
+    }
+
+    public static final int ERROR_FIELD_NUMBER = 4;
+    @SuppressWarnings("serial")
+    private java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> error_;
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    @java.lang.Override
+    public java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> getErrorList() {
+      return error_;
+    }
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder> 
+        getErrorOrBuilderList() {
+      return error_;
+    }
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    @java.lang.Override
+    public int getErrorCount() {
+      return error_.size();
+    }
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    @java.lang.Override
+    public org.mini_amazon.proto.AmazonUPSProtocol.Err getError(int index) {
+      return error_.get(index);
+    }
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    @java.lang.Override
+    public org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder getErrorOrBuilder(
+        int index) {
+      return error_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -208,6 +320,12 @@ public final class AmazonUPSProtocol {
           return false;
         }
       }
+      for (int i = 0; i < getErrorCount(); i++) {
+        if (!getError(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -220,6 +338,12 @@ public final class AmazonUPSProtocol {
       }
       for (int i = 0; i < deliverRequests_.size(); i++) {
         output.writeMessage(2, deliverRequests_.get(i));
+      }
+      for (int i = 0; i < acks_.size(); i++) {
+        output.writeInt64(3, acks_.getLong(i));
+      }
+      for (int i = 0; i < error_.size(); i++) {
+        output.writeMessage(4, error_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -237,6 +361,19 @@ public final class AmazonUPSProtocol {
       for (int i = 0; i < deliverRequests_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, deliverRequests_.get(i));
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < acks_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt64SizeNoTag(acks_.getLong(i));
+        }
+        size += dataSize;
+        size += 1 * getAcksList().size();
+      }
+      for (int i = 0; i < error_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, error_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -257,6 +394,10 @@ public final class AmazonUPSProtocol {
           .equals(other.getPickupRequestsList())) return false;
       if (!getDeliverRequestsList()
           .equals(other.getDeliverRequestsList())) return false;
+      if (!getAcksList()
+          .equals(other.getAcksList())) return false;
+      if (!getErrorList()
+          .equals(other.getErrorList())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -275,6 +416,14 @@ public final class AmazonUPSProtocol {
       if (getDeliverRequestsCount() > 0) {
         hash = (37 * hash) + DELIVERREQUESTS_FIELD_NUMBER;
         hash = (53 * hash) + getDeliverRequestsList().hashCode();
+      }
+      if (getAcksCount() > 0) {
+        hash = (37 * hash) + ACKS_FIELD_NUMBER;
+        hash = (53 * hash) + getAcksList().hashCode();
+      }
+      if (getErrorCount() > 0) {
+        hash = (37 * hash) + ERROR_FIELD_NUMBER;
+        hash = (53 * hash) + getErrorList().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -423,6 +572,14 @@ public final class AmazonUPSProtocol {
           deliverRequestsBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
+        acks_ = emptyLongList();
+        if (errorBuilder_ == null) {
+          error_ = java.util.Collections.emptyList();
+        } else {
+          error_ = null;
+          errorBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -473,6 +630,20 @@ public final class AmazonUPSProtocol {
           result.deliverRequests_ = deliverRequests_;
         } else {
           result.deliverRequests_ = deliverRequestsBuilder_.build();
+        }
+        if (((bitField0_ & 0x00000004) != 0)) {
+          acks_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.acks_ = acks_;
+        if (errorBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) != 0)) {
+            error_ = java.util.Collections.unmodifiableList(error_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.error_ = error_;
+        } else {
+          result.error_ = errorBuilder_.build();
         }
       }
 
@@ -544,6 +715,42 @@ public final class AmazonUPSProtocol {
             }
           }
         }
+        if (!other.acks_.isEmpty()) {
+          if (acks_.isEmpty()) {
+            acks_ = other.acks_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureAcksIsMutable();
+            acks_.addAll(other.acks_);
+          }
+          onChanged();
+        }
+        if (errorBuilder_ == null) {
+          if (!other.error_.isEmpty()) {
+            if (error_.isEmpty()) {
+              error_ = other.error_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureErrorIsMutable();
+              error_.addAll(other.error_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.error_.isEmpty()) {
+            if (errorBuilder_.isEmpty()) {
+              errorBuilder_.dispose();
+              errorBuilder_ = null;
+              error_ = other.error_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              errorBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getErrorFieldBuilder() : null;
+            } else {
+              errorBuilder_.addAllMessages(other.error_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -558,6 +765,11 @@ public final class AmazonUPSProtocol {
         }
         for (int i = 0; i < getDeliverRequestsCount(); i++) {
           if (!getDeliverRequests(i).isInitialized()) {
+            return false;
+          }
+        }
+        for (int i = 0; i < getErrorCount(); i++) {
+          if (!getError(i).isInitialized()) {
             return false;
           }
         }
@@ -606,6 +818,35 @@ public final class AmazonUPSProtocol {
                 }
                 break;
               } // case 18
+              case 24: {
+                long v = input.readInt64();
+                ensureAcksIsMutable();
+                acks_.addLong(v);
+                break;
+              } // case 24
+              case 26: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                ensureAcksIsMutable();
+                while (input.getBytesUntilLimit() > 0) {
+                  acks_.addLong(input.readInt64());
+                }
+                input.popLimit(limit);
+                break;
+              } // case 26
+              case 34: {
+                org.mini_amazon.proto.AmazonUPSProtocol.Err m =
+                    input.readMessage(
+                        org.mini_amazon.proto.AmazonUPSProtocol.Err.PARSER,
+                        extensionRegistry);
+                if (errorBuilder_ == null) {
+                  ensureErrorIsMutable();
+                  error_.add(m);
+                } else {
+                  errorBuilder_.addMessage(m);
+                }
+                break;
+              } // case 34
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -1102,6 +1343,327 @@ public final class AmazonUPSProtocol {
         }
         return deliverRequestsBuilder_;
       }
+
+      private com.google.protobuf.Internal.LongList acks_ = emptyLongList();
+      private void ensureAcksIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          acks_ = mutableCopy(acks_);
+          bitField0_ |= 0x00000004;
+        }
+      }
+      /**
+       * <code>repeated int64 acks = 3;</code>
+       * @return A list containing the acks.
+       */
+      public java.util.List<java.lang.Long>
+          getAcksList() {
+        return ((bitField0_ & 0x00000004) != 0) ?
+                 java.util.Collections.unmodifiableList(acks_) : acks_;
+      }
+      /**
+       * <code>repeated int64 acks = 3;</code>
+       * @return The count of acks.
+       */
+      public int getAcksCount() {
+        return acks_.size();
+      }
+      /**
+       * <code>repeated int64 acks = 3;</code>
+       * @param index The index of the element to return.
+       * @return The acks at the given index.
+       */
+      public long getAcks(int index) {
+        return acks_.getLong(index);
+      }
+      /**
+       * <code>repeated int64 acks = 3;</code>
+       * @param index The index to set the value at.
+       * @param value The acks to set.
+       * @return This builder for chaining.
+       */
+      public Builder setAcks(
+          int index, long value) {
+
+        ensureAcksIsMutable();
+        acks_.setLong(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int64 acks = 3;</code>
+       * @param value The acks to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAcks(long value) {
+
+        ensureAcksIsMutable();
+        acks_.addLong(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int64 acks = 3;</code>
+       * @param values The acks to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllAcks(
+          java.lang.Iterable<? extends java.lang.Long> values) {
+        ensureAcksIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, acks_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int64 acks = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearAcks() {
+        acks_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> error_ =
+        java.util.Collections.emptyList();
+      private void ensureErrorIsMutable() {
+        if (!((bitField0_ & 0x00000008) != 0)) {
+          error_ = new java.util.ArrayList<org.mini_amazon.proto.AmazonUPSProtocol.Err>(error_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.mini_amazon.proto.AmazonUPSProtocol.Err, org.mini_amazon.proto.AmazonUPSProtocol.Err.Builder, org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder> errorBuilder_;
+
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> getErrorList() {
+        if (errorBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(error_);
+        } else {
+          return errorBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public int getErrorCount() {
+        if (errorBuilder_ == null) {
+          return error_.size();
+        } else {
+          return errorBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public org.mini_amazon.proto.AmazonUPSProtocol.Err getError(int index) {
+        if (errorBuilder_ == null) {
+          return error_.get(index);
+        } else {
+          return errorBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public Builder setError(
+          int index, org.mini_amazon.proto.AmazonUPSProtocol.Err value) {
+        if (errorBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureErrorIsMutable();
+          error_.set(index, value);
+          onChanged();
+        } else {
+          errorBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public Builder setError(
+          int index, org.mini_amazon.proto.AmazonUPSProtocol.Err.Builder builderForValue) {
+        if (errorBuilder_ == null) {
+          ensureErrorIsMutable();
+          error_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          errorBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public Builder addError(org.mini_amazon.proto.AmazonUPSProtocol.Err value) {
+        if (errorBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureErrorIsMutable();
+          error_.add(value);
+          onChanged();
+        } else {
+          errorBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public Builder addError(
+          int index, org.mini_amazon.proto.AmazonUPSProtocol.Err value) {
+        if (errorBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureErrorIsMutable();
+          error_.add(index, value);
+          onChanged();
+        } else {
+          errorBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public Builder addError(
+          org.mini_amazon.proto.AmazonUPSProtocol.Err.Builder builderForValue) {
+        if (errorBuilder_ == null) {
+          ensureErrorIsMutable();
+          error_.add(builderForValue.build());
+          onChanged();
+        } else {
+          errorBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public Builder addError(
+          int index, org.mini_amazon.proto.AmazonUPSProtocol.Err.Builder builderForValue) {
+        if (errorBuilder_ == null) {
+          ensureErrorIsMutable();
+          error_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          errorBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public Builder addAllError(
+          java.lang.Iterable<? extends org.mini_amazon.proto.AmazonUPSProtocol.Err> values) {
+        if (errorBuilder_ == null) {
+          ensureErrorIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, error_);
+          onChanged();
+        } else {
+          errorBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public Builder clearError() {
+        if (errorBuilder_ == null) {
+          error_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          errorBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public Builder removeError(int index) {
+        if (errorBuilder_ == null) {
+          ensureErrorIsMutable();
+          error_.remove(index);
+          onChanged();
+        } else {
+          errorBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public org.mini_amazon.proto.AmazonUPSProtocol.Err.Builder getErrorBuilder(
+          int index) {
+        return getErrorFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder getErrorOrBuilder(
+          int index) {
+        if (errorBuilder_ == null) {
+          return error_.get(index);  } else {
+          return errorBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public java.util.List<? extends org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder> 
+           getErrorOrBuilderList() {
+        if (errorBuilder_ != null) {
+          return errorBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(error_);
+        }
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public org.mini_amazon.proto.AmazonUPSProtocol.Err.Builder addErrorBuilder() {
+        return getErrorFieldBuilder().addBuilder(
+            org.mini_amazon.proto.AmazonUPSProtocol.Err.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public org.mini_amazon.proto.AmazonUPSProtocol.Err.Builder addErrorBuilder(
+          int index) {
+        return getErrorFieldBuilder().addBuilder(
+            index, org.mini_amazon.proto.AmazonUPSProtocol.Err.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .mini_amazon.Err error = 4;</code>
+       */
+      public java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err.Builder> 
+           getErrorBuilderList() {
+        return getErrorFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.mini_amazon.proto.AmazonUPSProtocol.Err, org.mini_amazon.proto.AmazonUPSProtocol.Err.Builder, org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder> 
+          getErrorFieldBuilder() {
+        if (errorBuilder_ == null) {
+          errorBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              org.mini_amazon.proto.AmazonUPSProtocol.Err, org.mini_amazon.proto.AmazonUPSProtocol.Err.Builder, org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder>(
+                  error_,
+                  ((bitField0_ & 0x00000008) != 0),
+                  getParentForChildren(),
+                  isClean());
+          error_ = null;
+        }
+        return errorBuilder_;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1217,6 +1779,47 @@ public final class AmazonUPSProtocol {
      */
     org.mini_amazon.proto.AmazonUPSProtocol.UADeliveredOrBuilder getDeliveredOrBuilder(
         int index);
+
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @return A list containing the acks.
+     */
+    java.util.List<java.lang.Long> getAcksList();
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @return The count of acks.
+     */
+    int getAcksCount();
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @param index The index of the element to return.
+     * @return The acks at the given index.
+     */
+    long getAcks(int index);
+
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> 
+        getErrorList();
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    org.mini_amazon.proto.AmazonUPSProtocol.Err getError(int index);
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    int getErrorCount();
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    java.util.List<? extends org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder> 
+        getErrorOrBuilderList();
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder getErrorOrBuilder(
+        int index);
   }
   /**
    * <pre>
@@ -1237,6 +1840,8 @@ public final class AmazonUPSProtocol {
     private UACommand() {
       loadRequests_ = java.util.Collections.emptyList();
       delivered_ = java.util.Collections.emptyList();
+      acks_ = emptyLongList();
+      error_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -1341,6 +1946,75 @@ public final class AmazonUPSProtocol {
       return delivered_.get(index);
     }
 
+    public static final int ACKS_FIELD_NUMBER = 3;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.Internal.LongList acks_;
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @return A list containing the acks.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Long>
+        getAcksList() {
+      return acks_;
+    }
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @return The count of acks.
+     */
+    public int getAcksCount() {
+      return acks_.size();
+    }
+    /**
+     * <code>repeated int64 acks = 3;</code>
+     * @param index The index of the element to return.
+     * @return The acks at the given index.
+     */
+    public long getAcks(int index) {
+      return acks_.getLong(index);
+    }
+
+    public static final int ERROR_FIELD_NUMBER = 4;
+    @SuppressWarnings("serial")
+    private java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> error_;
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    @java.lang.Override
+    public java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> getErrorList() {
+      return error_;
+    }
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder> 
+        getErrorOrBuilderList() {
+      return error_;
+    }
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    @java.lang.Override
+    public int getErrorCount() {
+      return error_.size();
+    }
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    @java.lang.Override
+    public org.mini_amazon.proto.AmazonUPSProtocol.Err getError(int index) {
+      return error_.get(index);
+    }
+    /**
+     * <code>repeated .mini_amazon.Err error = 4;</code>
+     */
+    @java.lang.Override
+    public org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder getErrorOrBuilder(
+        int index) {
+      return error_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1360,6 +2034,12 @@ public final class AmazonUPSProtocol {
           return false;
         }
       }
+      for (int i = 0; i < getErrorCount(); i++) {
+        if (!getError(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1372,6 +2052,12 @@ public final class AmazonUPSProtocol {
       }
       for (int i = 0; i < delivered_.size(); i++) {
         output.writeMessage(2, delivered_.get(i));
+      }
+      for (int i = 0; i < acks_.size(); i++) {
+        output.writeInt64(3, acks_.getLong(i));
+      }
+      for (int i = 0; i < error_.size(); i++) {
+        output.writeMessage(4, error_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -1389,6 +2075,19 @@ public final class AmazonUPSProtocol {
       for (int i = 0; i < delivered_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, delivered_.get(i));
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < acks_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt64SizeNoTag(acks_.getLong(i));
+        }
+        size += dataSize;
+        size += 1 * getAcksList().size();
+      }
+      for (int i = 0; i < error_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, error_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -1409,6 +2108,10 @@ public final class AmazonUPSProtocol {
           .equals(other.getLoadRequestsList())) return false;
       if (!getDeliveredList()
           .equals(other.getDeliveredList())) return false;
+      if (!getAcksList()
+          .equals(other.getAcksList())) return false;
+      if (!getErrorList()
+          .equals(other.getErrorList())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -1427,6 +2130,14 @@ public final class AmazonUPSProtocol {
       if (getDeliveredCount() > 0) {
         hash = (37 * hash) + DELIVERED_FIELD_NUMBER;
         hash = (53 * hash) + getDeliveredList().hashCode();
+      }
+      if (getAcksCount() > 0) {
+        hash = (37 * hash) + ACKS_FIELD_NUMBER;
+        hash = (53 * hash) + getAcksList().hashCode();
+      }
+      if (getErrorCount() > 0) {
+        hash = (37 * hash) + ERROR_FIELD_NUMBER;
+        hash = (53 * hash) + getErrorList().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -1575,6 +2286,14 @@ public final class AmazonUPSProtocol {
           deliveredBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
+        acks_ = emptyLongList();
+        if (errorBuilder_ == null) {
+          error_ = java.util.Collections.emptyList();
+        } else {
+          error_ = null;
+          errorBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -1625,6 +2344,20 @@ public final class AmazonUPSProtocol {
           result.delivered_ = delivered_;
         } else {
           result.delivered_ = deliveredBuilder_.build();
+        }
+        if (((bitField0_ & 0x00000004) != 0)) {
+          acks_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.acks_ = acks_;
+        if (errorBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) != 0)) {
+            error_ = java.util.Collections.unmodifiableList(error_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.error_ = error_;
+        } else {
+          result.error_ = errorBuilder_.build();
         }
       }
 
@@ -1696,6 +2429,42 @@ public final class AmazonUPSProtocol {
             }
           }
         }
+        if (!other.acks_.isEmpty()) {
+          if (acks_.isEmpty()) {
+            acks_ = other.acks_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureAcksIsMutable();
+            acks_.addAll(other.acks_);
+          }
+          onChanged();
+        }
+        if (errorBuilder_ == null) {
+          if (!other.error_.isEmpty()) {
+            if (error_.isEmpty()) {
+              error_ = other.error_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureErrorIsMutable();
+              error_.addAll(other.error_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.error_.isEmpty()) {
+            if (errorBuilder_.isEmpty()) {
+              errorBuilder_.dispose();
+              errorBuilder_ = null;
+              error_ = other.error_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              errorBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getErrorFieldBuilder() : null;
+            } else {
+              errorBuilder_.addAllMessages(other.error_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -1710,6 +2479,11 @@ public final class AmazonUPSProtocol {
         }
         for (int i = 0; i < getDeliveredCount(); i++) {
           if (!getDelivered(i).isInitialized()) {
+            return false;
+          }
+        }
+        for (int i = 0; i < getErrorCount(); i++) {
+          if (!getError(i).isInitialized()) {
             return false;
           }
         }
@@ -1758,6 +2532,35 @@ public final class AmazonUPSProtocol {
                 }
                 break;
               } // case 18
+              case 24: {
+                long v = input.readInt64();
+                ensureAcksIsMutable();
+                acks_.addLong(v);
+                break;
+              } // case 24
+              case 26: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                ensureAcksIsMutable();
+                while (input.getBytesUntilLimit() > 0) {
+                  acks_.addLong(input.readInt64());
+                }
+                input.popLimit(limit);
+                break;
+              } // case 26
+              case 34: {
+                org.mini_amazon.proto.AmazonUPSProtocol.Err m =
+                    input.readMessage(
+                        org.mini_amazon.proto.AmazonUPSProtocol.Err.PARSER,
+                        extensionRegistry);
+                if (errorBuilder_ == null) {
+                  ensureErrorIsMutable();
+                  error_.add(m);
+                } else {
+                  errorBuilder_.addMessage(m);
+                }
+                break;
+              } // case 34
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -2254,635 +3057,12 @@ public final class AmazonUPSProtocol {
         }
         return deliveredBuilder_;
       }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:mini_amazon.UACommand)
-    }
-
-    // @@protoc_insertion_point(class_scope:mini_amazon.UACommand)
-    private static final org.mini_amazon.proto.AmazonUPSProtocol.UACommand DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new org.mini_amazon.proto.AmazonUPSProtocol.UACommand();
-    }
-
-    public static org.mini_amazon.proto.AmazonUPSProtocol.UACommand getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<UACommand>
-        PARSER = new com.google.protobuf.AbstractParser<UACommand>() {
-      @java.lang.Override
-      public UACommand parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        Builder builder = newBuilder();
-        try {
-          builder.mergeFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.setUnfinishedMessage(builder.buildPartial());
-        } catch (com.google.protobuf.UninitializedMessageException e) {
-          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
-        } catch (java.io.IOException e) {
-          throw new com.google.protobuf.InvalidProtocolBufferException(e)
-              .setUnfinishedMessage(builder.buildPartial());
-        }
-        return builder.buildPartial();
-      }
-    };
-
-    public static com.google.protobuf.Parser<UACommand> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<UACommand> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public org.mini_amazon.proto.AmazonUPSProtocol.UACommand getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface ResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:mini_amazon.Response)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>repeated int64 acks = 3;</code>
-     * @return A list containing the acks.
-     */
-    java.util.List<java.lang.Long> getAcksList();
-    /**
-     * <code>repeated int64 acks = 3;</code>
-     * @return The count of acks.
-     */
-    int getAcksCount();
-    /**
-     * <code>repeated int64 acks = 3;</code>
-     * @param index The index of the element to return.
-     * @return The acks at the given index.
-     */
-    long getAcks(int index);
-
-    /**
-     * <code>repeated .mini_amazon.Err error = 4;</code>
-     */
-    java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> 
-        getErrorList();
-    /**
-     * <code>repeated .mini_amazon.Err error = 4;</code>
-     */
-    org.mini_amazon.proto.AmazonUPSProtocol.Err getError(int index);
-    /**
-     * <code>repeated .mini_amazon.Err error = 4;</code>
-     */
-    int getErrorCount();
-    /**
-     * <code>repeated .mini_amazon.Err error = 4;</code>
-     */
-    java.util.List<? extends org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder> 
-        getErrorOrBuilderList();
-    /**
-     * <code>repeated .mini_amazon.Err error = 4;</code>
-     */
-    org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder getErrorOrBuilder(
-        int index);
-  }
-  /**
-   * <pre>
-   * ack response
-   * </pre>
-   *
-   * Protobuf type {@code mini_amazon.Response}
-   */
-  public static final class Response extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:mini_amazon.Response)
-      ResponseOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use Response.newBuilder() to construct.
-    private Response(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private Response() {
-      acks_ = emptyLongList();
-      error_ = java.util.Collections.emptyList();
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new Response();
-    }
-
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return org.mini_amazon.proto.AmazonUPSProtocol.internal_static_mini_amazon_Response_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return org.mini_amazon.proto.AmazonUPSProtocol.internal_static_mini_amazon_Response_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              org.mini_amazon.proto.AmazonUPSProtocol.Response.class, org.mini_amazon.proto.AmazonUPSProtocol.Response.Builder.class);
-    }
-
-    public static final int ACKS_FIELD_NUMBER = 3;
-    @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList acks_;
-    /**
-     * <code>repeated int64 acks = 3;</code>
-     * @return A list containing the acks.
-     */
-    @java.lang.Override
-    public java.util.List<java.lang.Long>
-        getAcksList() {
-      return acks_;
-    }
-    /**
-     * <code>repeated int64 acks = 3;</code>
-     * @return The count of acks.
-     */
-    public int getAcksCount() {
-      return acks_.size();
-    }
-    /**
-     * <code>repeated int64 acks = 3;</code>
-     * @param index The index of the element to return.
-     * @return The acks at the given index.
-     */
-    public long getAcks(int index) {
-      return acks_.getLong(index);
-    }
-
-    public static final int ERROR_FIELD_NUMBER = 4;
-    @SuppressWarnings("serial")
-    private java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> error_;
-    /**
-     * <code>repeated .mini_amazon.Err error = 4;</code>
-     */
-    @java.lang.Override
-    public java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> getErrorList() {
-      return error_;
-    }
-    /**
-     * <code>repeated .mini_amazon.Err error = 4;</code>
-     */
-    @java.lang.Override
-    public java.util.List<? extends org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder> 
-        getErrorOrBuilderList() {
-      return error_;
-    }
-    /**
-     * <code>repeated .mini_amazon.Err error = 4;</code>
-     */
-    @java.lang.Override
-    public int getErrorCount() {
-      return error_.size();
-    }
-    /**
-     * <code>repeated .mini_amazon.Err error = 4;</code>
-     */
-    @java.lang.Override
-    public org.mini_amazon.proto.AmazonUPSProtocol.Err getError(int index) {
-      return error_.get(index);
-    }
-    /**
-     * <code>repeated .mini_amazon.Err error = 4;</code>
-     */
-    @java.lang.Override
-    public org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder getErrorOrBuilder(
-        int index) {
-      return error_.get(index);
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      for (int i = 0; i < getErrorCount(); i++) {
-        if (!getError(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      for (int i = 0; i < acks_.size(); i++) {
-        output.writeInt64(3, acks_.getLong(i));
-      }
-      for (int i = 0; i < error_.size(); i++) {
-        output.writeMessage(4, error_.get(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      {
-        int dataSize = 0;
-        for (int i = 0; i < acks_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeInt64SizeNoTag(acks_.getLong(i));
-        }
-        size += dataSize;
-        size += 1 * getAcksList().size();
-      }
-      for (int i = 0; i < error_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, error_.get(i));
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof org.mini_amazon.proto.AmazonUPSProtocol.Response)) {
-        return super.equals(obj);
-      }
-      org.mini_amazon.proto.AmazonUPSProtocol.Response other = (org.mini_amazon.proto.AmazonUPSProtocol.Response) obj;
-
-      if (!getAcksList()
-          .equals(other.getAcksList())) return false;
-      if (!getErrorList()
-          .equals(other.getErrorList())) return false;
-      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      if (getAcksCount() > 0) {
-        hash = (37 * hash) + ACKS_FIELD_NUMBER;
-        hash = (53 * hash) + getAcksList().hashCode();
-      }
-      if (getErrorCount() > 0) {
-        hash = (37 * hash) + ERROR_FIELD_NUMBER;
-        hash = (53 * hash) + getErrorList().hashCode();
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(org.mini_amazon.proto.AmazonUPSProtocol.Response prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * <pre>
-     * ack response
-     * </pre>
-     *
-     * Protobuf type {@code mini_amazon.Response}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:mini_amazon.Response)
-        org.mini_amazon.proto.AmazonUPSProtocol.ResponseOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return org.mini_amazon.proto.AmazonUPSProtocol.internal_static_mini_amazon_Response_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return org.mini_amazon.proto.AmazonUPSProtocol.internal_static_mini_amazon_Response_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                org.mini_amazon.proto.AmazonUPSProtocol.Response.class, org.mini_amazon.proto.AmazonUPSProtocol.Response.Builder.class);
-      }
-
-      // Construct using org.mini_amazon.proto.AmazonUPSProtocol.Response.newBuilder()
-      private Builder() {
-
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        bitField0_ = 0;
-        acks_ = emptyLongList();
-        if (errorBuilder_ == null) {
-          error_ = java.util.Collections.emptyList();
-        } else {
-          error_ = null;
-          errorBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000002);
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return org.mini_amazon.proto.AmazonUPSProtocol.internal_static_mini_amazon_Response_descriptor;
-      }
-
-      @java.lang.Override
-      public org.mini_amazon.proto.AmazonUPSProtocol.Response getDefaultInstanceForType() {
-        return org.mini_amazon.proto.AmazonUPSProtocol.Response.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public org.mini_amazon.proto.AmazonUPSProtocol.Response build() {
-        org.mini_amazon.proto.AmazonUPSProtocol.Response result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public org.mini_amazon.proto.AmazonUPSProtocol.Response buildPartial() {
-        org.mini_amazon.proto.AmazonUPSProtocol.Response result = new org.mini_amazon.proto.AmazonUPSProtocol.Response(this);
-        buildPartialRepeatedFields(result);
-        if (bitField0_ != 0) { buildPartial0(result); }
-        onBuilt();
-        return result;
-      }
-
-      private void buildPartialRepeatedFields(org.mini_amazon.proto.AmazonUPSProtocol.Response result) {
-        if (((bitField0_ & 0x00000001) != 0)) {
-          acks_.makeImmutable();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.acks_ = acks_;
-        if (errorBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) != 0)) {
-            error_ = java.util.Collections.unmodifiableList(error_);
-            bitField0_ = (bitField0_ & ~0x00000002);
-          }
-          result.error_ = error_;
-        } else {
-          result.error_ = errorBuilder_.build();
-        }
-      }
-
-      private void buildPartial0(org.mini_amazon.proto.AmazonUPSProtocol.Response result) {
-        int from_bitField0_ = bitField0_;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.mini_amazon.proto.AmazonUPSProtocol.Response) {
-          return mergeFrom((org.mini_amazon.proto.AmazonUPSProtocol.Response)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(org.mini_amazon.proto.AmazonUPSProtocol.Response other) {
-        if (other == org.mini_amazon.proto.AmazonUPSProtocol.Response.getDefaultInstance()) return this;
-        if (!other.acks_.isEmpty()) {
-          if (acks_.isEmpty()) {
-            acks_ = other.acks_;
-            bitField0_ = (bitField0_ & ~0x00000001);
-          } else {
-            ensureAcksIsMutable();
-            acks_.addAll(other.acks_);
-          }
-          onChanged();
-        }
-        if (errorBuilder_ == null) {
-          if (!other.error_.isEmpty()) {
-            if (error_.isEmpty()) {
-              error_ = other.error_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-            } else {
-              ensureErrorIsMutable();
-              error_.addAll(other.error_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.error_.isEmpty()) {
-            if (errorBuilder_.isEmpty()) {
-              errorBuilder_.dispose();
-              errorBuilder_ = null;
-              error_ = other.error_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-              errorBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getErrorFieldBuilder() : null;
-            } else {
-              errorBuilder_.addAllMessages(other.error_);
-            }
-          }
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        for (int i = 0; i < getErrorCount(); i++) {
-          if (!getError(i).isInitialized()) {
-            return false;
-          }
-        }
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        if (extensionRegistry == null) {
-          throw new java.lang.NullPointerException();
-        }
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              case 24: {
-                long v = input.readInt64();
-                ensureAcksIsMutable();
-                acks_.addLong(v);
-                break;
-              } // case 24
-              case 26: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                ensureAcksIsMutable();
-                while (input.getBytesUntilLimit() > 0) {
-                  acks_.addLong(input.readInt64());
-                }
-                input.popLimit(limit);
-                break;
-              } // case 26
-              case 34: {
-                org.mini_amazon.proto.AmazonUPSProtocol.Err m =
-                    input.readMessage(
-                        org.mini_amazon.proto.AmazonUPSProtocol.Err.PARSER,
-                        extensionRegistry);
-                if (errorBuilder_ == null) {
-                  ensureErrorIsMutable();
-                  error_.add(m);
-                } else {
-                  errorBuilder_.addMessage(m);
-                }
-                break;
-              } // case 34
-              default: {
-                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
-                  done = true; // was an endgroup tag
-                }
-                break;
-              } // default:
-            } // switch (tag)
-          } // while (!done)
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.unwrapIOException();
-        } finally {
-          onChanged();
-        } // finally
-        return this;
-      }
-      private int bitField0_;
 
       private com.google.protobuf.Internal.LongList acks_ = emptyLongList();
       private void ensureAcksIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
+        if (!((bitField0_ & 0x00000004) != 0)) {
           acks_ = mutableCopy(acks_);
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000004;
         }
       }
       /**
@@ -2891,7 +3071,7 @@ public final class AmazonUPSProtocol {
        */
       public java.util.List<java.lang.Long>
           getAcksList() {
-        return ((bitField0_ & 0x00000001) != 0) ?
+        return ((bitField0_ & 0x00000004) != 0) ?
                  java.util.Collections.unmodifiableList(acks_) : acks_;
       }
       /**
@@ -2954,7 +3134,7 @@ public final class AmazonUPSProtocol {
        */
       public Builder clearAcks() {
         acks_ = emptyLongList();
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000004);
         onChanged();
         return this;
       }
@@ -2962,9 +3142,9 @@ public final class AmazonUPSProtocol {
       private java.util.List<org.mini_amazon.proto.AmazonUPSProtocol.Err> error_ =
         java.util.Collections.emptyList();
       private void ensureErrorIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
+        if (!((bitField0_ & 0x00000008) != 0)) {
           error_ = new java.util.ArrayList<org.mini_amazon.proto.AmazonUPSProtocol.Err>(error_);
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000008;
          }
       }
 
@@ -3114,7 +3294,7 @@ public final class AmazonUPSProtocol {
       public Builder clearError() {
         if (errorBuilder_ == null) {
           error_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000008);
           onChanged();
         } else {
           errorBuilder_.clear();
@@ -3191,7 +3371,7 @@ public final class AmazonUPSProtocol {
           errorBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               org.mini_amazon.proto.AmazonUPSProtocol.Err, org.mini_amazon.proto.AmazonUPSProtocol.Err.Builder, org.mini_amazon.proto.AmazonUPSProtocol.ErrOrBuilder>(
                   error_,
-                  ((bitField0_ & 0x00000002) != 0),
+                  ((bitField0_ & 0x00000008) != 0),
                   getParentForChildren(),
                   isClean());
           error_ = null;
@@ -3211,23 +3391,23 @@ public final class AmazonUPSProtocol {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:mini_amazon.Response)
+      // @@protoc_insertion_point(builder_scope:mini_amazon.UACommand)
     }
 
-    // @@protoc_insertion_point(class_scope:mini_amazon.Response)
-    private static final org.mini_amazon.proto.AmazonUPSProtocol.Response DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:mini_amazon.UACommand)
+    private static final org.mini_amazon.proto.AmazonUPSProtocol.UACommand DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new org.mini_amazon.proto.AmazonUPSProtocol.Response();
+      DEFAULT_INSTANCE = new org.mini_amazon.proto.AmazonUPSProtocol.UACommand();
     }
 
-    public static org.mini_amazon.proto.AmazonUPSProtocol.Response getDefaultInstance() {
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UACommand getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Response>
-        PARSER = new com.google.protobuf.AbstractParser<Response>() {
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<UACommand>
+        PARSER = new com.google.protobuf.AbstractParser<UACommand>() {
       @java.lang.Override
-      public Response parsePartialFrom(
+      public UACommand parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
@@ -3246,17 +3426,603 @@ public final class AmazonUPSProtocol {
       }
     };
 
-    public static com.google.protobuf.Parser<Response> parser() {
+    public static com.google.protobuf.Parser<UACommand> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Response> getParserForType() {
+    public com.google.protobuf.Parser<UACommand> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public org.mini_amazon.proto.AmazonUPSProtocol.Response getDefaultInstanceForType() {
+    public org.mini_amazon.proto.AmazonUPSProtocol.UACommand getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface UAStartOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:mini_amazon.UAStart)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required int32 worldid = 1;</code>
+     * @return Whether the worldid field is set.
+     */
+    boolean hasWorldid();
+    /**
+     * <code>required int32 worldid = 1;</code>
+     * @return The worldid.
+     */
+    int getWorldid();
+
+    /**
+     * <code>required int64 seqnum = 2;</code>
+     * @return Whether the seqnum field is set.
+     */
+    boolean hasSeqnum();
+    /**
+     * <code>required int64 seqnum = 2;</code>
+     * @return The seqnum.
+     */
+    long getSeqnum();
+  }
+  /**
+   * Protobuf type {@code mini_amazon.UAStart}
+   */
+  public static final class UAStart extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:mini_amazon.UAStart)
+      UAStartOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use UAStart.newBuilder() to construct.
+    private UAStart(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private UAStart() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new UAStart();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.mini_amazon.proto.AmazonUPSProtocol.internal_static_mini_amazon_UAStart_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.mini_amazon.proto.AmazonUPSProtocol.internal_static_mini_amazon_UAStart_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.mini_amazon.proto.AmazonUPSProtocol.UAStart.class, org.mini_amazon.proto.AmazonUPSProtocol.UAStart.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int WORLDID_FIELD_NUMBER = 1;
+    private int worldid_ = 0;
+    /**
+     * <code>required int32 worldid = 1;</code>
+     * @return Whether the worldid field is set.
+     */
+    @java.lang.Override
+    public boolean hasWorldid() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>required int32 worldid = 1;</code>
+     * @return The worldid.
+     */
+    @java.lang.Override
+    public int getWorldid() {
+      return worldid_;
+    }
+
+    public static final int SEQNUM_FIELD_NUMBER = 2;
+    private long seqnum_ = 0L;
+    /**
+     * <code>required int64 seqnum = 2;</code>
+     * @return Whether the seqnum field is set.
+     */
+    @java.lang.Override
+    public boolean hasSeqnum() {
+      return ((bitField0_ & 0x00000002) != 0);
+    }
+    /**
+     * <code>required int64 seqnum = 2;</code>
+     * @return The seqnum.
+     */
+    @java.lang.Override
+    public long getSeqnum() {
+      return seqnum_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasWorldid()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasSeqnum()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) != 0)) {
+        output.writeInt32(1, worldid_);
+      }
+      if (((bitField0_ & 0x00000002) != 0)) {
+        output.writeInt64(2, seqnum_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, worldid_);
+      }
+      if (((bitField0_ & 0x00000002) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, seqnum_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.mini_amazon.proto.AmazonUPSProtocol.UAStart)) {
+        return super.equals(obj);
+      }
+      org.mini_amazon.proto.AmazonUPSProtocol.UAStart other = (org.mini_amazon.proto.AmazonUPSProtocol.UAStart) obj;
+
+      if (hasWorldid() != other.hasWorldid()) return false;
+      if (hasWorldid()) {
+        if (getWorldid()
+            != other.getWorldid()) return false;
+      }
+      if (hasSeqnum() != other.hasSeqnum()) return false;
+      if (hasSeqnum()) {
+        if (getSeqnum()
+            != other.getSeqnum()) return false;
+      }
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasWorldid()) {
+        hash = (37 * hash) + WORLDID_FIELD_NUMBER;
+        hash = (53 * hash) + getWorldid();
+      }
+      if (hasSeqnum()) {
+        hash = (37 * hash) + SEQNUM_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getSeqnum());
+      }
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.mini_amazon.proto.AmazonUPSProtocol.UAStart prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code mini_amazon.UAStart}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:mini_amazon.UAStart)
+        org.mini_amazon.proto.AmazonUPSProtocol.UAStartOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.mini_amazon.proto.AmazonUPSProtocol.internal_static_mini_amazon_UAStart_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.mini_amazon.proto.AmazonUPSProtocol.internal_static_mini_amazon_UAStart_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.mini_amazon.proto.AmazonUPSProtocol.UAStart.class, org.mini_amazon.proto.AmazonUPSProtocol.UAStart.Builder.class);
+      }
+
+      // Construct using org.mini_amazon.proto.AmazonUPSProtocol.UAStart.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        worldid_ = 0;
+        seqnum_ = 0L;
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.mini_amazon.proto.AmazonUPSProtocol.internal_static_mini_amazon_UAStart_descriptor;
+      }
+
+      @java.lang.Override
+      public org.mini_amazon.proto.AmazonUPSProtocol.UAStart getDefaultInstanceForType() {
+        return org.mini_amazon.proto.AmazonUPSProtocol.UAStart.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.mini_amazon.proto.AmazonUPSProtocol.UAStart build() {
+        org.mini_amazon.proto.AmazonUPSProtocol.UAStart result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.mini_amazon.proto.AmazonUPSProtocol.UAStart buildPartial() {
+        org.mini_amazon.proto.AmazonUPSProtocol.UAStart result = new org.mini_amazon.proto.AmazonUPSProtocol.UAStart(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(org.mini_amazon.proto.AmazonUPSProtocol.UAStart result) {
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.worldid_ = worldid_;
+          to_bitField0_ |= 0x00000001;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.seqnum_ = seqnum_;
+          to_bitField0_ |= 0x00000002;
+        }
+        result.bitField0_ |= to_bitField0_;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.mini_amazon.proto.AmazonUPSProtocol.UAStart) {
+          return mergeFrom((org.mini_amazon.proto.AmazonUPSProtocol.UAStart)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.mini_amazon.proto.AmazonUPSProtocol.UAStart other) {
+        if (other == org.mini_amazon.proto.AmazonUPSProtocol.UAStart.getDefaultInstance()) return this;
+        if (other.hasWorldid()) {
+          setWorldid(other.getWorldid());
+        }
+        if (other.hasSeqnum()) {
+          setSeqnum(other.getSeqnum());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        if (!hasWorldid()) {
+          return false;
+        }
+        if (!hasSeqnum()) {
+          return false;
+        }
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 8: {
+                worldid_ = input.readInt32();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 8
+              case 16: {
+                seqnum_ = input.readInt64();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 16
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private int worldid_ ;
+      /**
+       * <code>required int32 worldid = 1;</code>
+       * @return Whether the worldid field is set.
+       */
+      @java.lang.Override
+      public boolean hasWorldid() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <code>required int32 worldid = 1;</code>
+       * @return The worldid.
+       */
+      @java.lang.Override
+      public int getWorldid() {
+        return worldid_;
+      }
+      /**
+       * <code>required int32 worldid = 1;</code>
+       * @param value The worldid to set.
+       * @return This builder for chaining.
+       */
+      public Builder setWorldid(int value) {
+
+        worldid_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int32 worldid = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearWorldid() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        worldid_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private long seqnum_ ;
+      /**
+       * <code>required int64 seqnum = 2;</code>
+       * @return Whether the seqnum field is set.
+       */
+      @java.lang.Override
+      public boolean hasSeqnum() {
+        return ((bitField0_ & 0x00000002) != 0);
+      }
+      /**
+       * <code>required int64 seqnum = 2;</code>
+       * @return The seqnum.
+       */
+      @java.lang.Override
+      public long getSeqnum() {
+        return seqnum_;
+      }
+      /**
+       * <code>required int64 seqnum = 2;</code>
+       * @param value The seqnum to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSeqnum(long value) {
+
+        seqnum_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int64 seqnum = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSeqnum() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        seqnum_ = 0L;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:mini_amazon.UAStart)
+    }
+
+    // @@protoc_insertion_point(class_scope:mini_amazon.UAStart)
+    private static final org.mini_amazon.proto.AmazonUPSProtocol.UAStart DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.mini_amazon.proto.AmazonUPSProtocol.UAStart();
+    }
+
+    public static org.mini_amazon.proto.AmazonUPSProtocol.UAStart getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<UAStart>
+        PARSER = new com.google.protobuf.AbstractParser<UAStart>() {
+      @java.lang.Override
+      public UAStart parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<UAStart> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<UAStart> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.mini_amazon.proto.AmazonUPSProtocol.UAStart getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -7125,10 +7891,10 @@ public final class AmazonUPSProtocol {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_mini_amazon_UACommand_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_mini_amazon_Response_descriptor;
+    internal_static_mini_amazon_UAStart_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_mini_amazon_Response_fieldAccessorTable;
+      internal_static_mini_amazon_UAStart_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_mini_amazon_AUPickupRequest_descriptor;
   private static final 
@@ -7164,24 +7930,26 @@ public final class AmazonUPSProtocol {
   static {
     java.lang.String[] descriptorData = {
       "\n\032resources/amazon_ups.proto\022\013mini_amazo" +
-      "n\"y\n\tAUCommand\0224\n\016pickupRequests\030\001 \003(\0132\034" +
-      ".mini_amazon.AUPickupRequest\0226\n\017deliverR" +
-      "equests\030\002 \003(\0132\035.mini_amazon.AUDeliverReq" +
-      "uest\"j\n\tUACommand\0220\n\014loadRequests\030\001 \003(\0132" +
-      "\032.mini_amazon.UALoadRequest\022+\n\tdelivered" +
-      "\030\002 \003(\0132\030.mini_amazon.UADelivered\"9\n\010Resp" +
-      "onse\022\014\n\004acks\030\003 \003(\003\022\037\n\005error\030\004 \003(\0132\020.mini" +
-      "_amazon.Err\"\210\001\n\017AUPickupRequest\022\016\n\006seqNu" +
-      "m\030\001 \002(\003\022\016\n\006shipId\030\002 \002(\003\022\023\n\013warehouseId\030\003" +
-      " \002(\003\022\t\n\001x\030\004 \002(\005\022\t\n\001y\030\005 \002(\005\022\024\n\014destinatio" +
-      "nX\030\006 \002(\005\022\024\n\014destinationY\030\007 \002(\005\"@\n\rUALoad" +
-      "Request\022\016\n\006seqNum\030\001 \002(\003\022\017\n\007truckId\030\002 \002(\005" +
-      "\022\016\n\006shipId\030\003 \002(\003\"2\n\020AUDeliverRequest\022\016\n\006" +
-      "seqNum\030\001 \002(\003\022\016\n\006shipId\030\002 \002(\003\"-\n\013UADelive" +
-      "red\022\016\n\006seqNum\030\001 \002(\003\022\016\n\006shipId\030\002 \002(\003\"8\n\003E" +
-      "rr\022\013\n\003err\030\001 \002(\t\022\024\n\014originSeqNum\030\002 \002(\003\022\016\n" +
-      "\006seqNum\030\003 \002(\003B*\n\025org.mini_amazon.protoB\021" +
-      "AmazonUPSProtocol"
+      "n\"\250\001\n\tAUCommand\0224\n\016pickupRequests\030\001 \003(\0132" +
+      "\034.mini_amazon.AUPickupRequest\0226\n\017deliver" +
+      "Requests\030\002 \003(\0132\035.mini_amazon.AUDeliverRe" +
+      "quest\022\014\n\004acks\030\003 \003(\003\022\037\n\005error\030\004 \003(\0132\020.min" +
+      "i_amazon.Err\"\231\001\n\tUACommand\0220\n\014loadReques" +
+      "ts\030\001 \003(\0132\032.mini_amazon.UALoadRequest\022+\n\t" +
+      "delivered\030\002 \003(\0132\030.mini_amazon.UADelivere" +
+      "d\022\014\n\004acks\030\003 \003(\003\022\037\n\005error\030\004 \003(\0132\020.mini_am" +
+      "azon.Err\"*\n\007UAStart\022\017\n\007worldid\030\001 \002(\005\022\016\n\006" +
+      "seqnum\030\002 \002(\003\"\210\001\n\017AUPickupRequest\022\016\n\006seqN" +
+      "um\030\001 \002(\003\022\016\n\006shipId\030\002 \002(\003\022\023\n\013warehouseId\030" +
+      "\003 \002(\003\022\t\n\001x\030\004 \002(\005\022\t\n\001y\030\005 \002(\005\022\024\n\014destinati" +
+      "onX\030\006 \002(\005\022\024\n\014destinationY\030\007 \002(\005\"@\n\rUALoa" +
+      "dRequest\022\016\n\006seqNum\030\001 \002(\003\022\017\n\007truckId\030\002 \002(" +
+      "\005\022\016\n\006shipId\030\003 \002(\003\"2\n\020AUDeliverRequest\022\016\n" +
+      "\006seqNum\030\001 \002(\003\022\016\n\006shipId\030\002 \002(\003\"-\n\013UADeliv" +
+      "ered\022\016\n\006seqNum\030\001 \002(\003\022\016\n\006shipId\030\002 \002(\003\"8\n\003" +
+      "Err\022\013\n\003err\030\001 \002(\t\022\024\n\014originSeqNum\030\002 \002(\003\022\016" +
+      "\n\006seqNum\030\003 \002(\003B*\n\025org.mini_amazon.protoB" +
+      "\021AmazonUPSProtocol"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7192,19 +7960,19 @@ public final class AmazonUPSProtocol {
     internal_static_mini_amazon_AUCommand_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_mini_amazon_AUCommand_descriptor,
-        new java.lang.String[] { "PickupRequests", "DeliverRequests", });
+        new java.lang.String[] { "PickupRequests", "DeliverRequests", "Acks", "Error", });
     internal_static_mini_amazon_UACommand_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_mini_amazon_UACommand_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_mini_amazon_UACommand_descriptor,
-        new java.lang.String[] { "LoadRequests", "Delivered", });
-    internal_static_mini_amazon_Response_descriptor =
+        new java.lang.String[] { "LoadRequests", "Delivered", "Acks", "Error", });
+    internal_static_mini_amazon_UAStart_descriptor =
       getDescriptor().getMessageTypes().get(2);
-    internal_static_mini_amazon_Response_fieldAccessorTable = new
+    internal_static_mini_amazon_UAStart_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_mini_amazon_Response_descriptor,
-        new java.lang.String[] { "Acks", "Error", });
+        internal_static_mini_amazon_UAStart_descriptor,
+        new java.lang.String[] { "Worldid", "Seqnum", });
     internal_static_mini_amazon_AUPickupRequest_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_mini_amazon_AUPickupRequest_fieldAccessorTable = new

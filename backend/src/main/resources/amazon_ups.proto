@@ -8,6 +8,8 @@ option java_outer_classname = "AmazonUPSProtocol";
 message AUCommand{
   repeated AUPickupRequest pickupRequests = 1;
   repeated AUDeliverRequest deliverRequests = 2;
+  repeated int64 acks = 3;
+  repeated Err error = 4;
 }
 
 
@@ -15,13 +17,14 @@ message AUCommand{
 message UACommand{
   repeated UALoadRequest loadRequests = 1;
   repeated UADelivered delivered = 2;
+  repeated int64 acks = 3;
+  repeated Err error = 4;
 }
 
 
-// ack response
-message Response {
-  repeated int64 acks = 3;
-  repeated Err error = 4;
+message UAStart {
+  required int32 worldid = 1;
+  required int64 seqnum = 2;
 }
 
 
