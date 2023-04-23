@@ -91,6 +91,12 @@ public class ShipmentService {
               "Cannot update shipment status from " + shipment.getStatus() + " to " + status);
     }
   }
+  @Transactional
+  public Shipment updateShipmentTruckId(long id, int truckId) throws ServiceError {
+    Shipment shipment = getShipmentById(id);
+    shipment.setTruckId(truckId);
+    return shipmentRepository.save(shipment);
+  }
 
 
   @Transactional(readOnly = true)

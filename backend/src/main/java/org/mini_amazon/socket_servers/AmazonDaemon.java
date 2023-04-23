@@ -88,35 +88,39 @@ public class AmazonDaemon {
     GPBUtil.receiveFrom(WorldAmazonProtocol.AConnected.newBuilder(), this.AWInputStream);
   }
 
-  public void initWorldSenderThread() {
-    int i = 0;
-    while (true) {
-      try {
-//        System.out.println("send");
-        Thread.sleep(3000);
-//        WorldAmazonProtocol.APurchaseMore.Builder aPurchaseMoreBuilder = WorldAmazonProtocol.APurchaseMore.newBuilder();
-//        aPurchaseMoreBuilder.setWhnum(1);
-//        aPurchaseMoreBuilder.setSeqnum(seqNum);
-//        aPurchaseMoreBuilder.addAllThings(new ArrayList<>());
-//        System.out.println(aPurchaseMoreBuilder.build());
-//        WorldAmazonProtocol.APurchaseMore message = aPurchaseMoreBuilder.build();
-//        CodedOutputStream codedOutputStream = CodedOutputStream.newInstance(outputStream);
-////      System.out.println("send: " + message);
-//        int size = message.getSerializedSize();
-//        codedOutputStream.writeUInt32NoTag(size);
-//        message.writeTo(codedOutputStream);
-//        codedOutputStream.flush();
+  public synchronized void handleAResponses(WorldAmazonProtocol.AResponses aResponses) {
+//    for (long seq : aResponses.getAcksList()) {
+////      System.out.println("receive ack, seq: " + seq);
+//      if (this.msgTracker.containsKey(seq)) {
+////        System.out.println("remove timer, seq: " + seq);
+//        this.msgTracker.get(seq).cancel();
+//        this.msgTracker.remove(seq);
+//      }
+//    }
+    this.ackHandler(aResponses.getAcksList());
+    this.sendAckToWorld(aResponses);
 
-        this.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(1, List.of(), i++)), 0);
-//        System.out.println("send finished");
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
+    aResponses.getArrivedList().forEach(this::handleAPurchaseMore);
+    aResponses.getReadyList().forEach(this::handleAPacked);
+    aResponses.getLoadedList().forEach(this::handleALoaded);
+    aResponses.getErrorList().forEach(this::handleAError);
+    aResponses.getPackagestatusList().forEach(this::handleAPackageStatus);
+
+    if (aResponses.hasFinished()) {
+      System.out.println("Amazon disconnect finished. ");
     }
   }
 
-  public synchronized void handleAResponses(WorldAmazonProtocol.AResponses aResponses) {
-    for (long seq : aResponses.getAcksList()) {
+  public synchronized void handleUACommands(AmazonUPSProtocol.UACommand uaCommands) {
+    this.ackHandler(uaCommands.getAcksList());
+    this.sendAckToUPS(uaCommands);
+//    uaCommands.getLoadRequestsList().forEach(this::handleUALoadRequest);
+//    uaCommands.getDeliveredList().forEach(this::handleUADelivered);
+//    uaCommands.getErrorList().forEach(this::handleUAError);
+  }
+
+  public synchronized void ackHandler(List<Long> acks) {
+    for (long seq : acks) {
 //      System.out.println("receive ack, seq: " + seq);
       if (this.msgTracker.containsKey(seq)) {
 //        System.out.println("remove timer, seq: " + seq);
@@ -124,26 +128,11 @@ public class AmazonDaemon {
         this.msgTracker.remove(seq);
       }
     }
-    sendAckToWorld(aResponses);
-    //TODO
-//    System.out.println("test+"+ aResponses.getArrivedList());
-
-    aResponses.getArrivedList().forEach(this::handleAPurchaseMore);
-    aResponses.getReadyList().forEach(this::handleAPacked);
-//    aResponses.getLoadedList().forEach(r -> new ALoadedConsumer().accept(r));
-//    aResponses.getErrorList().forEach(r -> new AErrConsumer().accept(r));
-//    aResponses.getPackagestatusList().forEach(r -> new APackageConsumer().accept(r));
-
-    if (aResponses.hasFinished()) {
-      System.out.println("Amazon disconnect finished. ");
-    }
   }
 
   @Async("taskExecutor1")
   // arrived
   public void handleAPurchaseMore(WorldAmazonProtocol.APurchaseMore aPurchaseMore) {
-//    System.out.println("Received APurchaseMore: " + aPurchaseMore);
-
     List<WorldAmazonProtocol.AProduct> aProducts = aPurchaseMore.getThingsList();
     Shipment shipment;
     try {
@@ -177,6 +166,8 @@ public class AmazonDaemon {
       this.sendLoadRequest(List.of(AMessageBuilder.createAPutOnTruck(shipment.getWarehouse().getId(), truckId, shipment.getId(), seqNum)), seqNum);
     }
     // TODO: send ups
+//    long newSeqNum = this.getSeqNum();
+//    this.sendQueryRequest(List.of(AMessageBuilder.createAQuery(shipment.getId(), newSeqNum)), newSeqNum);
 
   }
 
@@ -196,6 +187,16 @@ public class AmazonDaemon {
     } catch (ServiceError e) {
       e.printStackTrace();
     }
+  }
+
+  @Async("taskExecutor1")
+  public void handleAError(WorldAmazonProtocol.AErr aError) {
+    System.out.println("Amazon error: " + aError);
+  }
+
+  @Async("taskExecutor1")
+  public void handleAPackageStatus(WorldAmazonProtocol.APackage aPackageStatus) {
+    System.out.println("Amazon package status: " + aPackageStatus);
   }
 
 
@@ -252,6 +253,19 @@ public class AmazonDaemon {
     }
   }
 
+  public void sendAckToUPS(AmazonUPSProtocol.UACommand responses) {
+    List<Long> acks = new ArrayList<>();
+    acks.addAll(responses.getLoadRequestsList().stream().map(AmazonUPSProtocol.UALoadRequest::getSeqNum).toList());
+    acks.addAll(responses.getDeliveredList().stream().map(AmazonUPSProtocol.UADelivered::getSeqNum).toList());
+    acks.addAll(responses.getErrorList().stream().map(AmazonUPSProtocol.Err::getSeqNum).toList());
+
+    if (!acks.isEmpty()) {
+      AmazonUPSProtocol.AUCommand.Builder aCommands = AmazonUPSProtocol.AUCommand.newBuilder();
+      aCommands.addAllAcks(acks);
+      this.sendToUPS(aCommands.build());
+    }
+  }
+
   private void sendToWorld(WorldAmazonProtocol.AConnect aConnect) {
     this.sendTo(aConnect, this.AWOutputStream);
   }
@@ -290,5 +304,4 @@ public class AmazonDaemon {
     }, 0, TIME_OUT);
     this.msgTracker.put(seqNum, timer);
   }
-
 }
