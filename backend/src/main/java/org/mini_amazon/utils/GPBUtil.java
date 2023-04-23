@@ -35,10 +35,6 @@ public class GPBUtil {
   public static <T extends Message.Builder> boolean receiveFrom(T response, InputStream in) {
     try {
       CodedInputStream codedInputStream = CodedInputStream.newInstance(in);
-//      int len = codedInputStream.readRawVarint32();
-//      int oldLimit = codedInputStream.pushLimit(len);
-//      response.mergeFrom(codedInputStream);
-//      codedInputStream.popLimit(oldLimit);
       response.mergeFrom(codedInputStream.readByteArray());
 
       if (Config.DEBUG) {

@@ -35,6 +35,8 @@ public class Shipment {
   @Column(nullable = false)
   private double totalPrice;
 
+  private Integer truckId;
+
   @Column(nullable = false)
   private int destinationX;
   @Column(nullable = false)
@@ -53,6 +55,25 @@ public class Shipment {
 
   @Enumerated(EnumType.STRING)
   private ShipmentStatus status;
+
+  public boolean canUpdatedTo(ShipmentStatus status) {
+    return switch (status) {
+      case PENDING -> true;
+      case PACKED -> this.status == ShipmentStatus.PENDING;
+      case LOADED -> this.status == ShipmentStatus.PACKED;
+      case SHIPPING -> this.status == ShipmentStatus.LOADED;
+      case DELIVERED -> this.status == ShipmentStatus.SHIPPING;
+      case CANCELLED -> this.status != ShipmentStatus.DELIVERED;
+    };
+  }
+
+  public Integer getTruckId() {
+    return truckId;
+  }
+
+  public void setTruckId(Integer truckId) {
+    this.truckId = truckId;
+  }
 
   public Long getId() {
     return id;
@@ -144,6 +165,7 @@ public class Shipment {
            "id=" + id +
            ", destinationX=" + destinationX +
            ", destinationY=" + destinationY +
+           ", truckId=" + truckId +
 //           ", orders=" + Objects.requireNonNullElse(orders,"") +
            ", status=" + status +
            '}';

@@ -80,13 +80,25 @@ public class ShipmentService {
     return shipment;
   }
 
+  @Transactional
+  public Shipment updateShipmentStatus(long id, ShipmentStatus status) throws ServiceError {
+    Shipment shipment = getShipmentById(id);
+    if (shipment.canUpdatedTo(status)) {
+      shipment.setStatus(status);
+      return shipmentRepository.save(shipment);
+    } else {
+      throw new ServiceError(
+              "Cannot update shipment status from " + shipment.getStatus() + " to " + status);
+    }
+  }
+
 
   @Transactional(readOnly = true)
   public Shipment getPendingShipmentBySameOrder(WorldAmazonProtocol.APurchaseMore aPurchaseMore) throws ServiceError {
 
     List<Shipment> shipments = shipmentRepository.findShipmentsByStatusAndWarehouseId(ShipmentStatus.PENDING, aPurchaseMore.getWhnum());
 //    System.out.println("all shipments: " + shipmentRepository.findAll());
-    System.out.println("shipments: " + shipments);
+//    System.out.println("shipments: " + shipments);
     if (shipments.isEmpty()) {
       // never reach here
       throw new ServiceError("No such shipment");
@@ -112,8 +124,8 @@ public class ShipmentService {
       }
       List<Order> shipmentOrders = shipment.getOrders();
       shipmentOrders.sort((o1, o2) -> (int) (o1.getItem().getId() - o2.getItem().getId()));
-      System.out.println("shipmentOrders: " + shipmentOrders);
-      System.out.println("orders: " + orders);
+//      System.out.println("shipmentOrders: " + shipmentOrders);
+//      System.out.println("orders: " + orders);
       if (ifShipmentOrdersEqualOrders(shipmentOrders, orders)) {
         return shipment;
       }

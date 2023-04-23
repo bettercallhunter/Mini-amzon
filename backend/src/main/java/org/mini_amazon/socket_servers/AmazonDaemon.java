@@ -2,15 +2,16 @@ package org.mini_amazon.socket_servers;
 
 import com.google.protobuf.Message;
 
+import org.mini_amazon.enums.ShipmentStatus;
 import org.mini_amazon.errors.ServiceError;
 import org.mini_amazon.models.Shipment;
 import org.mini_amazon.models.Warehouse;
+import org.mini_amazon.proto.AmazonUPSProtocol;
 import org.mini_amazon.proto.WorldAmazonProtocol;
 import org.mini_amazon.services.ShipmentService;
 import org.mini_amazon.services.WarehouseService;
 import org.mini_amazon.utils.AMessageBuilder;
 import org.mini_amazon.utils.GPBUtil;
-import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -39,12 +40,12 @@ public class AmazonDaemon {
 //  //Server Communicate with World
   private final Socket AWSocket;
   private final Socket AUSocket;
-  //  InputStream inputStream;
-//  public final CodedInputStream aWcodedInputStream;
   public final InputStream AWInputStream;
-  public final OutputStream AWoutputStream;
+  public final OutputStream AWOutputStream;
+
+  public final InputStream AUInputStream;
+  public final OutputStream AUOutputStream;
   private final Map<Long, Timer> msgTracker;
-  //  private final Map<Long, Shipment> pendingShipmentTracker;
   private long seqNum;
 
   //  BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(100);
@@ -59,14 +60,13 @@ public class AmazonDaemon {
       this.AWSocket = new Socket(WORLD_HOST, WORLD_PORT);
 //      this.AUSocket = new Socket(upsHost, upsPort);
       this.AUSocket = null;
+      this.AUInputStream = null;
+      this.AUOutputStream = null;
 
       this.AWInputStream = this.AWSocket.getInputStream();
-      this.AWoutputStream = this.AWSocket.getOutputStream();
+      this.AWOutputStream = this.AWSocket.getOutputStream();
       this.msgTracker = new ConcurrentHashMap<>();
-//      this.pendingShipmentTracker = new ConcurrentHashMap<>();
       this.seqNum = 0;
-//      this.connect();
-
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -77,7 +77,6 @@ public class AmazonDaemon {
       WorldAmazonProtocol.AResponses.Builder responses = WorldAmazonProtocol.AResponses.newBuilder();
       GPBUtil.receiveFrom(responses, AmazonDaemon.this.AWInputStream);
       this.handleAResponses(responses.build());
-
     }
   }
 
@@ -116,32 +115,6 @@ public class AmazonDaemon {
     }
   }
 
-  //  @Async
-  public void initWorldReceiverThread() {
-//    System.out.println("initWorldReceiverThread");
-//    Thread recvThread = new Thread(() -> {
-
-//      while (!Thread.currentThread().isInterrupted()) {
-//    this.executor.execute(() -> {
-    while (true) {
-//      try {
-//        WorldAmazonProtocol.AResponses.Bu aResponses =WorldAmazonProtocol.AResponses.newBuilder();
-      GPBUtil.receiveFrom(WorldAmazonProtocol.AConnected.newBuilder(), this.AWInputStream);
-//        System.out.println(aResponses);
-
-//          this.handleAResponses(aResponses);
-//          System.out.println("thread started");
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//      }
-    }
-//    });
-//      }
-//    });
-//    recvThread.start();
-  }
-
-
   public synchronized void handleAResponses(WorldAmazonProtocol.AResponses aResponses) {
     for (long seq : aResponses.getAcksList()) {
 //      System.out.println("receive ack, seq: " + seq);
@@ -156,7 +129,7 @@ public class AmazonDaemon {
 //    System.out.println("test+"+ aResponses.getArrivedList());
 
     aResponses.getArrivedList().forEach(this::handleAPurchaseMore);
-//    aResponses.getReadyList().forEach(r -> new APackedConsumer().accept(r));
+    aResponses.getReadyList().forEach(this::handleAPacked);
 //    aResponses.getLoadedList().forEach(r -> new ALoadedConsumer().accept(r));
 //    aResponses.getErrorList().forEach(r -> new AErrConsumer().accept(r));
 //    aResponses.getPackagestatusList().forEach(r -> new APackageConsumer().accept(r));
@@ -167,11 +140,12 @@ public class AmazonDaemon {
   }
 
   @Async("taskExecutor1")
+  // arrived
   public void handleAPurchaseMore(WorldAmazonProtocol.APurchaseMore aPurchaseMore) {
 //    System.out.println("Received APurchaseMore: " + aPurchaseMore);
 
     List<WorldAmazonProtocol.AProduct> aProducts = aPurchaseMore.getThingsList();
-    Shipment shipment = null;
+    Shipment shipment;
     try {
       shipment = shipmentService.getPendingShipmentBySameOrder(aPurchaseMore);
     } catch (ServiceError e) {
@@ -179,15 +153,50 @@ public class AmazonDaemon {
       e.printStackTrace();
       return;
     }
-
-    WorldAmazonProtocol.APack aPack = AMessageBuilder.createAPack(aPurchaseMore.getWhnum(), aProducts, shipment.getId(), aPurchaseMore.getSeqnum());
-    this.sendToPackRequest(List.of(aPack), this.getSeqNum());
+    long seqNum = this.getSeqNum();
+    WorldAmazonProtocol.APack aPack = AMessageBuilder.createAPack(aPurchaseMore.getWhnum(), aProducts, shipment.getId(), seqNum);
+    this.sendToPackRequest(List.of(aPack), seqNum);
+//    long newSeqNum = this.getSeqNum();
+//    this.sendQueryRequest(List.of(AMessageBuilder.createAQuery(shipment.getId(), newSeqNum)), newSeqNum);
+    //TODO:send ups
   }
-  //  @Async("gpbReceiverExecutor")
-//  @Async("taskExecutor2")
-//  @PostConstruct
-//  @Async
-//  @PostConstruct
+
+  @Async("taskExecutor1")
+  // ready
+  public void handleAPacked(WorldAmazonProtocol.APacked aPacked) {
+    Shipment shipment;
+    try {
+      shipment = shipmentService.updateShipmentStatus(aPacked.getShipid(), ShipmentStatus.PACKED);
+    } catch (ServiceError e) {
+      e.printStackTrace();
+      return;
+    }
+    long seqNum = this.getSeqNum();
+    Integer truckId = shipment.getTruckId();
+    if (truckId != null) {
+      this.sendLoadRequest(List.of(AMessageBuilder.createAPutOnTruck(shipment.getWarehouse().getId(), truckId, shipment.getId(), seqNum)), seqNum);
+    }
+    // TODO: send ups
+
+  }
+
+  @Async("taskExecutor1")
+  public void handleALoaded(WorldAmazonProtocol.ALoaded aLoaded) {
+    Shipment shipment;
+    try {
+      shipment = shipmentService.updateShipmentStatus(aLoaded.getShipid(), ShipmentStatus.LOADED);
+    } catch (ServiceError e) {
+      e.printStackTrace();
+      return;
+    }
+    long seqNum = this.getSeqNum();
+    // TODO: send ups
+    try {
+      shipment = shipmentService.updateShipmentStatus(aLoaded.getShipid(), ShipmentStatus.SHIPPING);
+    } catch (ServiceError e) {
+      e.printStackTrace();
+    }
+  }
 
 
   public synchronized long getSeqNum() {
@@ -197,10 +206,6 @@ public class AmazonDaemon {
   @Async("taskExecutor1")
   public void sendBuyRequest(List<WorldAmazonProtocol.APurchaseMore> aPurchaseMores, long seqNum) {
     WorldAmazonProtocol.ACommands aCommands = WorldAmazonProtocol.ACommands.newBuilder().addAllBuy(aPurchaseMores).build();
-//    for (WorldAmazonProtocol.APurchaseMore aPurchaseMore : aPurchaseMores) {
-//
-//      this.pendingShipmentTracker.put(aPurchaseMore.get, aPurchaseMores);
-//    }
     this.sendToWorld(aCommands, seqNum);
   }
 
@@ -248,63 +253,42 @@ public class AmazonDaemon {
   }
 
   private void sendToWorld(WorldAmazonProtocol.AConnect aConnect) {
-    synchronized (AmazonDaemon.this) {
-      GPBUtil.send(aConnect, AmazonDaemon.this.AWoutputStream);
-    }
+    this.sendTo(aConnect, this.AWOutputStream);
   }
 
   private void sendToWorld(WorldAmazonProtocol.ACommands command) {
-    synchronized (AmazonDaemon.this) {
-      GPBUtil.send(command, AmazonDaemon.this.AWoutputStream);
-    }
+    this.sendTo(command, this.AWOutputStream);
   }
 
   private void sendToWorld(WorldAmazonProtocol.ACommands command, long seq) {
+    this.sendTo(command, this.AWOutputStream, seq);
+  }
+
+  private void sendToUPS(AmazonUPSProtocol.AUCommand command) {
+    sendTo(command, this.AUOutputStream);
+  }
+
+  private void sendToUPS(AmazonUPSProtocol.AUCommand command, long seq) {
+    this.sendTo(command, this.AUOutputStream, seq);
+  }
+
+  private void sendTo(Message message, OutputStream outputStream) {
+    synchronized (AmazonDaemon.this) {
+      GPBUtil.send(message, outputStream);
+    }
+  }
+
+  private void sendTo(Message message, OutputStream outputStream, long seqNum) {
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
         synchronized (AmazonDaemon.this) {
-          GPBUtil.send(command, AmazonDaemon.this.AWoutputStream);
+          GPBUtil.send(message, outputStream);
         }
       }
     }, 0, TIME_OUT);
-    this.msgTracker.put(seq, timer);
+    this.msgTracker.put(seqNum, timer);
   }
-
-
-  //   main
-  public static void main(String[] args) {
-    AmazonDaemon amazonDaemon = new AmazonDaemon();
-//    try {
-//    amazonDaemon.run();
-//    amazonDaemon.thre
-//
-//    amazonDaemon.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(1, List.of(), 0)));
-//    amazonDaemon.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(1, List.of(), 0)));
-//    amazonDaemon.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(1, List.of(), 0)));
-//    amazonDaemon.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(1, List.of(), 0)));
-//    amazonDaemon.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(1, List.of(), 0)));
-//    amazonDaemon.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(1, List.of(), 0)));
-//    new Thread(() -> {
-//      try {
-//        while (true) {
-//          Thread.sleep(1000);
-//          System.out.println("send buy request");
-//
-//        }
-//      } catch (InterruptedException e) {
-//        e.printStackTrace();
-//      }
-//    }).start();
-//    amazonDaemon.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(1, List.of(), 0)));
-//      System.out.println(aConnected);
-//      return aConnected.toBuilder();
-//    } catch (IOException e) {
-//      throw new RuntimeException(e);
-//    }
-
-  }
-
 
 }

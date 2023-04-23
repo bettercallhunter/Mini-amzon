@@ -49,4 +49,6 @@ public class ShipmentController {
     amazonDaemon.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(shipment.getWarehouse().getId(), products, seqNum)), seqNum);
     return ResponseEntity.ok().body(shipment);
   }
+
+
 }
