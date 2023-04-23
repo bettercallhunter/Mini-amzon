@@ -54,7 +54,7 @@ public class Ups {
     UConnect connectMsg = connect.build();
     GPBUtil.send(connectMsg, out);
     seqNum++;
-    GPBUtil.receiveFrom(connected, CodedInputStream.newInstance(in));
+    GPBUtil.receive(connected, CodedInputStream.newInstance(in));
     UConnected connectedMsg = connected.build();
   }
 
