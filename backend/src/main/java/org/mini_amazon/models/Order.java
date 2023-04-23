@@ -8,6 +8,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -40,7 +41,8 @@ public class Order {
 
   //temp remove these for testing
   @JsonIgnore
-  @ManyToOne(cascade = {CascadeType.ALL})
+  @ManyToOne
+//  @JoinColumn(name = "shipment_id", insertable=false, updatable=false)
   private Shipment shipment;
 
 //  @ManyToOne(cascade = {CascadeType.ALL})
@@ -96,7 +98,7 @@ public class Order {
            ", item=" + item +
            ", quantity=" + quantity +
            ", status=" + status +
-           ", shipment=" + shipment +
+           ", shipmentId=" + (shipment == null ? null : shipment.getId()) +
            '}';
   }
 

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Set;
 
-public interface ShipmentRepository extends JpaRepository<Shipment, String> {
+public interface ShipmentRepository extends JpaRepository<Shipment, Long> {
 
   Shipment findUnfinishedShipmentById(long id);
 

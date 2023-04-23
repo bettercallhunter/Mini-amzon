@@ -1,6 +1,5 @@
 package org.mini_amazon.services;
 
-import org.hibernate.sql.ast.tree.expression.Collation;
 import org.mini_amazon.controllers.OrderController;
 import org.mini_amazon.enums.ShipmentStatus;
 import org.mini_amazon.errors.ServiceError;
@@ -9,16 +8,12 @@ import org.mini_amazon.models.Order;
 import org.mini_amazon.models.Shipment;
 import org.mini_amazon.models.Warehouse;
 import org.mini_amazon.proto.WorldAmazonProtocol;
+import org.mini_amazon.repositories.OrderRepository;
 import org.mini_amazon.repositories.ShipmentRepository;
-import org.mini_amazon.socket_servers.AmazonDaemon;
-import org.springframework.data.util.Pair;
-import org.springframework.lang.NonNull;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -39,7 +34,7 @@ public class ShipmentService {
 
 
   @Transactional(readOnly = true)
-  public Shipment getShipmentById(String id) throws ServiceError {
+  public Shipment getShipmentById(long id) throws ServiceError {
     Optional<Shipment> shipment = shipmentRepository.findById(id);
     if (shipment.isEmpty()) {
       throw new ServiceError("Shipment does not exist.");
@@ -47,6 +42,9 @@ public class ShipmentService {
       return shipment.get();
     }
   }
+
+  @Resource
+  private OrderRepository orderRepository;
 
 
   @Transactional
@@ -58,14 +56,17 @@ public class ShipmentService {
     Warehouse warehouse = warehouseService.getWarehouseByDestination(destinationX, destinationY);
     List<Order> orders = new ArrayList<>();
     double totalPrice = 0;
+    Shipment newShipment = new Shipment();
     for (OrderController.OrderRequest orderPair : orderRequests) {
       Order order = orderService.createOrder(orderPair.itemId(), orderPair.quantity());
-
+//      Order order = new Order();
+//      order.setItem(itemService.getItemById(orderPair.itemId()));
+//      order.setQuantity(orderPair.quantity());
       orders.add(order);
+//      Order order =
       totalPrice += order.getItem().getUnitPrice() * order.getQuantity();
     }
-    Shipment newShipment = new Shipment();
-    newShipment.setOrders(orders);
+
     newShipment.setDestinationX(destinationX);
     newShipment.setDestinationY(destinationY);
     newShipment.setTotalPrice(totalPrice);
@@ -74,9 +75,8 @@ public class ShipmentService {
     Shipment shipment = shipmentRepository.save(newShipment);
     for (Order order : orders) {
       order.setShipment(shipment);
-//      orderRepository.save(order);
-//      orderService.updateOrder(order.getId(), order);
     }
+    orderRepository.saveAll(orders);
     return shipment;
   }
 
@@ -85,35 +85,58 @@ public class ShipmentService {
   public Shipment getPendingShipmentBySameOrder(WorldAmazonProtocol.APurchaseMore aPurchaseMore) throws ServiceError {
 
     List<Shipment> shipments = shipmentRepository.findShipmentsByStatusAndWarehouseId(ShipmentStatus.PENDING, aPurchaseMore.getWhnum());
-    System.out.println("all shipments: " + shipmentRepository.findAll());
+//    System.out.println("all shipments: " + shipmentRepository.findAll());
     System.out.println("shipments: " + shipments);
     if (shipments.isEmpty()) {
       // never reach here
-      return null;
+      throw new ServiceError("No such shipment");
     }
     List<WorldAmazonProtocol.AProduct> aProducts = aPurchaseMore.getThingsList();
     List<Order> orders = new ArrayList<>();
     for (WorldAmazonProtocol.AProduct p : aProducts) {
       Item item = itemService.getItemById(p.getId());
       Order order = new Order();
-      order.setId(p.getId());
+//      order.setId(p.getId());
       order.setQuantity(p.getCount());
       order.setItem(item);
       orders.add(order);
     }
-    orders.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
+    return findShipmentMatchByOrders(shipments, orders);
+  }
+
+  private Shipment findShipmentMatchByOrders(List<Shipment> shipments, List<Order> orders) throws ServiceError {
+    orders.sort((o1, o2) -> (int) (o1.getItem().getId() - o2.getItem().getId()));
     for (Shipment shipment : shipments) {
+      if (shipment.getOrders().size() != orders.size()) {
+        continue;
+      }
       List<Order> shipmentOrders = shipment.getOrders();
-      shipmentOrders.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
+      shipmentOrders.sort((o1, o2) -> (int) (o1.getItem().getId() - o2.getItem().getId()));
       System.out.println("shipmentOrders: " + shipmentOrders);
       System.out.println("orders: " + orders);
-      if (shipmentOrders.equals(orders)) {
+      if (ifShipmentOrdersEqualOrders(shipmentOrders, orders)) {
         return shipment;
       }
     }
     throw new ServiceError("No such shipment");
   }
 
+  // two list are sorted
+  private boolean ifShipmentOrdersEqualOrders(List<Order> shipmentOrders, List<Order> orders) {
+    for (int i = 0; i < shipmentOrders.size(); i++) {
+      if (!ifTwoOrderContainsSameItem(shipmentOrders.get(i), orders.get(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
 
+  private boolean ifTwoOrderContainsSameItem(Order o1, Order o2) {
+    return o1.getItem().getId() == o2.getItem().getId() && o1.getQuantity() == o2.getQuantity()
+           && o1.getItem().getDescription().equals(o2.getItem().getDescription());
+  }
 }
+
+
+
 

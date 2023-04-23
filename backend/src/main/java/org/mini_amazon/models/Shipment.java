@@ -44,7 +44,7 @@ public class Shipment {
 //  @Column(nullable = false)
   private Warehouse warehouse;
 
-  @OneToMany(mappedBy = "shipment", cascade = {CascadeType.ALL})
+  @OneToMany(mappedBy = "shipment", cascade = {CascadeType.ALL}, orphanRemoval = true)
   @Column(nullable = false)
   private List<Order> orders;
 
@@ -144,7 +144,7 @@ public class Shipment {
            "id=" + id +
            ", destinationX=" + destinationX +
            ", destinationY=" + destinationY +
-           ", orders=" + orders +
+//           ", orders=" + Objects.requireNonNullElse(orders,"") +
            ", status=" + status +
            '}';
   }

@@ -23,6 +23,8 @@ public class OrderService {
   private OrderRepository orderRepository;
   @Resource
   private ItemService itemService;
+//  @Resource
+//  private ShipmentService shipmentService;
 
   @Transactional(readOnly = true)
   public Page<Order> listOrders(Integer pageNo, Integer pageSize, String... sortBy) {
@@ -33,13 +35,14 @@ public class OrderService {
 
   }
 
-  @Transactional
+  @Transactional// long shipmentId
   public Order createOrder(long itemId, int quantity) throws ServiceError {
     Item item = itemService.getItemById(itemId);
     Order newOrder = new Order();
     newOrder.setItem(item);
     newOrder.setQuantity(quantity);
     newOrder.setStatus(OrderStatus.PROCESSING);
+//    newOrder.setShipment(shipmentService.getShipmentById(shipmentId));
     return orderRepository.save(newOrder);
   }
 
