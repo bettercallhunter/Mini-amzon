@@ -3447,15 +3447,15 @@ public final class AmazonUPSProtocol {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required int32 worldid = 1;</code>
+     * <code>required int64 worldid = 1;</code>
      * @return Whether the worldid field is set.
      */
     boolean hasWorldid();
     /**
-     * <code>required int32 worldid = 1;</code>
+     * <code>required int64 worldid = 1;</code>
      * @return The worldid.
      */
-    int getWorldid();
+    long getWorldid();
 
     /**
      * <code>required int64 seqnum = 2;</code>
@@ -3505,9 +3505,9 @@ public final class AmazonUPSProtocol {
 
     private int bitField0_;
     public static final int WORLDID_FIELD_NUMBER = 1;
-    private int worldid_ = 0;
+    private long worldid_ = 0L;
     /**
-     * <code>required int32 worldid = 1;</code>
+     * <code>required int64 worldid = 1;</code>
      * @return Whether the worldid field is set.
      */
     @java.lang.Override
@@ -3515,11 +3515,11 @@ public final class AmazonUPSProtocol {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>required int32 worldid = 1;</code>
+     * <code>required int64 worldid = 1;</code>
      * @return The worldid.
      */
     @java.lang.Override
-    public int getWorldid() {
+    public long getWorldid() {
       return worldid_;
     }
 
@@ -3565,7 +3565,7 @@ public final class AmazonUPSProtocol {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
-        output.writeInt32(1, worldid_);
+        output.writeInt64(1, worldid_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         output.writeInt64(2, seqnum_);
@@ -3581,7 +3581,7 @@ public final class AmazonUPSProtocol {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, worldid_);
+          .computeInt64Size(1, worldid_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
@@ -3625,7 +3625,8 @@ public final class AmazonUPSProtocol {
       hash = (19 * hash) + getDescriptor().hashCode();
       if (hasWorldid()) {
         hash = (37 * hash) + WORLDID_FIELD_NUMBER;
-        hash = (53 * hash) + getWorldid();
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getWorldid());
       }
       if (hasSeqnum()) {
         hash = (37 * hash) + SEQNUM_FIELD_NUMBER;
@@ -3761,7 +3762,7 @@ public final class AmazonUPSProtocol {
       public Builder clear() {
         super.clear();
         bitField0_ = 0;
-        worldid_ = 0;
+        worldid_ = 0L;
         seqnum_ = 0L;
         return this;
       }
@@ -3859,7 +3860,7 @@ public final class AmazonUPSProtocol {
                 done = true;
                 break;
               case 8: {
-                worldid_ = input.readInt32();
+                worldid_ = input.readInt64();
                 bitField0_ |= 0x00000001;
                 break;
               } // case 8
@@ -3885,9 +3886,9 @@ public final class AmazonUPSProtocol {
       }
       private int bitField0_;
 
-      private int worldid_ ;
+      private long worldid_ ;
       /**
-       * <code>required int32 worldid = 1;</code>
+       * <code>required int64 worldid = 1;</code>
        * @return Whether the worldid field is set.
        */
       @java.lang.Override
@@ -3895,19 +3896,19 @@ public final class AmazonUPSProtocol {
         return ((bitField0_ & 0x00000001) != 0);
       }
       /**
-       * <code>required int32 worldid = 1;</code>
+       * <code>required int64 worldid = 1;</code>
        * @return The worldid.
        */
       @java.lang.Override
-      public int getWorldid() {
+      public long getWorldid() {
         return worldid_;
       }
       /**
-       * <code>required int32 worldid = 1;</code>
+       * <code>required int64 worldid = 1;</code>
        * @param value The worldid to set.
        * @return This builder for chaining.
        */
-      public Builder setWorldid(int value) {
+      public Builder setWorldid(long value) {
 
         worldid_ = value;
         bitField0_ |= 0x00000001;
@@ -3915,12 +3916,12 @@ public final class AmazonUPSProtocol {
         return this;
       }
       /**
-       * <code>required int32 worldid = 1;</code>
+       * <code>required int64 worldid = 1;</code>
        * @return This builder for chaining.
        */
       public Builder clearWorldid() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        worldid_ = 0;
+        worldid_ = 0L;
         onChanged();
         return this;
       }
@@ -4055,15 +4056,15 @@ public final class AmazonUPSProtocol {
     long getShipId();
 
     /**
-     * <code>required int64 warehouseId = 3;</code>
+     * <code>required int32 warehouseId = 3;</code>
      * @return Whether the warehouseId field is set.
      */
     boolean hasWarehouseId();
     /**
-     * <code>required int64 warehouseId = 3;</code>
+     * <code>required int32 warehouseId = 3;</code>
      * @return The warehouseId.
      */
-    long getWarehouseId();
+    int getWarehouseId();
 
     /**
      * <pre>
@@ -4204,9 +4205,9 @@ public final class AmazonUPSProtocol {
     }
 
     public static final int WAREHOUSEID_FIELD_NUMBER = 3;
-    private long warehouseId_ = 0L;
+    private int warehouseId_ = 0;
     /**
-     * <code>required int64 warehouseId = 3;</code>
+     * <code>required int32 warehouseId = 3;</code>
      * @return Whether the warehouseId field is set.
      */
     @java.lang.Override
@@ -4214,11 +4215,11 @@ public final class AmazonUPSProtocol {
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>required int64 warehouseId = 3;</code>
+     * <code>required int32 warehouseId = 3;</code>
      * @return The warehouseId.
      */
     @java.lang.Override
-    public long getWarehouseId() {
+    public int getWarehouseId() {
       return warehouseId_;
     }
 
@@ -4363,7 +4364,7 @@ public final class AmazonUPSProtocol {
         output.writeInt64(2, shipId_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
-        output.writeInt64(3, warehouseId_);
+        output.writeInt32(3, warehouseId_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
         output.writeInt32(4, x_);
@@ -4396,7 +4397,7 @@ public final class AmazonUPSProtocol {
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(3, warehouseId_);
+          .computeInt32Size(3, warehouseId_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
         size += com.google.protobuf.CodedOutputStream
@@ -4487,8 +4488,7 @@ public final class AmazonUPSProtocol {
       }
       if (hasWarehouseId()) {
         hash = (37 * hash) + WAREHOUSEID_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-            getWarehouseId());
+        hash = (53 * hash) + getWarehouseId();
       }
       if (hasX()) {
         hash = (37 * hash) + X_FIELD_NUMBER;
@@ -4641,7 +4641,7 @@ public final class AmazonUPSProtocol {
         bitField0_ = 0;
         seqNum_ = 0L;
         shipId_ = 0L;
-        warehouseId_ = 0L;
+        warehouseId_ = 0;
         x_ = 0;
         y_ = 0;
         destinationX_ = 0;
@@ -4802,7 +4802,7 @@ public final class AmazonUPSProtocol {
                 break;
               } // case 16
               case 24: {
-                warehouseId_ = input.readInt64();
+                warehouseId_ = input.readInt32();
                 bitField0_ |= 0x00000004;
                 break;
               } // case 24
@@ -4923,9 +4923,9 @@ public final class AmazonUPSProtocol {
         return this;
       }
 
-      private long warehouseId_ ;
+      private int warehouseId_ ;
       /**
-       * <code>required int64 warehouseId = 3;</code>
+       * <code>required int32 warehouseId = 3;</code>
        * @return Whether the warehouseId field is set.
        */
       @java.lang.Override
@@ -4933,19 +4933,19 @@ public final class AmazonUPSProtocol {
         return ((bitField0_ & 0x00000004) != 0);
       }
       /**
-       * <code>required int64 warehouseId = 3;</code>
+       * <code>required int32 warehouseId = 3;</code>
        * @return The warehouseId.
        */
       @java.lang.Override
-      public long getWarehouseId() {
+      public int getWarehouseId() {
         return warehouseId_;
       }
       /**
-       * <code>required int64 warehouseId = 3;</code>
+       * <code>required int32 warehouseId = 3;</code>
        * @param value The warehouseId to set.
        * @return This builder for chaining.
        */
-      public Builder setWarehouseId(long value) {
+      public Builder setWarehouseId(int value) {
 
         warehouseId_ = value;
         bitField0_ |= 0x00000004;
@@ -4953,12 +4953,12 @@ public final class AmazonUPSProtocol {
         return this;
       }
       /**
-       * <code>required int64 warehouseId = 3;</code>
+       * <code>required int32 warehouseId = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearWarehouseId() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        warehouseId_ = 0L;
+        warehouseId_ = 0;
         onChanged();
         return this;
       }
@@ -7938,10 +7938,10 @@ public final class AmazonUPSProtocol {
       "ts\030\001 \003(\0132\032.mini_amazon.UALoadRequest\022+\n\t" +
       "delivered\030\002 \003(\0132\030.mini_amazon.UADelivere" +
       "d\022\014\n\004acks\030\003 \003(\003\022\037\n\005error\030\004 \003(\0132\020.mini_am" +
-      "azon.Err\"*\n\007UAStart\022\017\n\007worldid\030\001 \002(\005\022\016\n\006" +
+      "azon.Err\"*\n\007UAStart\022\017\n\007worldid\030\001 \002(\003\022\016\n\006" +
       "seqnum\030\002 \002(\003\"\210\001\n\017AUPickupRequest\022\016\n\006seqN" +
       "um\030\001 \002(\003\022\016\n\006shipId\030\002 \002(\003\022\023\n\013warehouseId\030" +
-      "\003 \002(\003\022\t\n\001x\030\004 \002(\005\022\t\n\001y\030\005 \002(\005\022\024\n\014destinati" +
+      "\003 \002(\005\022\t\n\001x\030\004 \002(\005\022\t\n\001y\030\005 \002(\005\022\024\n\014destinati" +
       "onX\030\006 \002(\005\022\024\n\014destinationY\030\007 \002(\005\"@\n\rUALoa" +
       "dRequest\022\016\n\006seqNum\030\001 \002(\003\022\017\n\007truckId\030\002 \002(" +
       "\005\022\016\n\006shipId\030\003 \002(\003\"2\n\020AUDeliverRequest\022\016\n" +

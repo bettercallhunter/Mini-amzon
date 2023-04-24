@@ -51,6 +51,8 @@ public class Shipment {
   private List<Order> orders;
 
   @ManyToOne(cascade = {CascadeType.ALL})
+  @JsonIgnore
+  // TODO
   private User owner;
 
   @Enumerated(EnumType.STRING)

@@ -1,5 +1,7 @@
 package org.mini_amazon.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -22,9 +24,6 @@ public class Item {
   @Column(nullable = false)
   private String name;
   private String description;
-  // this may not in use
-  // TODO
-//  @Deprecated
   @Column(nullable = false)
   private double unitPrice;
   @ManyToMany(cascade = {
@@ -35,6 +34,7 @@ public class Item {
   private boolean onSale;
 
   //  @ManyToOne
+//  @JsonIgnore
 //  private User seller;
   // TODO: change to user
 //  private String seller;
