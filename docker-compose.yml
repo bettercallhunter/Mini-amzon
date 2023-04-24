@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=amazon
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - data-volume:/var/lib/postgresql/data
+  backend:
+    build: ./backend
+#    command: /code/initserver.sh
+#    volumes:
+#      - ./:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+#
+volumes:
+  data-volume:
