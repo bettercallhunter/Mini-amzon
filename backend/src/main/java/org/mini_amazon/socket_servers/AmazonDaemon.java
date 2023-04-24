@@ -82,16 +82,15 @@ public class AmazonDaemon {
     }
   }
 
-  public boolean connect() {
-    List<Warehouse> warehouses = warehouseService.getAllWarehouses();
-    List<WorldAmazonProtocol.AInitWarehouse> wh = warehouses.stream()
-        .map(
-            w -> WorldAmazonProtocol.AInitWarehouse.newBuilder().setX(w.getX()).setY(w.getY()).setId(w.getId()).build())
-        .toList();
+  public void startUPSReceiverThread() {
+    while (true) {
+      AmazonUPSProtocol.UACommand.Builder responses = AmazonUPSProtocol.UACommand.newBuilder();
+      GPBUtil.receiveFrom(responses, AmazonDaemon.this.AUInputStream);
+      this.handleUACommands(responses.build());
+    }
+  }
 
-    this.connectToNewWorld(wh);
-    WorldAmazonProtocol.AConnected.Builder result = WorldAmazonProtocol.AConnected.newBuilder();
-    GPBUtil.receiveFrom(result, this.AWInputStream);
+  public boolean connect() {
 
     // Connect to UPS
     // Might need change
@@ -104,6 +103,17 @@ public class AmazonDaemon {
     System.out.println("worldId: " + worldId);
     AmazonUPSProtocol.AUCommand ack = AmazonUPSProtocol.AUCommand.newBuilder().addAcks(ackNum).build();
     GPBUtil.send(ack, this.AUOutputStream);
+    // connect warehouses
+
+    List<Warehouse> warehouses = warehouseService.getAllWarehouses();
+    List<WorldAmazonProtocol.AInitWarehouse> wh = warehouses.stream()
+        .map(
+            w -> WorldAmazonProtocol.AInitWarehouse.newBuilder().setX(w.getX()).setY(w.getY()).setId(w.getId()).build())
+        .toList();
+
+    this.connectToWorld(wh, worldId);
+    WorldAmazonProtocol.AConnected.Builder result = WorldAmazonProtocol.AConnected.newBuilder();
+    GPBUtil.receiveFrom(result, this.AWInputStream);
 
     return result.getResult().equals("connected!");
   }
@@ -329,9 +339,9 @@ public class AmazonDaemon {
     this.sendToWorld(aConnect);
   }
 
-  public void connectToWorld(Long worldId) {
+  public void connectToWorld(List<WorldAmazonProtocol.AInitWarehouse> positions, Long worldId) {
 
-    WorldAmazonProtocol.AConnect aConnect = AMessageBuilder.createNewWorld(worldId, List.of());
+    WorldAmazonProtocol.AConnect aConnect = AMessageBuilder.createNewWorld(worldId, positions);
     this.sendToWorld(aConnect);
   }
 

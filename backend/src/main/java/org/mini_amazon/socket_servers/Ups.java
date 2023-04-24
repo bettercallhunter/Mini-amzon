@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.sound.midi.SysexMessage;
+
 import org.mini_amazon.proto.AmazonUPSProtocol;
 import org.mini_amazon.proto.AmazonUPSProtocol.AUCommand;
 import org.mini_amazon.proto.AmazonUPSProtocol.AUDeliverRequest;
@@ -131,20 +133,40 @@ public class Ups {
     UResponses.Builder responses = UResponses.newBuilder();
     GPBUtil.receiveFrom(responses, in);
 
-    UFinished finished = responses.getCompletions(0);
+    UALoadRequest.Builder loadRequest = UALoadRequest.newBuilder();
+    loadRequest.setSeqNum(seqNum++);
+    loadRequest.setShipId(shipId);
+    loadRequest.setTruckId(shipId % 2 == 0 ? 1 : 2);
+    UACommand.Builder response = UACommand.newBuilder();
+    response.addLoadRequests(loadRequest);
+    GPBUtil.send(response.build(), AUout);
+
+    // UFinished finished = responses.getCompletions(0);
 
     // GPBUtil.receiveFrom(responses, CodedInputStream.newInstance(in));
 
     // with amazon
-
+    delivery(destinationX, y, destinationY);
   }
 
   public void delivery(int X, int Y, int packageid) throws IOException {
     // recv AUDeliverRequest from amazon
-    AUDeliverRequest.Builder deliverRequest = AUDeliverRequest.newBuilder();
-    GPBUtil.receiveFrom(deliverRequest, AUin);
-    deliverRequest.build();
-    long shipId = deliverRequest.getShipId();
+
+    AUCommand.Builder deliverRequest = AUCommand.newBuilder();
+    // AUDeliverRequest.Builder deliverRequest = AUDeliverRequest.newBuilder();
+    AUDeliverRequest deliverinfo;
+    while (true) {
+      try {
+
+        GPBUtil.receiveFrom(deliverRequest, AUin);
+        deliverRequest.build();
+        deliverinfo = deliverRequest.getDeliverRequests(0);
+        break;
+      } catch (Exception e) {
+        continue;
+      }
+    }
+    long shipId = deliverinfo.getShipId();
     // send ack to amazon
     AmazonUPSProtocol.UACommand confirmDeliverRequest = AmazonUPSProtocol.UACommand.newBuilder().addAcks(seqNum)
         .build();
@@ -169,7 +191,7 @@ public class Ups {
 
     // delivered
     UADelivered.Builder delivered = UADelivered.newBuilder();
-    delivered.setSeqNum(deliverRequest.getSeqNum());
+    delivered.setSeqNum(seqNum++);
     delivered.setShipId(shipId);
     GPBUtil.send(delivered.build(), AUout);
     UACommand.Builder response = UACommand.newBuilder();
@@ -185,6 +207,8 @@ public class Ups {
   public static void main(String[] args) throws Exception {
     Ups ups = new Ups();
     ups.run();
+    ups.pickUp();
+
   }
 }
 // public static final int TIME_OUT = 3000;

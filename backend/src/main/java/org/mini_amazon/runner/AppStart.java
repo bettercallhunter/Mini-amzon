@@ -21,8 +21,8 @@ public class AppStart implements ApplicationRunner {
   private ScheduledExecutorService executorService;
   @Resource
   TaskExecutor taskExecutor1;
-  //  @Resource
-//  TaskExecutor taskExecutor2;
+  // @Resource
+  // TaskExecutor taskExecutor2;
   @Resource
   AmazonDaemon amazonDaemon;
 
@@ -34,6 +34,7 @@ public class AppStart implements ApplicationRunner {
       System.exit(1);
     }
     taskExecutor1.execute(() -> amazonDaemon.startWorldReceiverThread());
-//    taskExecutor1.execute(() -> amazonDaemon.initWorldSenderThread());
+    taskExecutor1.execute(() -> amazonDaemon.startUPSReceiverThread());
+    // taskExecutor1.execute(() -> amazonDaemon.initWorldSenderThread());
   }
 }
