@@ -10,7 +10,7 @@ const Buy = () => {
     const [redirect, setRedirect] = useState(false);
     const buy = async (e) => {
         e.preventDefault();
-        const response = await fetch(`http://localhost:8000/api/buy/${id}`, {
+        const response = await fetch(`/api/buy/${id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

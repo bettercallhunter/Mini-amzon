@@ -20,7 +20,8 @@ public class UserController {
   @Resource
   private UserRepository userRepository;
 
-  record RegisterRequest(String username, String email, String password) {}
+  record RegisterRequest(String username, String email, String password) {
+  }
 
   @PostMapping("/register")
   public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
@@ -32,7 +33,8 @@ public class UserController {
     return ResponseEntity.ok("niudeniude");
   }
 
-  record LoginRequest(String username, String password) {}
+  record LoginRequest(String username, String password) {
+  }
 
   @PostMapping("/login")
   public ResponseEntity<String> login(@RequestBody LoginRequest request) {
@@ -49,10 +51,10 @@ public class UserController {
       System.out.println("token is " + token);
       // Create a cookie with the JWT token and add it to the response
       ResponseCookie cookie = ResponseCookie
-        .from("jwt", token)
-        .httpOnly(true)
-        .path("/")
-        .build();
+          .from("jwt", token)
+          .httpOnly(true)
+          .path("/")
+          .build();
       HttpHeaders headers = new HttpHeaders();
 
       headers.add(HttpHeaders.SET_COOKIE, cookie.toString());

@@ -6,7 +6,7 @@ const Orders = () => {
     const [orders, setOrders] = useState([])
     useState(() => {
         const fetchItem = async () => {
-            const response = await fetch("http://localhost:8000/api/orders", {
+            const response = await fetch("/api/orders", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: 'include'
