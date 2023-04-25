@@ -1,4 +1,4 @@
-package org.mini_amazon.utils;
+package org.mini_amazon.configs;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.mini_amazon.errors.ServiceError;

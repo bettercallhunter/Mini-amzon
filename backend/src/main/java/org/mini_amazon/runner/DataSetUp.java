@@ -1,4 +1,4 @@
-package org.mini_amazon.configs;
+package org.mini_amazon.runner;
 
 import org.mini_amazon.errors.ServiceError;
 import org.mini_amazon.models.Warehouse;

@@ -1,4 +1,4 @@
-package org.mini_amazon.configs;
+package org.mini_amazon.runner;
 
 import org.mini_amazon.socket_servers.AmazonDaemon;
 import org.springframework.boot.ApplicationArguments;
