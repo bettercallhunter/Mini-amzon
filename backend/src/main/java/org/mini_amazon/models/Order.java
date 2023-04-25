@@ -2,17 +2,14 @@ package org.mini_amazon.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.mini_amazon.enums.OrderStatus;
 
 import java.util.Objects;
@@ -39,17 +36,12 @@ public class Order {
   @Enumerated(EnumType.STRING)
   private OrderStatus status;
 
-  //temp remove these for testing
   @JsonIgnore
   @ManyToOne
-//  @JoinColumn(name = "shipment_id", insertable=false, updatable=false)
   private Shipment shipment;
 
-//  @ManyToOne(cascade = {CascadeType.ALL})
-//  private User owner;
-
-//  private String address;
-
+  @ManyToOne
+  private User owner;
 
   public Long getId() {
     return id;
@@ -91,6 +83,14 @@ public class Order {
     this.shipment = shipment;
   }
 
+  public User getOwner() {
+    return owner;
+  }
+
+  public void setOwner(User owner) {
+    this.owner = owner;
+  }
+
   @Override
   public String toString() {
     return "Order{" +
@@ -98,7 +98,7 @@ public class Order {
            ", item=" + item +
            ", quantity=" + quantity +
            ", status=" + status +
-           ", shipmentId=" + (shipment == null ? null : shipment.getId()) +
+           ", shipment=" + shipment +
            '}';
   }
 
@@ -109,11 +109,12 @@ public class Order {
     Order order = (Order) o;
     return quantity == order.quantity && Objects.equals(id, order.id)
            && Objects.equals(item, order.item) && status == order.status
-           && Objects.equals(shipment, order.shipment);
+           && Objects.equals(shipment, order.shipment)
+           && Objects.equals(owner, order.owner);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, item, quantity, status, shipment);
+    return Objects.hash(id, item, quantity, status, shipment, owner);
   }
 }

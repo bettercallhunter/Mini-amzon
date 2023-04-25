@@ -1,39 +1,65 @@
 package org.mini_amazon.models;
 
 import com.google.common.hash.Hashing;
+
+import org.mini_amazon.enums.Role;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.*;
+
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
   @Id
-  private String email;
-
   private String username;
+  private String email;
+  @Column(nullable = false)
   private String password;
-  private String salt;
+  //  private String salt;
+  private Set<Role> roles;
+
+  @OneToMany(mappedBy = "owner", cascade = {CascadeType.ALL}, orphanRemoval = true)
+  private List<Order> cart;
 
   public User(String email, String username, String password) {
-    this.email = email;
-    this.username = username;
-    this.password = password;
-    Random r = new SecureRandom();
-    byte[] Salt = new byte[20];
-    r.nextBytes(Salt);
-    this.salt = Base64.getEncoder().encodeToString(Salt);
+//    this.email = email;
+//    this.username = username;
+//    this.password = password;
+//    Random r = new SecureRandom();
+//    byte[] Salt = new byte[20];
+//    r.nextBytes(Salt);
+//    this.salt = Base64.getEncoder().encodeToString(Salt);
+//    this.roles = Set.of(Role.BUYER);
   }
 
   public User() {
-    Random r = new SecureRandom();
-    byte[] Salt = new byte[20];
-    r.nextBytes(Salt);
-    this.salt = Base64.getEncoder().encodeToString(Salt);
+//    Random r = new SecureRandom();
+//    byte[] Salt = new byte[20];
+//    r.nextBytes(Salt);
+//    this.salt = Base64.getEncoder().encodeToString(Salt);
+//    this.roles = Set.of(Role.BUYER);
+  }
+
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public String getEmail() {
@@ -44,28 +70,84 @@ public class User {
     this.email = email;
   }
 
+//  public String getSalt() {
+//    return salt;
+//  }
+//
+//  public void setSalt(String salt) {
+//    this.salt = salt;
+//  }
+
+  // from user details
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    List<GrantedAuthority> authorities = new ArrayList<>();
+    for (Role role : roles) {
+      authorities.add(new SimpleGrantedAuthority(role.name()));
+    }
+    return authorities;
+  }
+
+
+  @Override
   public String getUsername() {
-    return username;
+    return this.username;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
+  @Override
+  public String getPassword() {
+    return this.password;
   }
 
-  public boolean verifyPassword(String password) {
-    final String hashed = Hashing
-      .sha256()
-      .hashString(password + salt, StandardCharsets.UTF_8)
-      .toString();
-    return hashed.equals(this.password);
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
   }
 
-  public void setPassword(String password) {
-    final String hashed = Hashing
-      .sha256()
-      .hashString(password + salt, StandardCharsets.UTF_8)
-      .toString();
-    this.password = hashed;
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
+  }
+
+
+
+
+  public List<Order> getCart() {
+    return cart;
+  }
+
+  public void setCart(List<Order> cart) {
+    this.cart = cart;
+  }
+
+  public Set<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(Set<Role> roles) {
+    this.roles = roles;
+  }
+
+  @Override
+  public String toString() {
+    return "User{" +
+           "username='" + username + '\'' +
+           ", email='" + email + '\'' +
+           ", password='" + password + '\'' +
+           ", roles=" + roles +
+           ", cart=" + cart +
+           '}';
   }
 
   @Override
@@ -73,33 +155,15 @@ public class User {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     User user = (User) o;
-    return (
-      Objects.equals(email, user.email) &&
-      Objects.equals(username, user.username) &&
-      Objects.equals(password, user.password) &&
-      Objects.equals(salt, user.salt)
-    );
+    return Objects.equals(username, user.username)
+           && Objects.equals(email, user.email)
+           && Objects.equals(password, user.password)
+           && Objects.equals(roles, user.roles)
+           && Objects.equals(cart, user.cart);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(email, username, password);
-  }
-
-  @Override
-  public String toString() {
-    return (
-      "User{" +
-      "email='" +
-      email +
-      '\'' +
-      ", username='" +
-      username +
-      '\'' +
-      ", password='" +
-      password +
-      '\'' +
-      '}'
-    );
+    return Objects.hash(username, email, password, roles, cart);
   }
 }

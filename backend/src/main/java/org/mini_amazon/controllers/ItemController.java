@@ -51,9 +51,11 @@ public class ItemController {
   @GetMapping("/items")
   public ResponseEntity<Page<Item>> getItems(@RequestParam(defaultValue = "0") Integer page,
                                              @RequestParam(defaultValue = "10") Integer size,
+                                             @RequestParam(defaultValue = "") String search,
                                              @RequestParam(defaultValue = "id") String... sortBy) {
 //    warehouseRepository.findAll();
-    Page<Item> items = itemService.listItems(page, size, sortBy);
+    Page<Item> items = itemService.listOnSaleItems(page, size, search, sortBy);
+//    items.
     return ResponseEntity.ok().body(items);
   }
 
