@@ -5,37 +5,36 @@ import Order from "../Elements/Order";
 const FindOrder = () => {
     const [shipmentNumber, setShipmentNumber] = useState('');
     const [orders, setOrders] = useState(null);
-    // need to modify here
+
     // useEffect(() => {
-    //     if (orders !== null && orders.length >= 1) {
-    //         return (
-    //             <React.Fragment>
-    //                 {orders.map(order => <Order {...order} />)}
-    //             </React.Fragment>
-    //         )
-    //     }
+
+    //     findOrder();
     // }, []);
 
     const findOrder = async (e) => {
         e.preventDefault();
-        const response = await fetch(`/api/findShipment`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ shipmentNumber }),
-            credentials: 'include'
-        });
 
+        try {
+            const response = await fetch(`/api/findShipment`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ shipmentNumber }),
+                credentials: 'include'
+            });
 
-        if (response.status !== 200) {
-            alert('Item not found');
+            if (response.status !== 200) {
+                alert('Item not found');
+                setOrders(null);
+            } else {
+                const data = await response.json();
+                setOrders(data);
+            }
+        } catch (error) {
+            console.error(error);
         }
-        else {
-            const orderFound = await response.json();
-            setOrders(orderFound);
 
-        }
 
 
     }
@@ -49,6 +48,7 @@ const FindOrder = () => {
                 <br />
                 <button type="submit">Find</button>
             </form>
+            {orders && orders.map(order => <Order {...order} />)}
         </React.Fragment>
     )
 }
