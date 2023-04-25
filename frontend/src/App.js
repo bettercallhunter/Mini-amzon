@@ -6,6 +6,7 @@ import Index from './Pages/Index';
 import Orders from './Pages/Orders';
 import Login from './User/Login';
 import Register from './User/Register';
+import FindOrder from './Pages/FindOrder';
 function App() {
   return (
     <Router>
@@ -15,6 +16,7 @@ function App() {
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/buy/:id" element={<Buy />} />
         <Route exact path="/orders" element={<Orders />} />
+        <Route exact path="/findorder" element={<FindOrder />} />
       </Routes>
     </Router>
   );

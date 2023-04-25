@@ -14,7 +14,7 @@ import org.mini_amazon.repositories.OrderRepository;
 import org.mini_amazon.repositories.ShipmentRepository;
 import org.mini_amazon.repositories.WarehouseRepository;
 import org.mini_amazon.services.OrderService;
-import org.mini_amazon.socket_servers.AmazonDaemon;
+// import org.mini_amazon.socket_servers.AmazonDaemon;
 import org.mini_amazon.utils.AMessageBuilder;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.Page;
@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/api")
 public class OrderController {
@@ -37,12 +36,14 @@ public class OrderController {
 
   @GetMapping("/orders")
   public ResponseEntity<Page<Order>> getOrders(@RequestParam(defaultValue = "0") Integer page,
-                                               @RequestParam(defaultValue = "10") Integer size,
-                                               @RequestParam(defaultValue = "id") String... sortBy) {
+      @RequestParam(defaultValue = "10") Integer size,
+      @RequestParam(defaultValue = "id") String... sortBy) {
     // TODO: list my orders
     Page<Order> orders = orderService.listOrders(page, size, sortBy);
     return ResponseEntity.ok().body(orders);
   }
+
+  
 
   public record OrderRequest(long itemId, int quantity) {
   }

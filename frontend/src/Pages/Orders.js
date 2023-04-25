@@ -11,8 +11,8 @@ const Orders = () => {
                 headers: { "Content-Type": "application/json" },
                 credentials: 'include'
             })
-            const orders = await response.json();
-            setOrders(orders);
+            const order = await response.json();
+            setOrders(order.content);
         }
         fetchItem();
 

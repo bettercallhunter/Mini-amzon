@@ -9,13 +9,13 @@ const Index = () => {
     const [items, setItems] = React.useState([]);
     useEffect(() => {
         const fetchItem = async () => {
-            const response = await fetch('/api', {
+            const response = await fetch('/api/items', {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: 'include'
             })
             const item = await response.json();
-            setItems(item);
+            setItems(item.content);
         }
         fetchItem();
     }, [])
@@ -30,6 +30,10 @@ const Index = () => {
             <Link to={"/orders"}>
                 <IconSearch />
                 Check Orders
+            </Link>
+            <Link to={"/findorder"}>
+                <IconSearch />
+                Find Orders
             </Link>
         </React.Fragment >
 

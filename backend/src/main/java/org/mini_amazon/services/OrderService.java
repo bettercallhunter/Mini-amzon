@@ -23,26 +23,26 @@ public class OrderService {
   private OrderRepository orderRepository;
   @Resource
   private ItemService itemService;
-//  @Resource
-//  private ShipmentService shipmentService;
+  // @Resource
+  // private ShipmentService shipmentService;
 
   @Transactional(readOnly = true)
   public Page<Order> listOrders(Integer pageNo, Integer pageSize, String... sortBy) {
     Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
     Page<Order> pagedResult = orderRepository.findAll(paging);
-//    System.out.println(pagedResult);
+    // System.out.println(pagedResult);
     return pagedResult;
 
   }
 
-  @Transactional// long shipmentId
+  @Transactional // long shipmentId
   public Order createOrder(long itemId, int quantity) throws ServiceError {
     Item item = itemService.getItemById(itemId);
     Order newOrder = new Order();
     newOrder.setItem(item);
     newOrder.setQuantity(quantity);
     newOrder.setStatus(OrderStatus.PROCESSING);
-//    newOrder.setShipment(shipmentService.getShipmentById(shipmentId));
+    // newOrder.setShipment(shipmentService.getShipmentById(shipmentId));
     return orderRepository.save(newOrder);
   }
 
@@ -62,23 +62,26 @@ public class OrderService {
 
   }
 
-//  // if two order lists contains the same elements, return true, order does not matter
-//  public boolean compareOrders(List<Order> orderList1, List<Order> orderList2) {
-//    if (orderList1.size() != orderList2.size()) {
-//      return false;
-//    }
-//    for (Order order1 : orderList1) {
-//      boolean found = false;
-//      for (Order order2 : orderList2) {
-//        if (order1.getId() == order2.getId()) {
-//          found = true;
-//          break;
-//        }
-//      }
-//      if (!found) {
-//        return false;
-//      }
-//    }
 
+
+  // // if two order lists contains the same elements, return true, order does not
+  // matter
+  // public boolean compareOrders(List<Order> orderList1, List<Order> orderList2)
+  // {
+  // if (orderList1.size() != orderList2.size()) {
+  // return false;
+  // }
+  // for (Order order1 : orderList1) {
+  // boolean found = false;
+  // for (Order order2 : orderList2) {
+  // if (order1.getId() == order2.getId()) {
+  // found = true;
+  // break;
+  // }
+  // }
+  // if (!found) {
+  // return false;
+  // }
+  // }
 
 }

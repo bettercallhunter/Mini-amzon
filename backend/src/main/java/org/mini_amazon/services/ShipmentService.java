@@ -32,7 +32,6 @@ public class ShipmentService {
   @Resource
   private ItemService itemService;
 
-
   @Transactional(readOnly = true)
   public Shipment getShipmentById(long id) throws ServiceError {
     Optional<Shipment> shipment = shipmentRepository.findById(id);
@@ -46,10 +45,10 @@ public class ShipmentService {
   @Resource
   private OrderRepository orderRepository;
 
-
   @Transactional
   // long itemId, double quantity
-  public Shipment createShipment(List<OrderController.OrderRequest> orderRequests, int destinationX, int destinationY) throws ServiceError {
+  public Shipment createShipment(List<OrderController.OrderRequest> orderRequests, int destinationX, int destinationY)
+      throws ServiceError {
     if (orderRequests == null || orderRequests.isEmpty()) {
       throw new ServiceError("No order pairs provided");
     }
@@ -59,11 +58,11 @@ public class ShipmentService {
     Shipment newShipment = new Shipment();
     for (OrderController.OrderRequest orderPair : orderRequests) {
       Order order = orderService.createOrder(orderPair.itemId(), orderPair.quantity());
-//      Order order = new Order();
-//      order.setItem(itemService.getItemById(orderPair.itemId()));
-//      order.setQuantity(orderPair.quantity());
+      // Order order = new Order();
+      // order.setItem(itemService.getItemById(orderPair.itemId()));
+      // order.setQuantity(orderPair.quantity());
       orders.add(order);
-//      Order order =
+      // Order order =
       totalPrice += order.getItem().getUnitPrice() * order.getQuantity();
     }
 
@@ -88,9 +87,10 @@ public class ShipmentService {
       return shipmentRepository.save(shipment);
     } else {
       throw new ServiceError(
-              "Cannot update shipment status from " + shipment.getStatus() + " to " + status);
+          "Cannot update shipment status from " + shipment.getStatus() + " to " + status);
     }
   }
+
   @Transactional
   public Shipment updateShipmentTruckId(long id, int truckId) throws ServiceError {
     Shipment shipment = getShipmentById(id);
@@ -98,13 +98,20 @@ public class ShipmentService {
     return shipmentRepository.save(shipment);
   }
 
+  @Transactional
+  public List<Order> getOrdersByShipment(long shipmentId) throws ServiceError {
+    Shipment shipment = getShipmentById(shipmentId);
+    return shipment.getOrders();
+
+  }
 
   @Transactional(readOnly = true)
   public Shipment getPendingShipmentBySameOrder(WorldAmazonProtocol.APurchaseMore aPurchaseMore) throws ServiceError {
 
-    List<Shipment> shipments = shipmentRepository.findShipmentsByStatusAndWarehouseId(ShipmentStatus.PENDING, aPurchaseMore.getWhnum());
-//    System.out.println("all shipments: " + shipmentRepository.findAll());
-//    System.out.println("shipments: " + shipments);
+    List<Shipment> shipments = shipmentRepository.findShipmentsByStatusAndWarehouseId(ShipmentStatus.PENDING,
+        aPurchaseMore.getWhnum());
+    // System.out.println("all shipments: " + shipmentRepository.findAll());
+    // System.out.println("shipments: " + shipments);
     if (shipments.isEmpty()) {
       // never reach here
       throw new ServiceError("No such shipment");
@@ -114,7 +121,7 @@ public class ShipmentService {
     for (WorldAmazonProtocol.AProduct p : aProducts) {
       Item item = itemService.getItemById(p.getId());
       Order order = new Order();
-//      order.setId(p.getId());
+      // order.setId(p.getId());
       order.setQuantity(p.getCount());
       order.setItem(item);
       orders.add(order);
@@ -130,8 +137,8 @@ public class ShipmentService {
       }
       List<Order> shipmentOrders = shipment.getOrders();
       shipmentOrders.sort((o1, o2) -> (int) (o1.getItem().getId() - o2.getItem().getId()));
-//      System.out.println("shipmentOrders: " + shipmentOrders);
-//      System.out.println("orders: " + orders);
+      // System.out.println("shipmentOrders: " + shipmentOrders);
+      // System.out.println("orders: " + orders);
       if (ifShipmentOrdersEqualOrders(shipmentOrders, orders)) {
         return shipment;
       }
@@ -151,10 +158,7 @@ public class ShipmentService {
 
   private boolean ifTwoOrderContainsSameItem(Order o1, Order o2) {
     return o1.getItem().getId() == o2.getItem().getId() && o1.getQuantity() == o2.getQuantity()
-           && o1.getItem().getDescription().equals(o2.getItem().getDescription());
+        && o1.getItem().getDescription().equals(o2.getItem().getDescription());
   }
+
 }
-
-
-
-
