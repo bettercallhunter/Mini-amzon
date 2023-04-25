@@ -66,4 +66,11 @@ public class UserController {
       return ResponseEntity.status(404).body(e.getMessage());
     }
   }
+
+  @GetMapping("/health")
+  public ResponseEntity<User> health(@CookieValue("jwt") String token) {
+    System.out.println("token is " + token);
+    User parsed_User = JwtTokenUtil.getClaimsFromToken(token);
+    return ResponseEntity.ok().body(parsed_User);
+  }
 }

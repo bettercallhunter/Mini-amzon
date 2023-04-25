@@ -53,7 +53,7 @@ public class ItemController {
                                              @RequestParam(defaultValue = "10") Integer size,
                                              @RequestParam(defaultValue = "id") String... sortBy) {
 //    warehouseRepository.findAll();
-    Page<Item> items = itemService.listItems(page, size, sortBy);
+    Page<Item> items = itemService.listOnSaleItems(page, size, sortBy);
     return ResponseEntity.ok().body(items);
   }
 

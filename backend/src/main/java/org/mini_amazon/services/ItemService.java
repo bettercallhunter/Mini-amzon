@@ -46,7 +46,13 @@ public class ItemService {
     Page<Item> pagedResult = itemRepository.findAll(paging);
 //    System.out.println(pagedResult);
     return pagedResult;
+  }
 
+  @Transactional(readOnly = true)
+  public Page<Item> listOnSaleItems(Integer pageNo, Integer pageSize, String... sortBy) {
+    Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+    Page<Item> pagedResult = itemRepository.findAllByOnSale(true, paging);
+    return pagedResult;
   }
 
   @Transactional

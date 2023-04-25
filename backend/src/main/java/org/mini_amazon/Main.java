@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
  * com/example package, letting it find the controllers.
  */
 @SpringBootApplication
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 //@EnableAsync
 public class Main {
 
