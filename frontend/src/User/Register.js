@@ -7,6 +7,7 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const navigate = useNavigate();
 //   const [redirect, setRedirect] = useState(false);
   const register = async (e) => {
@@ -84,6 +85,8 @@ const Register = () => {
                     class="form-control"
                     id="password2"
                     name="password2"
+                    value={password2}
+                    onChange={(ev) => setPassword2(ev.target.value)}
                     required
                   />
                   <label for="password2">Re-enter your password</label>
