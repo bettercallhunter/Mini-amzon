@@ -28,26 +28,29 @@ public class User implements UserDetails {
   private String email;
   @Column(nullable = false)
   private String password;
-  private String salt;
+  //  private String salt;
   private Set<Role> roles;
 
+  @OneToMany(mappedBy = "owner", cascade = {CascadeType.ALL}, orphanRemoval = true)
+  private List<Order> cart;
+
   public User(String email, String username, String password) {
-    this.email = email;
-    this.username = username;
-    this.password = password;
-    Random r = new SecureRandom();
-    byte[] Salt = new byte[20];
-    r.nextBytes(Salt);
-    this.salt = Base64.getEncoder().encodeToString(Salt);
-    this.roles = Set.of(Role.BUYER);
+//    this.email = email;
+//    this.username = username;
+//    this.password = password;
+//    Random r = new SecureRandom();
+//    byte[] Salt = new byte[20];
+//    r.nextBytes(Salt);
+//    this.salt = Base64.getEncoder().encodeToString(Salt);
+//    this.roles = Set.of(Role.BUYER);
   }
 
   public User() {
-    Random r = new SecureRandom();
-    byte[] Salt = new byte[20];
-    r.nextBytes(Salt);
-    this.salt = Base64.getEncoder().encodeToString(Salt);
-    this.roles = Set.of(Role.BUYER);
+//    Random r = new SecureRandom();
+//    byte[] Salt = new byte[20];
+//    r.nextBytes(Salt);
+//    this.salt = Base64.getEncoder().encodeToString(Salt);
+//    this.roles = Set.of(Role.BUYER);
   }
 
 
@@ -67,13 +70,13 @@ public class User implements UserDetails {
     this.email = email;
   }
 
-  public String getSalt() {
-    return salt;
-  }
-
-  public void setSalt(String salt) {
-    this.salt = salt;
-  }
+//  public String getSalt() {
+//    return salt;
+//  }
+//
+//  public void setSalt(String salt) {
+//    this.salt = salt;
+//  }
 
   // from user details
 
@@ -118,22 +121,15 @@ public class User implements UserDetails {
   }
 
 
-//  public boolean verifyPassword(String password) {
-//    final String hashed = Hashing
-//            .sha256()
-//            .hashString(password + salt, StandardCharsets.UTF_8)
-//            .toString();
-//    return hashed.equals(this.password);
-//  }
-//
-//  public void setPassword(String password) {
-//    final String hashed = Hashing
-//            .sha256()
-//            .hashString(password + salt, StandardCharsets.UTF_8)
-//            .toString();
-//    this.password = hashed;
-//  }
 
+
+  public List<Order> getCart() {
+    return cart;
+  }
+
+  public void setCart(List<Order> cart) {
+    this.cart = cart;
+  }
 
   public Set<Role> getRoles() {
     return roles;
@@ -146,11 +142,11 @@ public class User implements UserDetails {
   @Override
   public String toString() {
     return "User{" +
-           "email='" + email + '\'' +
-           ", username='" + username + '\'' +
+           "username='" + username + '\'' +
+           ", email='" + email + '\'' +
            ", password='" + password + '\'' +
-           ", salt='" + salt + '\'' +
            ", roles=" + roles +
+           ", cart=" + cart +
            '}';
   }
 
@@ -159,15 +155,15 @@ public class User implements UserDetails {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     User user = (User) o;
-    return Objects.equals(email, user.email)
-           && Objects.equals(username, user.username)
+    return Objects.equals(username, user.username)
+           && Objects.equals(email, user.email)
            && Objects.equals(password, user.password)
-           && Objects.equals(salt, user.salt)
-           && Objects.equals(roles, user.roles);
+           && Objects.equals(roles, user.roles)
+           && Objects.equals(cart, user.cart);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(email, username, password, salt, roles);
+    return Objects.hash(username, email, password, roles, cart);
   }
 }
