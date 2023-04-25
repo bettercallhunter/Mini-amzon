@@ -49,9 +49,10 @@ public class ItemService {
   }
 
   @Transactional(readOnly = true)
-  public Page<Item> listOnSaleItems(Integer pageNo, Integer pageSize, String... sortBy) {
+  public Page<Item> listOnSaleItems(Integer pageNo, Integer pageSize, String searchName, String... sortBy) {
     Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-    Page<Item> pagedResult = itemRepository.findAllByOnSale(true, paging);
+    Page<Item> pagedResult = itemRepository.findItemsByOnSaleAndNameContainingIgnoreCase(true, searchName, paging);
+    System.out.println(searchName);
     return pagedResult;
   }
 

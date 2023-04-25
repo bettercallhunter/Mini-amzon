@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 
 import jakarta.annotation.Resource;
@@ -26,7 +27,10 @@ public class SecurityConfig {
     http
             .csrf()
             .disable()
-
+            .logout(logout -> logout
+                    .logoutUrl("/api/logout")
+                    .addLogoutHandler(new SecurityContextLogoutHandler())
+            )
             .authorizeHttpRequests()
             .requestMatchers("/api/register", "/api/login","/api/items")
             .permitAll()

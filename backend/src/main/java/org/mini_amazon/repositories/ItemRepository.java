@@ -16,4 +16,6 @@ import java.util.Set;
 public interface ItemRepository extends JpaRepository<Item, Long> {
   Page<Item> findAllByOnSale(boolean onSale, Pageable pageable);
 
+  Page<Item> findItemsByOnSaleAndNameContainingIgnoreCase(boolean onSale, String name, Pageable pageable);
+
 }

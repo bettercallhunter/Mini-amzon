@@ -18,6 +18,8 @@ const Login = () => {
       alert("login successful");
       //   setRedirect(true);
       navigate("/");
+    } else {
+      alert("login failed");
     }
   };
   return (
@@ -77,7 +79,10 @@ const Login = () => {
                   </button>
                 </div>
                 <div className="d-grid">
-                  <a href="/register">Register</a>
+                  <p>
+                    Don't have account?
+                    <a href="/register">Register</a>
+                  </p>
                 </div>
                 <hr className="my-4" />
               </form>

@@ -1,6 +1,8 @@
 import React from "react";
 
-const NavBar = () => {
+const NavBar = (props) => {
+  const { onSearch, onSubmit } = props;
+  const [searchValue, setSearchValue] = React.useState("");
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -35,12 +37,17 @@ const NavBar = () => {
               <a className="nav-link disabled">Disabled</a>
             </li>
           </ul>
-          <form className="d-flex" role="search">
+          <form className="d-flex" role="search" onSubmit={onSubmit}>
             <input
               className="form-control me-2"
               type="search"
               placeholder="Search"
               aria-label="Search"
+              value={searchValue}
+              onChange={(e) => {
+                setSearchValue(e.target.value);
+                onSearch(searchValue);
+              }}
             />
             <button className="btn btn-outline-success" type="submit">
               Search

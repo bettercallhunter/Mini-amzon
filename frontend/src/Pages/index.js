@@ -4,6 +4,7 @@ import IconSearch from "../Templates/SearchButton";
 import Pagination from "@mui/material/Pagination";
 import ItemGroups from "../components/ItemGroups";
 import NavBar from "../components/NavBar";
+import HealthCheck from "../components/HealthCheck";
 
 const Index = () => {
   const [items, setItems] = React.useState({
@@ -16,17 +17,14 @@ const Index = () => {
     size: 4,
     totalElements: 0,
     totalPages: 0,
+    searchName: "",
   });
-  const [searchTitle, setSearchTitle] = React.useState("");
+  // const [searchTitle, setSearchTitle] = React.useState("");
   // const [currentPage, setCurrentPage] = React.useState(1);
   //   const
-  useEffect(() => {
-    retriveItems();
-    console.log(items);
-  }, [items.number, items.size]);
 
   const retriveItems = () => {
-    const params = getRequestParams(searchTitle, items.number, items.size);
+    const params = getRequestParams(items.searchName, items.number, items.size);
     const fetchItem = async () => {
       const response = await fetch(
         "/api/items?" +
@@ -51,6 +49,7 @@ const Index = () => {
     // if (searchTitle) {
     //   params["title"] = searchTitle;
     // }
+    params["search"] = items.searchName || "";
     params["page"] = items.number - 1;
     params["size"] = items.size;
     return params;
@@ -60,27 +59,44 @@ const Index = () => {
     setItems({ ...items, number: value });
   };
 
+  const handleSeach = (e) => {
+    e.preventDefault();
+    setItems({ ...items, searchName: e.target.value });
+    console.log(e.target.value);
+  };
+  useEffect(() => {
+    retriveItems();
+    console.log(items);
+  }, [items.number, items.size]);
+
+  // console.log(items.searchValue);
   return (
     <div className="container">
-      <NavBar />
+      <NavBar
+        onSearch={(newValue) => setItems({ ...items, searchName: newValue })}
+        onSubmit={(e) => {
+          e.preventDefault();
+          retriveItems();
+        }}
+      />
       <h1> Welcome</h1>
+      <HealthCheck />
 
-      <div class="form-floating mb-3">
+      <div className="form-floating mb-3">
         <select
           className="form-control"
           id="floatingSelect"
+          value={items.size}
           onChange={(e) =>
             setItems({ ...items, number: 1, size: e.target.value })
           }
           aria-label="number of item per page"
         >
-          <option value="4" selected>
-            4
-          </option>
+          <option value="4">4</option>
           <option value="8">8</option>
           <option value="12">12</option>
         </select>
-        <label for="floatingSelect"># items per page</label>
+        <label htmlFor="floatingSelect"># items per page</label>
       </div>
       <ItemGroups items={items.content} />
 

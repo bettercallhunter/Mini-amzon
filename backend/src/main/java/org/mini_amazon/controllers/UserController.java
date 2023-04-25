@@ -4,8 +4,9 @@ import jakarta.annotation.Resource;
 
 import org.mini_amazon.models.User;
 import org.mini_amazon.services.AuthService;
-import org.mini_amazon.utils.JwtTokenUtil;
+//import org.mini_amazon.utils.JwtTokenUtil;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -67,9 +68,9 @@ public class UserController {
   }
 
   @GetMapping("/health")
-  public ResponseEntity<User> health(@CookieValue("jwt") String token) {
+  public ResponseEntity<User> health() {
 //    System.out.println("token is " + token);
-    User parsed_User = JwtTokenUtil.getClaimsFromToken(token);
+    User parsed_User = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     return ResponseEntity.ok().body(parsed_User);
   }
 }
