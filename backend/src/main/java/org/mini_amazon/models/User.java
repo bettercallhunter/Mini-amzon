@@ -1,7 +1,5 @@
 package org.mini_amazon.models;
 
-import com.google.common.hash.Hashing;
-
 import org.mini_amazon.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,31 +26,30 @@ public class User implements UserDetails {
   private String email;
   @Column(nullable = false)
   private String password;
-  //  private String salt;
+  // private String salt;
   private Set<Role> roles;
 
-  @OneToMany(mappedBy = "owner", cascade = {CascadeType.ALL}, orphanRemoval = true)
+  @OneToMany(mappedBy = "owner", cascade = { CascadeType.ALL }, orphanRemoval = true)
   private List<Order> cart;
 
   public User(String email, String username, String password) {
-//    this.email = email;
-//    this.username = username;
-//    this.password = password;
-//    Random r = new SecureRandom();
-//    byte[] Salt = new byte[20];
-//    r.nextBytes(Salt);
-//    this.salt = Base64.getEncoder().encodeToString(Salt);
-//    this.roles = Set.of(Role.BUYER);
+    // this.email = email;
+    // this.username = username;
+    // this.password = password;
+    // Random r = new SecureRandom();
+    // byte[] Salt = new byte[20];
+    // r.nextBytes(Salt);
+    // this.salt = Base64.getEncoder().encodeToString(Salt);
+    // this.roles = Set.of(Role.BUYER);
   }
 
   public User() {
-//    Random r = new SecureRandom();
-//    byte[] Salt = new byte[20];
-//    r.nextBytes(Salt);
-//    this.salt = Base64.getEncoder().encodeToString(Salt);
-//    this.roles = Set.of(Role.BUYER);
+    // Random r = new SecureRandom();
+    // byte[] Salt = new byte[20];
+    // r.nextBytes(Salt);
+    // this.salt = Base64.getEncoder().encodeToString(Salt);
+    // this.roles = Set.of(Role.BUYER);
   }
-
 
   public void setUsername(String username) {
     this.username = username;
@@ -70,13 +67,13 @@ public class User implements UserDetails {
     this.email = email;
   }
 
-//  public String getSalt() {
-//    return salt;
-//  }
-//
-//  public void setSalt(String salt) {
-//    this.salt = salt;
-//  }
+  // public String getSalt() {
+  // return salt;
+  // }
+  //
+  // public void setSalt(String salt) {
+  // this.salt = salt;
+  // }
 
   // from user details
 
@@ -88,7 +85,6 @@ public class User implements UserDetails {
     }
     return authorities;
   }
-
 
   @Override
   public String getUsername() {
@@ -120,15 +116,16 @@ public class User implements UserDetails {
     return true;
   }
 
-
-
-
   public List<Order> getCart() {
     return cart;
   }
 
   public void setCart(List<Order> cart) {
     this.cart = cart;
+  }
+
+  public void addCart(Order order) {
+    this.cart.add(order);
   }
 
   public Set<Role> getRoles() {
@@ -142,24 +139,26 @@ public class User implements UserDetails {
   @Override
   public String toString() {
     return "User{" +
-           "username='" + username + '\'' +
-           ", email='" + email + '\'' +
-           ", password='" + password + '\'' +
-           ", roles=" + roles +
-           ", cart=" + cart +
-           '}';
+        "username='" + username + '\'' +
+        ", email='" + email + '\'' +
+        ", password='" + password + '\'' +
+        ", roles=" + roles +
+        ", cart=" + cart +
+        '}';
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     User user = (User) o;
     return Objects.equals(username, user.username)
-           && Objects.equals(email, user.email)
-           && Objects.equals(password, user.password)
-           && Objects.equals(roles, user.roles)
-           && Objects.equals(cart, user.cart);
+        && Objects.equals(email, user.email)
+        && Objects.equals(password, user.password)
+        && Objects.equals(roles, user.roles)
+        && Objects.equals(cart, user.cart);
   }
 
   @Override

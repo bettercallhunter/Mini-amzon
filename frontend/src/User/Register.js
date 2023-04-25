@@ -9,26 +9,26 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const navigate = useNavigate();
-//   const [redirect, setRedirect] = useState(false);
+  //   const [redirect, setRedirect] = useState(false);
   const register = async (e) => {
     e.preventDefault();
     const response = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ username, email, password, password2 }),
       credentials: "include",
     });
     if (response.status === 200) {
       alert("registration successful");
-    //   setRedirect(true);
+      //   setRedirect(true);
       navigate("/login")
-    }else{
+    } else {
       alert("registration failed");
     }
   };
-//   if (redirect) {
-//     return <Navigate to="/login" />;
-//   }
+  //   if (redirect) {
+  //     return <Navigate to="/login" />;
+  //   }
 
   return (
     // <form onSubmit={register}>

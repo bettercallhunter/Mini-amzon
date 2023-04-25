@@ -43,9 +43,14 @@ public class OrderController {
     return ResponseEntity.ok().body(orders);
   }
 
-  
+  // @PostMapping("addToCart")
+  // public ResponseEntity<Order> addToCart(@RequestBody OrderRequest request) {
+    
+  // }
 
   public record OrderRequest(long itemId, int quantity) {
   }
+
+
 
 }

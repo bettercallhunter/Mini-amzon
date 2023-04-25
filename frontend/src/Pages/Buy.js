@@ -12,12 +12,13 @@ const Buy = () => {
     const [ups, setUps] = useState('');
     const buy = async (e) => {
         e.preventDefault();
-        const response = await fetch(`/api/buy/${id}`, {
+        const response = await fetch(`/api/cart/${id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ quantity, x, y }),
+            // body: JSON.stringify({ quantity, x, y }),
+            body: JSON.stringify({ quantity }),
             credentials: 'include'
         });
         console.log(quantity);
@@ -32,7 +33,7 @@ const Buy = () => {
     }
     return (
         <React.Fragment>
-            <h1>Buy</h1>
+            <h1>Add to Cart</h1>
             <form onSubmit={buy}>
                 <label htmlFor="quantity">Quantity</label>
                 <input type="number" id="quantity" placeholder="Quantity" value={quantity} onChange={ev => setQuantity(ev.target.value)} />

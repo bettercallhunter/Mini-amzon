@@ -5,11 +5,12 @@ import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import Buy from './Pages/Buy';
+import FindOrder from './Pages/FindOrder';
 import Index from './Pages/Index';
 import Orders from './Pages/Orders';
 import Login from './User/Login';
 import Register from './User/Register';
-import FindOrder from './Pages/FindOrder';
+import Cart from './Pages/Cart';
 function App() {
   return (
     <Router>
@@ -20,6 +21,7 @@ function App() {
         <Route exact path="/buy/:id" element={<Buy />} />
         <Route exact path="/orders" element={<Orders />} />
         <Route exact path="/findorder" element={<FindOrder />} />
+        <Route exact path="/cart" element={<Cart />} />
       </Routes>
     </Router>
   );
