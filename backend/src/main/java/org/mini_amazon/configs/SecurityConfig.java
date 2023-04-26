@@ -53,7 +53,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.OPTIONS).permitAll().and();
 
     http.authorizeHttpRequests()
-            .requestMatchers("/api/register/**", "/api/login/**", "/api/items/**").permitAll()
+            .requestMatchers("/api/register", "/api/login", "/api/items").permitAll()
 //            .requestMatchers("/api/**").permitAll()
             .anyRequest().authenticated();
     http.authenticationProvider(authenticationProvider);

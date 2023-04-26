@@ -5,6 +5,7 @@ import jakarta.annotation.Resource;
 import org.mini_amazon.models.User;
 import org.mini_amazon.services.AuthService;
 //import org.mini_amazon.utils.JwtTokenUtil;
+import org.mini_amazon.services.EmailService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
 
   @Resource
   private AuthService authService;
+  @Resource
+  private EmailService emailService;
 
   public record LoginRequest(String username, String password) {
   }
@@ -94,8 +97,22 @@ public class UserController {
   @GetMapping("/health")
   public ResponseEntity<String> health() {
 //    System.out.println("token is " + token);
-    System.out.println("reach health");
+//    System.out.println("reach health");
 //    User parsed_User = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return ResponseEntity.ok().body("hello");
+    return ResponseEntity.ok().body("hello get");
+  }
+
+  @PostMapping("/health")
+  public ResponseEntity<String> healthPost() {
+//    System.out.println("token is " + token);
+//    System.out.println("reach health");
+//    User parsed_User = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    return ResponseEntity.ok().body("hello post");
+  }
+  @PostMapping("/emailCheck")
+  public ResponseEntity<String> emailCheck() {
+    User parsed_User = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    emailService.sendEmail(parsed_User.getEmail(), "test", "test");
+    return ResponseEntity.ok().body("hello post email");
   }
 }
