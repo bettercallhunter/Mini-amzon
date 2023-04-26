@@ -15,7 +15,7 @@ const FindOrder = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch(`/api/findShipment`, {
+            const response = await fetch('/api/findShipment', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

@@ -1,8 +1,6 @@
-import React from "react";
-import { useState } from "react";
-import { useParams } from 'react-router-dom'
-import { Navigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, Navigate, useParams } from 'react-router-dom';
+import authHeader from "../utils/authHeader";
 const Buy = () => {
     const { id } = useParams();
     const [quantity, setQuantity] = useState(0);
@@ -10,15 +8,17 @@ const Buy = () => {
     const [x, setX] = useState('');
     const [y, setY] = useState('');
     const [ups, setUps] = useState('');
+
     const buy = async (e) => {
         e.preventDefault();
-        const response = await fetch(`/api/cart/${id}`, {
+        const response = await fetch('http://localhost:8000/api/cart', {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                ...authHeader()
             },
             // body: JSON.stringify({ quantity, x, y }),
-            body: JSON.stringify({ quantity }),
+            body: JSON.stringify({ quantity, id }),
             credentials: 'include'
         });
         console.log(quantity);
@@ -33,6 +33,7 @@ const Buy = () => {
     }
     return (
         <React.Fragment>
+
             <h1>Add to Cart</h1>
             <form onSubmit={buy}>
                 <label htmlFor="quantity">Quantity</label>
@@ -49,7 +50,7 @@ const Buy = () => {
                 <label htmlFor="ups">UPS Account: </label>
                 <input type="text" placeholder="UPS Account Name" id="ups" value={ups} onChange={ev => setUps(ev.target.value)} />
                 <br />
-                <button type="submit">Buy</button>
+                <button type="submit">add to cart</button>
             </form>
             <Link to={"/"}>
                 <button>Back</button>

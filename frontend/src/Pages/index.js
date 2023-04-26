@@ -59,10 +59,10 @@ const Index = () => {
         setItems({ ...items, number: value });
     };
 
-  useEffect(() => {
-    retriveItems();
-    // console.log(items);
-  }, [items.number, items.size]);
+    useEffect(() => {
+        retriveItems();
+        // console.log(items);
+    }, [items.number, items.size]);
 
     // console.log(items.searchValue);
     return (

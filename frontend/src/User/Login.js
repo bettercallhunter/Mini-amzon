@@ -14,10 +14,10 @@ const Login = () => {
       body: JSON.stringify({ username, password }),
       credentials: "include",
     });
-    
+
     if (response.status === 200) {
       const data = await response.json();
-    // console.log(data);
+      // console.log(data);
       localStorage.setItem("token", JSON.stringify(data.token));
       alert("login successful");
       //   setRedirect(true);
