@@ -11,10 +11,11 @@ const Buy = () => {
 
     const buy = async (e) => {
         e.preventDefault();
-        const response = await fetch('http://localhost:8000/api/cart', {
+        const response = await fetch('/api/cart', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Acess-Control-Allow-Origin": "*",
                 ...authHeader()
             },
             // body: JSON.stringify({ quantity, x, y }),

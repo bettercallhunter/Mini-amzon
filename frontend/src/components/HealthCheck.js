@@ -4,7 +4,7 @@ import authHeader from "../utils/authHeader";
 
 const HealthCheck = () => {
   const navigate = useNavigate();
-  const handleOnClick = async (e) => {
+  const handleOnClickGet = async (e) => {
     e.preventDefault();
     const header = { 
         "Content-Type": "application/json",
@@ -17,12 +17,51 @@ const HealthCheck = () => {
       headers:header
        }
      
-    // }
     );
-    // const data = await response.json();
-    // console.log(data);
-    // console.log({ "Content-Type": "application/json",
-    // ...authHeader() })
+    if (response.status === 200) {
+      alert("healthcheck successful");
+    } else {
+      alert("healthcheck failed, plz sign in ");
+      navigate("/login");
+    }
+  };
+
+  const handleOnClickPost = async (e) => {
+    e.preventDefault();
+    const header = { 
+        "Content-Type": "application/json",
+      ...authHeader() };
+
+    const response = await fetch("/api/health", 
+        {
+      method: "Post",
+      credentials: "include",
+      headers:header
+       }
+     
+    );
+    if (response.status === 200) {
+      alert("healthcheck successful");
+    } else {
+      alert("healthcheck failed, plz sign in ");
+      navigate("/login");
+    }
+  };
+
+  const handleOnClickEmail = async (e) => {
+    e.preventDefault();
+    const header = { 
+        "Content-Type": "application/json",
+      ...authHeader() };
+
+    const response = await fetch("/api/emailCheck", 
+        {
+      method: "Post",
+      credentials: "include",
+      headers:header
+       }
+     
+    );
     if (response.status === 200) {
       alert("healthcheck successful");
     } else {
@@ -31,9 +70,18 @@ const HealthCheck = () => {
     }
   };
   return (
-    <button type="button" className="btn btn-primary" onClick={handleOnClick}>
-      Health Check Button
+    <div>
+    <button type="button" className="btn btn-primary" onClick={handleOnClickGet}>
+      Health Check Button (Get)
     </button>
+    <button type="button" className="btn btn-primary" onClick={handleOnClickPost}>
+    Health Check Button (Post)
+  </button>
+  <button type="button" className="btn btn-primary" onClick={handleOnClickEmail}>
+    Email Check Button (Post)
+  </button>
+  </div>
+
   );
 };
 
