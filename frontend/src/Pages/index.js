@@ -59,15 +59,10 @@ const Index = () => {
         setItems({ ...items, number: value });
     };
 
-    const handleSeach = (e) => {
-        e.preventDefault();
-        setItems({ ...items, searchName: e.target.value });
-        console.log(e.target.value);
-    };
-    useEffect(() => {
-        retriveItems();
-        console.log(items);
-    }, [items.number, items.size]);
+  useEffect(() => {
+    retriveItems();
+    // console.log(items);
+  }, [items.number, items.size]);
 
     // console.log(items.searchValue);
     return (

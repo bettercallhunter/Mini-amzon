@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -21,7 +20,7 @@ const Register = () => {
     if (response.status === 200) {
       alert("registration successful");
       //   setRedirect(true);
-      navigate("/login")
+      navigate("/login");
     } else {
       alert("registration failed");
     }
@@ -42,7 +41,9 @@ const Register = () => {
         <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
           <div className="card border-0 shadow rounded-3 my-5">
             <div className="card-body p-4 p-sm-5">
-              <h5 className="card-title text-center mb-5 fw-light fs-5">Sign Up</h5>
+              <h5 className="card-title text-center mb-5 fw-light fs-5">
+                Sign Up
+              </h5>
 
               <form onSubmit={register}>
                 <div className="form-floating mb-3">

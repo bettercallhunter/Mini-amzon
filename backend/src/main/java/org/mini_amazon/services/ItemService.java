@@ -52,7 +52,7 @@ public class ItemService {
   public Page<Item> listOnSaleItems(Integer pageNo, Integer pageSize, String searchName, String... sortBy) {
     Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
     Page<Item> pagedResult = itemRepository.findItemsByOnSaleAndNameContainingIgnoreCase(true, searchName, paging);
-    System.out.println(searchName);
+//    System.out.println(searchName);
     return pagedResult;
   }
 

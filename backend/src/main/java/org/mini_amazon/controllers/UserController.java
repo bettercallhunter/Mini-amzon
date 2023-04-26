@@ -9,6 +9,8 @@ import org.mini_amazon.repositories.ItemRepository;
 import org.mini_amazon.services.AuthService;
 import org.mini_amazon.services.ShoppingCartService;
 //import org.mini_amazon.utils.JwtTokenUtil;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,7 @@ import jakarta.annotation.Resource;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
 
   @Resource
@@ -40,69 +43,70 @@ public class UserController {
 
   @PostMapping("/register")
   public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-
-    return ResponseEntity.ok(authService.register(request));
+    AuthenticationResponse response = authService.register(request);
+//    System.out.println("register response: " + response.token() + " " + response.error());
+    if (response.token() == null || response.error() != null) {
+      return ResponseEntity.status(400).body(response);
+    } else {
+      return ResponseEntity.ok(response);
+    }
   }
 
   @PostMapping("/login")
   public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest request) {
-    return ResponseEntity.ok(authService.authenticate(request));
-    // try {
-    // User account = userRepository.findById(request.username());
-    // boolean authentication = account.verifyPassword(request.password());
-    // if (!authentication) {
-    // throw new Exception("Wrong password");
-    // }
-    //
-    // Map<String, Object> claims = new HashMap<>();
-    // claims.put("user", account);
-    // String token = JwtTokenUtil.generateToken(claims);
-    // System.out.println("token is " + token);
-    // // Create a cookie with the JWT token and add it to the response
-    // ResponseCookie cookie = ResponseCookie
-    // .from("jwt", token)
-    // .httpOnly(true)
-    // .path("/")
-    // .build();
-    // HttpHeaders headers = new HttpHeaders();
-    //
-    // headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
-    //
-    // User parsed_User = JwtTokenUtil.getClaimsFromToken(token);
-    //
-    // System.out.println("parse username:" + parsed_User.getUsername());
-    //
-    // return ResponseEntity.ok().headers(headers).body("ojbk");
-    // } catch (Exception e) {
-    // return ResponseEntity.status(404).body(e.getMessage());
-    // }
+    AuthenticationResponse response = authService.authenticate(request);
+//    System.out.println("login response: " + response.token() + " " + response.error());
+    String token = response.token();
+    if (token == null || response.error() != null) {
+      return ResponseEntity.status(400).body(response);
+    } else {
+//      System.out.println(ResponseEntity.ok(response));
+//      ResponseCookie cookie = ResponseCookie
+//              .from("token",  token)
+////              .httpOnly(false)
+//              .path("/")
+//              .build();
+//      HttpHeaders headers = new HttpHeaders();
+//
+//      headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
+      return ResponseEntity.ok().body(response);
+    }
+//    try {
+//      User account = userRepository.findById(request.username());
+//      boolean authentication = account.verifyPassword(request.password());
+//      if (!authentication) {
+//        throw new Exception("Wrong password");
+//      }
+//
+//      Map<String, Object> claims = new HashMap<>();
+//      claims.put("user", account);
+//      String token = JwtTokenUtil.generateToken(claims);
+//      System.out.println("token is " + token);
+//      // Create a cookie with the JWT token and add it to the response
+//      ResponseCookie cookie = ResponseCookie
+//              .from("jwt", token)
+//              .httpOnly(true)
+//              .path("/")
+//              .build();
+//      HttpHeaders headers = new HttpHeaders();
+//
+//      headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
+//
+//      User parsed_User = JwtTokenUtil.getClaimsFromToken(token);
+//
+//      System.out.println("parse username:" + parsed_User.getUsername());
+//
+//      return ResponseEntity.ok().headers(headers).body("ojbk");
+//    } catch (Exception e) {
+//      return ResponseEntity.status(404).body(e.getMessage());
+//    }
   }
 
   @GetMapping("/health")
-  public ResponseEntity<User> health() {
-    // System.out.println("token is " + token);
-    User parsed_User = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return ResponseEntity.ok().body(parsed_User);
-  }
-
-  @GetMapping("/cart")
-  public ResponseEntity<List<Order>> cart() {
-    List<Order> cart = shoppingCartService.getShoppingCart();
-    return ResponseEntity.ok().body(cart);
-  }
-
-  public record addToCartRequest(int quantity) {
-  }
-
-  @PostMapping("/cart")
-  public ResponseEntity<String> cart(@RequestBody addToCartRequest request, @RequestParam int item_id)
-      throws Exception {
-    try {
-
-      shoppingCartService.addCart(item_id, request.quantity());
-      return ResponseEntity.ok().body("niuzie gege");
-    } catch (Exception e) {
-      return ResponseEntity.status(404).body(e.getMessage());
-    }
+  public ResponseEntity<String> health() {
+//    System.out.println("token is " + token);
+    System.out.println("reach health");
+//    User parsed_User = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    return ResponseEntity.ok().body("hello");
   }
 }

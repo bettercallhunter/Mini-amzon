@@ -19,7 +19,7 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
   private static final String SECRET_KEY =
-          "uihauhisduhaihdiquhwiehiuhihakjsdbkjabdkjabdiqhwuehqihdbksbakjdbakbdkjadkjahodhoqhwoehqdhiajbdksabdkbadhoqhwioqhdakjbdkjsabdka";
+           "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
   private static final long EXPIRATION_TIME = 86400000; // 24 hours
 
   public String extractUsername(String jwt) {

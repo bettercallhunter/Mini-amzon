@@ -1,5 +1,6 @@
 package org.mini_amazon.models;
 
+
 import org.mini_amazon.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,8 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
 
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
+
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
@@ -26,7 +26,8 @@ public class User implements UserDetails {
   private String email;
   @Column(nullable = false)
   private String password;
-  // private String salt;
+  //  private String salt;
+  @Enumerated(EnumType.STRING)
   private Set<Role> roles;
 
   @OneToMany(mappedBy = "owner", cascade = { CascadeType.ALL }, orphanRemoval = true)
@@ -44,11 +45,12 @@ public class User implements UserDetails {
   }
 
   public User() {
-    // Random r = new SecureRandom();
-    // byte[] Salt = new byte[20];
-    // r.nextBytes(Salt);
-    // this.salt = Base64.getEncoder().encodeToString(Salt);
-    // this.roles = Set.of(Role.BUYER);
+//    Random r = new SecureRandom();
+//    byte[] Salt = new byte[20];
+//    r.nextBytes(Salt);
+//    this.salt = Base64.getEncoder().encodeToString(Salt);
+    this.roles = Set.of(Role.BUYER);
+    this.cart = new ArrayList<>();
   }
 
   public void setUsername(String username) {
