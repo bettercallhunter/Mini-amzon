@@ -1,15 +1,28 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import authHeader from "../utils/authHeader";
 
 const HealthCheck = () => {
   const navigate = useNavigate();
   const handleOnClick = async (e) => {
     e.preventDefault();
-    const response = await fetch("/api/healthcheck", {
+    const header = { 
+        "Content-Type": "application/json",
+      ...authHeader() };
+
+    const response = await fetch("/api/health", 
+        {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
       credentials: "include",
-    });
+      headers:header
+       }
+     
+    // }
+    );
+    // const data = await response.json();
+    // console.log(data);
+    // console.log({ "Content-Type": "application/json",
+    // ...authHeader() })
     if (response.status === 200) {
       alert("healthcheck successful");
     } else {

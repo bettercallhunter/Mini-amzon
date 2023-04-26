@@ -1,8 +1,15 @@
 import React from "react";
 
+import { useNavigate } from "react-router-dom";
+
 const NavBar = (props) => {
   const { onSearch, onSubmit } = props;
   const [searchValue, setSearchValue] = React.useState("");
+  const navigate = useNavigate();
+  const logout = async () => {
+    localStorage.clear();
+    navigate("/");
+  };
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">

@@ -2,33 +2,32 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const navigate = useNavigate();
-//   const [redirect, setRedirect] = useState(false);
+  //   const [redirect, setRedirect] = useState(false);
   const register = async (e) => {
     e.preventDefault();
     const response = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ username, email, password, password2 }),
       credentials: "include",
     });
     if (response.status === 200) {
       alert("registration successful");
-    //   setRedirect(true);
-      navigate("/login")
-    }else{
+      //   setRedirect(true);
+      navigate("/login");
+    } else {
       alert("registration failed");
     }
   };
-//   if (redirect) {
-//     return <Navigate to="/login" />;
-//   }
+  //   if (redirect) {
+  //     return <Navigate to="/login" />;
+  //   }
 
   return (
     // <form onSubmit={register}>
@@ -42,7 +41,9 @@ const Register = () => {
         <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
           <div className="card border-0 shadow rounded-3 my-5">
             <div className="card-body p-4 p-sm-5">
-              <h5 className="card-title text-center mb-5 fw-light fs-5">Sign Up</h5>
+              <h5 className="card-title text-center mb-5 fw-light fs-5">
+                Sign Up
+              </h5>
 
               <form onSubmit={register}>
                 <div className="form-floating mb-3">
