@@ -5,12 +5,15 @@ import jakarta.annotation.Resource;
 import org.mini_amazon.models.User;
 import org.mini_amazon.services.AuthService;
 //import org.mini_amazon.utils.JwtTokenUtil;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
 
   @Resource
@@ -28,14 +31,35 @@ public class UserController {
 
   @PostMapping("/register")
   public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-
-    return ResponseEntity.ok(authService.register(request));
+    AuthenticationResponse response = authService.register(request);
+//    System.out.println("register response: " + response.token() + " " + response.error());
+    if (response.token() == null || response.error() != null) {
+      return ResponseEntity.status(400).body(response);
+    } else {
+      return ResponseEntity.ok(response);
+    }
   }
 
 
   @PostMapping("/login")
   public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest request) {
-    return ResponseEntity.ok(authService.authenticate(request));
+    AuthenticationResponse response = authService.authenticate(request);
+//    System.out.println("login response: " + response.token() + " " + response.error());
+    String token = response.token();
+    if (token == null || response.error() != null) {
+      return ResponseEntity.status(400).body(response);
+    } else {
+//      System.out.println(ResponseEntity.ok(response));
+//      ResponseCookie cookie = ResponseCookie
+//              .from("token",  token)
+////              .httpOnly(false)
+//              .path("/")
+//              .build();
+//      HttpHeaders headers = new HttpHeaders();
+//
+//      headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
+      return ResponseEntity.ok().body(response);
+    }
 //    try {
 //      User account = userRepository.findById(request.username());
 //      boolean authentication = account.verifyPassword(request.password());
@@ -68,9 +92,10 @@ public class UserController {
   }
 
   @GetMapping("/health")
-  public ResponseEntity<User> health() {
+  public ResponseEntity<String> health() {
 //    System.out.println("token is " + token);
-    User parsed_User = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return ResponseEntity.ok().body(parsed_User);
+    System.out.println("reach health");
+//    User parsed_User = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    return ResponseEntity.ok().body("hello");
   }
 }

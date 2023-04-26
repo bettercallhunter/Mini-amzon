@@ -46,7 +46,7 @@ public class Shipment {
 //  @Column(nullable = false)
   private Warehouse warehouse;
 
-  @OneToMany(mappedBy = "shipment", cascade = {CascadeType.ALL}, orphanRemoval = true)
+  @OneToMany(mappedBy = "shipment", cascade = {CascadeType.ALL})
   @Column(nullable = false)
   private List<Order> orders;
 
