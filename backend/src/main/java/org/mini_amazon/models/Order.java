@@ -27,20 +27,21 @@ public class Order {
 
   private int quantity;
 
-//  @Deprecated
-//  private double unitPrice;
-//
-//  @Deprecated
-//  private double totalPrice;
+  // @Deprecated
+  // private double unitPrice;
+  //
+  // @Deprecated
+  // private double totalPrice;
 
   @Enumerated(EnumType.STRING)
   private OrderStatus status;
 
-  @JsonIgnore
+  // @JsonIgnore
   @ManyToOne
   private Shipment shipment;
 
   @ManyToOne
+  @JsonIgnore
   private User owner;
 
   public Long getId() {
@@ -94,23 +95,25 @@ public class Order {
   @Override
   public String toString() {
     return "Order{" +
-           "id=" + id +
-           ", item=" + item +
-           ", quantity=" + quantity +
-           ", status=" + status +
-           ", shipment=" + shipment +
-           '}';
+        "id=" + id +
+        ", item=" + item +
+        ", quantity=" + quantity +
+        ", status=" + status +
+        ", shipment=" + shipment +
+        '}';
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     Order order = (Order) o;
     return quantity == order.quantity && Objects.equals(id, order.id)
-           && Objects.equals(item, order.item) && status == order.status
-           && Objects.equals(shipment, order.shipment)
-           && Objects.equals(owner, order.owner);
+        && Objects.equals(item, order.item) && status == order.status
+        && Objects.equals(shipment, order.shipment)
+        && Objects.equals(owner, order.owner);
   }
 
   @Override

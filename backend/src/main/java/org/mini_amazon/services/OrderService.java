@@ -4,6 +4,7 @@ import org.mini_amazon.enums.OrderStatus;
 import org.mini_amazon.errors.ServiceError;
 import org.mini_amazon.models.Item;
 import org.mini_amazon.models.Order;
+import org.mini_amazon.models.User;
 import org.mini_amazon.repositories.OrderRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,26 +24,35 @@ public class OrderService {
   private OrderRepository orderRepository;
   @Resource
   private ItemService itemService;
-//  @Resource
-//  private ShipmentService shipmentService;
+  @Resource
+  private UserService userService;
 
   @Transactional(readOnly = true)
   public Page<Order> listOrders(Integer pageNo, Integer pageSize, String... sortBy) {
     Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
     Page<Order> pagedResult = orderRepository.findAll(paging);
-//    System.out.println(pagedResult);
+    // System.out.println(pagedResult);
     return pagedResult;
-
+  }
+  public Order findOrderById(long id) throws ServiceError {
+    Optional<Order> orderOptional = orderRepository.findById(id);
+    if (orderOptional.isEmpty()) {
+      throw new ServiceError("Order does not exist.");
+    } else {
+      return orderOptional.get();
+    }
   }
 
-  @Transactional// long shipmentId
+  @Transactional // long shipmentId
   public Order createOrder(long itemId, int quantity) throws ServiceError {
+    User user = userService.getCurrentUser();
     Item item = itemService.getItemById(itemId);
     Order newOrder = new Order();
     newOrder.setItem(item);
     newOrder.setQuantity(quantity);
     newOrder.setStatus(OrderStatus.PROCESSING);
-//    newOrder.setShipment(shipmentService.getShipmentById(shipmentId));
+    newOrder.setOwner(user);
+    // newOrder.setShipment(shipmentService.getShipmentById(shipmentId));
     return orderRepository.save(newOrder);
   }
 
@@ -59,26 +69,39 @@ public class OrderService {
       order.setShipment(newOrder.getShipment());
       return orderRepository.save(order);
     }
-
   }
 
-//  // if two order lists contains the same elements, return true, order does not matter
-//  public boolean compareOrders(List<Order> orderList1, List<Order> orderList2) {
-//    if (orderList1.size() != orderList2.size()) {
-//      return false;
-//    }
-//    for (Order order1 : orderList1) {
-//      boolean found = false;
-//      for (Order order2 : orderList2) {
-//        if (order1.getId() == order2.getId()) {
-//          found = true;
-//          break;
-//        }
-//      }
-//      if (!found) {
-//        return false;
-//      }
-//    }
+  @Transactional
+  public Order updateOrderStatus(long orderId, OrderStatus status) throws ServiceError {
+    Optional<Order> orderOptional = orderRepository.findById(orderId);
+    if (orderOptional.isEmpty()) {
+      throw new ServiceError("Order does not exist.");
+    } else {
+      Order order = orderOptional.get();
+      order.setStatus(status);
+      return orderRepository.save(order);
+    }
+  }
 
+
+  // // if two order lists contains the same elements, return true, order does not
+  // matter
+  // public boolean compareOrders(List<Order> orderList1, List<Order> orderList2)
+  // {
+  // if (orderList1.size() != orderList2.size()) {
+  // return false;
+  // }
+  // for (Order order1 : orderList1) {
+  // boolean found = false;
+  // for (Order order2 : orderList2) {
+  // if (order1.getId() == order2.getId()) {
+  // found = true;
+  // break;
+  // }
+  // }
+  // if (!found) {
+  // return false;
+  // }
+  // }
 
 }

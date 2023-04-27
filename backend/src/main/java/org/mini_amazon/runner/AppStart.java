@@ -28,13 +28,14 @@ public class AppStart implements ApplicationRunner {
 
   @Override
   public void run(ApplicationArguments args) {
-    boolean success = amazonDaemon.connect();
-    if (!success) {
-      System.out.println("Connection failed");
-      System.exit(1);
-    }
-    taskExecutor1.execute(() -> amazonDaemon.startWorldReceiverThread());
-    taskExecutor1.execute(() -> amazonDaemon.startUPSReceiverThread());
+// boolean success = amazonDaemon.connect();
+// if (!success) {
+// System.out.println("Connection failed");
+// System.exit(1);
+// }
+taskExecutor1.execute(() -> amazonDaemon.run());
+//    taskExecutor1.execute(() -> amazonDaemon.startUPSReceiverThread());
+//    taskExecutor1.execute(() -> amazonDaemon.startWorldReceiverThread());
     // taskExecutor1.execute(() -> amazonDaemon.initWorldSenderThread());
   }
 }

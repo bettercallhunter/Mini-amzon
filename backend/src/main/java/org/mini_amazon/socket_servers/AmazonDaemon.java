@@ -2,30 +2,42 @@ package org.mini_amazon.socket_servers;
 
 import com.google.protobuf.Message;
 
-import org.aspectj.weaver.World;
+import org.mini_amazon.enums.OrderStatus;
 import org.mini_amazon.enums.ShipmentStatus;
 import org.mini_amazon.errors.ServiceError;
 import org.mini_amazon.models.Shipment;
 import org.mini_amazon.models.Warehouse;
+import org.mini_amazon.models.Order;
 import org.mini_amazon.proto.AmazonUPSProtocol;
 import org.mini_amazon.proto.WorldAmazonProtocol;
+import org.mini_amazon.services.OrderService;
 import org.mini_amazon.services.ShipmentService;
 import org.mini_amazon.services.WarehouseService;
 import org.mini_amazon.utils.AMessageBuilder;
 import org.mini_amazon.utils.GPBUtil;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import jakarta.annotation.Resource;
 
@@ -33,47 +45,78 @@ import jakarta.annotation.Resource;
 public class AmazonDaemon {
 
   public static final int TIME_OUT = 10000;
-  private static final String WORLD_HOST = "localhost";
+  private static final String WORLD_HOST = "vcm-32169.vm.duke.edu";
   private static final int WORLD_PORT = 23456;
-  private static final String UPS_HOST = "localhost";
-  private static final int UPS_PORT = 8081;
+  //  private static final String UPS_HOST = "localhost";
+//  private static final int UPS_PORT = 8081;
   // public static final int AMAZON_SERVER_PORT = 9999;
   // //Server Communicate with World
   private final Socket AWSocket;
-  private final Socket AUSocket;
+  private final ServerSocket serverSocket;
   public final InputStream AWInputStream;
   public final OutputStream AWOutputStream;
 
-  public final InputStream AUInputStream;
-  public final OutputStream AUOutputStream;
+  public InputStream AUInputStream;
+  public OutputStream AUOutputStream;
   private final Map<Long, Timer> msgTracker;
   private long seqNum;
+  // at most one
+  private final HashMap<Long, Object> receivedSeq;
 
-  // BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(100);
-  // ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 100, 5,
-  // TimeUnit.MILLISECONDS, workQueue);
+  //  BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(100);
+//  ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 100, 5,
+//          TimeUnit.MILLISECONDS, workQueue);
   @Resource
   private WarehouseService warehouseService;
   @Resource
   private ShipmentService shipmentService;
+  @Resource
+  private OrderService orderService;
+  @Resource
+  TaskExecutor taskExecutor1;
+
 
   public AmazonDaemon() {
     try {
       this.AWSocket = new Socket(WORLD_HOST, WORLD_PORT);
-      this.AUSocket = new Socket(UPS_HOST, UPS_PORT);
+      this.serverSocket = new ServerSocket(8080);
       // this.AUSocket = null;
-      this.AUInputStream = AUSocket.getInputStream();
-      this.AUOutputStream = AUSocket.getOutputStream();
+//       this.AUInputStream = AUSocket.getInputStream();
+//       this.AUOutputStream = AUSocket.getOutputStream();
 
       this.AWInputStream = this.AWSocket.getInputStream();
       this.AWOutputStream = this.AWSocket.getOutputStream();
       this.msgTracker = new ConcurrentHashMap<>();
+      this.receivedSeq = new HashMap<>();
       this.seqNum = 0;
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
+  @Async("taskExecutor1")
+  public void run() {
+    try {
+      final Socket client_socket = this.serverSocket.accept();
+      if (client_socket == null) {
+        throw new RuntimeException("client_socket is null");
+      }
+
+      this.AUInputStream = client_socket.getInputStream();
+      this.AUOutputStream = client_socket.getOutputStream();
+      AmazonUPSProtocol.UAStart.Builder uaStart = AmazonUPSProtocol.UAStart.newBuilder();
+      GPBUtil.receiveFrom(uaStart, this.AUInputStream);
+      System.out.println("worldId: " + uaStart.getWorldid());
+      this.connect(uaStart.getWorldid());
+      taskExecutor1.execute(this::startWorldReceiverThread);
+      taskExecutor1.execute(this::startUPSReceiverThread);
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+
+  //  @Async("taskExecutor1")
   public void startWorldReceiverThread() {
     while (true) {
       WorldAmazonProtocol.AResponses.Builder responses = WorldAmazonProtocol.AResponses.newBuilder();
@@ -82,40 +125,76 @@ public class AmazonDaemon {
     }
   }
 
+  //  @Async("taskExecutor1")
   public void startUPSReceiverThread() {
+
+//    while (!Thread.currentThread().isInterrupted()) {
+//    try {
+
+
+    // do something with client_socket
+
     while (true) {
       AmazonUPSProtocol.UACommand.Builder responses = AmazonUPSProtocol.UACommand.newBuilder();
-      GPBUtil.receiveFrom(responses, AmazonDaemon.this.AUInputStream);
-      this.handleUACommands(responses.build());
+
+      GPBUtil.receiveFrom(responses, AUInputStream);
+      AmazonDaemon.this.handleUACommands(responses.build());
     }
+
   }
 
-  public boolean connect() {
 
-    // Connect to UPS
-    // Might need change
-    // worldid should come from ups
-    AmazonUPSProtocol.UAStart.Builder uaStart = AmazonUPSProtocol.UAStart.newBuilder();
-    GPBUtil.receiveFrom(uaStart, this.AUInputStream);
-    uaStart.build();
-    long worldId = uaStart.getWorldid();
-    long ackNum = uaStart.getSeqnum();
-    System.out.println("worldId: " + worldId);
-    AmazonUPSProtocol.AUCommand ack = AmazonUPSProtocol.AUCommand.newBuilder().addAcks(ackNum).build();
-    GPBUtil.send(ack, this.AUOutputStream);
+//  } catch(
+//  IOException e)
+//
+//  {
+//    e.printStackTrace();
+//  } finally
+//
+//  {
+//    try {
+//      client_socket.close();
+//    } catch (IOException e) {
+//      throw new RuntimeException(e);
+//    }
+//  }
+
+
+  /**
+   * This is a helper method to accept a socket from the ServerSocket or return null if it
+   * timeouts.
+   *
+   * @return the socket accepted from the ServerSocket
+   */
+//  public Socket acceptOrNull() {
+//    try {
+//      return this.serverSocket.accept();
+//    } catch (IOException ioe) {
+//      return null;
+//    }
+//  }
+  @Async("taskExecutor1")
+  public void connect(Long worldId) {
+
+
     // connect warehouses
 
     List<Warehouse> warehouses = warehouseService.getAllWarehouses();
     List<WorldAmazonProtocol.AInitWarehouse> wh = warehouses.stream()
-        .map(
-            w -> WorldAmazonProtocol.AInitWarehouse.newBuilder().setX(w.getX()).setY(w.getY()).setId(w.getId()).build())
-        .toList();
+            .map(
+                    w -> WorldAmazonProtocol.AInitWarehouse.newBuilder().setX(w.getX()).setY(w.getY()).setId(w.getId()).build())
+            .toList();
 
     this.connectToWorld(wh, worldId);
     WorldAmazonProtocol.AConnected.Builder result = WorldAmazonProtocol.AConnected.newBuilder();
     GPBUtil.receiveFrom(result, this.AWInputStream);
 
-    return result.getResult().equals("connected!");
+    boolean isSuccess = result.getResult().equals("connected!");
+    if (isSuccess) {
+      System.out.println("connected to world");
+    } else {
+      throw new RuntimeException("failed to connect to world");
+    }
   }
 
   public synchronized void handleAResponses(WorldAmazonProtocol.AResponses aResponses) {
@@ -127,14 +206,17 @@ public class AmazonDaemon {
     // this.msgTracker.remove(seq);
     // }
     // }
+
+
     this.ackHandler(aResponses.getAcksList());
     this.sendAckToWorld(aResponses);
 
-    aResponses.getArrivedList().forEach(this::handleAPurchaseMore);
+    aResponses.getArrivedList().stream().forEach(this::handleAPurchaseMore);
     aResponses.getReadyList().forEach(this::handleAPacked);
     aResponses.getLoadedList().forEach(this::handleALoaded);
     aResponses.getErrorList().forEach(this::handleAError);
     aResponses.getPackagestatusList().forEach(this::handleAPackageStatus);
+
 
     if (aResponses.hasFinished()) {
       System.out.println("Amazon disconnect finished. ");
@@ -144,9 +226,13 @@ public class AmazonDaemon {
   public synchronized void handleUACommands(AmazonUPSProtocol.UACommand uaCommands) {
     this.ackHandler(uaCommands.getAcksList());
     this.sendAckToUPS(uaCommands);
-    uaCommands.getLoadRequestsList().forEach(this::handleUALoadRequest);
-    uaCommands.getDeliveredList().forEach(this::handleUADelivered);
-    uaCommands.getErrorList().forEach(this::handleUAError);
+    uaCommands.getLoadRequestsList().stream().filter(l -> !this.receivedSeq.containsKey(l.getSeqNum())).forEach(this::handleUALoadRequest);
+    uaCommands.getDeliveredList().stream().filter(l -> !this.receivedSeq.containsKey(l.getSeqNum())).forEach(this::handleUADelivered);
+    uaCommands.getErrorList().stream().filter(l -> !this.receivedSeq.containsKey(l.getSeqNum())).forEach(this::handleUAError);
+
+    for (long i : uaCommands.getAcksList()) {
+      this.receivedSeq.put(i, true);
+    }
   }
 
   public synchronized void ackHandler(List<Long> acks) {
@@ -167,14 +253,14 @@ public class AmazonDaemon {
       shipmentService.updateShipmentTruckId(shipment.getId(), uaLoadRequest.getTruckId());
       if (shipment.getStatus() == ShipmentStatus.PACKED) {
         this.sendLoadRequest(List.of(AMessageBuilder.createAPutOnTruck(shipment.getWarehouse().getId(),
-            shipment.getTruckId(), shipment.getId(), seqNum)), seqNum);
+                shipment.getTruckId(), shipment.getId(), seqNum)), seqNum);
       }
     } catch (ServiceError e) {
       AmazonUPSProtocol.AUCommand.Builder aCommand = AmazonUPSProtocol.AUCommand.newBuilder();
       AmazonUPSProtocol.Err.Builder err = AmazonUPSProtocol.Err.newBuilder().setErr(
-          "Shipment not found, id: "
-              + uaLoadRequest.getShipId())
-          .setSeqNum(seqNum).setOriginSeqNum(uaLoadRequest.getSeqNum());
+                      "Shipment not found, id: "
+                      + uaLoadRequest.getShipId())
+              .setSeqNum(seqNum).setOriginSeqNum(uaLoadRequest.getSeqNum());
       aCommand.addError(err);
       this.sendToUPS(aCommand.build(), seqNum);
     }
@@ -185,12 +271,15 @@ public class AmazonDaemon {
     try {
       Shipment shipment = shipmentService.getShipmentById(uaDelivered.getShipId());
       shipmentService.updateShipmentStatus(shipment.getId(), ShipmentStatus.DELIVERED);
+      for (Long orderId : shipment.getOrders().stream().map(Order::getId).toList()) {
+        orderService.updateOrderStatus(orderId, OrderStatus.DELIVERED);
+      }
     } catch (ServiceError e) {
       AmazonUPSProtocol.AUCommand.Builder aCommand = AmazonUPSProtocol.AUCommand.newBuilder();
       AmazonUPSProtocol.Err.Builder err = AmazonUPSProtocol.Err.newBuilder().setErr(
-          "Shipment not found, id: "
-              + uaDelivered.getShipId())
-          .setSeqNum(seqNum).setOriginSeqNum(uaDelivered.getSeqNum());
+                      "Shipment not found, id: "
+                      + uaDelivered.getShipId())
+              .setSeqNum(seqNum).setOriginSeqNum(uaDelivered.getSeqNum());
       aCommand.addError(err);
       this.sendToUPS(aCommand.build(), seqNum);
     }
@@ -215,7 +304,7 @@ public class AmazonDaemon {
     }
     long seqNum1 = this.getSeqNum();
     WorldAmazonProtocol.APack aPack = AMessageBuilder.createAPack(aPurchaseMore.getWhnum(), aProducts, shipment.getId(),
-        seqNum1);
+            seqNum1);
     this.sendToPackRequest(List.of(aPack), seqNum1);
     // send to ups
     long seqNum2 = this.getSeqNum();
@@ -227,6 +316,11 @@ public class AmazonDaemon {
     aUPickupRequest.setY(shipment.getWarehouse().getY());
     aUPickupRequest.setDestinationX(shipment.getDestinationX());
     aUPickupRequest.setDestinationY(shipment.getDestinationY());
+    String upsName = shipment.getUpsName();
+    if (upsName != null && !upsName.isEmpty()) {
+      aUPickupRequest.setUpsName(shipment.getUpsName());
+    }
+    aUPickupRequest.addAllItems(shipment.getOrders().stream().map(o -> o.getItem().getName()).collect(Collectors.toList()));
 
     this.sendAUPickUpRequest(List.of(aUPickupRequest.build()), seqNum2);
   }
@@ -245,9 +339,9 @@ public class AmazonDaemon {
     Integer truckId = shipment.getTruckId();
     if (truckId != null) {
       this.sendLoadRequest(
-          List.of(
-              AMessageBuilder.createAPutOnTruck(shipment.getWarehouse().getId(), truckId, shipment.getId(), seqNum)),
-          seqNum);
+              List.of(
+                      AMessageBuilder.createAPutOnTruck(shipment.getWarehouse().getId(), truckId, shipment.getId(), seqNum)),
+              seqNum);
     }
   }
 
@@ -289,7 +383,7 @@ public class AmazonDaemon {
   @Async("taskExecutor1")
   public void sendBuyRequest(List<WorldAmazonProtocol.APurchaseMore> aPurchaseMores, long seqNum) {
     WorldAmazonProtocol.ACommands aCommands = WorldAmazonProtocol.ACommands.newBuilder().addAllBuy(aPurchaseMores)
-        .build();
+            .build();
     this.sendToWorld(aCommands, seqNum);
   }
 
@@ -308,7 +402,7 @@ public class AmazonDaemon {
   @Async("taskExecutor1")
   public void sendQueryRequest(List<WorldAmazonProtocol.AQuery> aQueries, long seqNum) {
     WorldAmazonProtocol.ACommands aCommands = WorldAmazonProtocol.ACommands.newBuilder().addAllQueries(aQueries)
-        .build();
+            .build();
     this.sendToWorld(aCommands, seqNum);
   }
 
@@ -322,14 +416,14 @@ public class AmazonDaemon {
   // send to ups to pickup the package
   public void sendAUPickUpRequest(List<AmazonUPSProtocol.AUPickupRequest> pickupRequests, long seqNum) {
     AmazonUPSProtocol.AUCommand auCommand = AmazonUPSProtocol.AUCommand.newBuilder()
-        .addAllPickupRequests(pickupRequests).build();
+            .addAllPickupRequests(pickupRequests).build();
     this.sendToUPS(auCommand, seqNum);
   }
 
   @Async("taskExecutor1")
   public void sendAUDeliverRequest(List<AmazonUPSProtocol.AUDeliverRequest> deliverRequests, long seqNum) {
     AmazonUPSProtocol.AUCommand auCommand = AmazonUPSProtocol.AUCommand.newBuilder()
-        .addAllDeliverRequests(deliverRequests).build();
+            .addAllDeliverRequests(deliverRequests).build();
     this.sendToUPS(auCommand, seqNum);
   }
 
@@ -354,7 +448,7 @@ public class AmazonDaemon {
     acks.addAll(responses.getPackagestatusList().stream().map(WorldAmazonProtocol.APackage::getSeqnum).toList());
     if (!acks.isEmpty()) {
       WorldAmazonProtocol.ACommands aCommands = AMessageBuilder.createACommands(List.of(), List.of(), List.of(),
-          List.of(), acks);
+              List.of(), acks);
       this.sendToWorld(aCommands);
     }
   }

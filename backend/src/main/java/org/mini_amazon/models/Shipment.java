@@ -31,7 +31,7 @@ public class Shipment {
   private Long id;
 
   // destination
-//  private String address;
+  // private String address;
   @Column(nullable = false)
   private double totalPrice;
 
@@ -42,15 +42,26 @@ public class Shipment {
   @Column(nullable = false)
   private int destinationY;
   @ManyToOne
-//  @JsonIgnore
-//  @Column(nullable = false)
+  // @JsonIgnore
+  // @Column(nullable = false)
   private Warehouse warehouse;
 
-  @OneToMany(mappedBy = "shipment", cascade = {CascadeType.ALL})
+  private String upsName;
+
+  public String getUpsName() {
+    return upsName;
+  }
+
+  public void setUpsName(String upsName) {
+    this.upsName = upsName;
+  }
+
+  @OneToMany(mappedBy = "shipment", cascade = {CascadeType.ALL })
   @Column(nullable = false)
+  @JsonIgnore
   private List<Order> orders;
 
-  @ManyToOne(cascade = {CascadeType.ALL})
+  @ManyToOne(cascade = { CascadeType.ALL })
   @JsonIgnore
   // TODO
   private User owner;
@@ -125,6 +136,10 @@ public class Shipment {
     this.orders = orders;
   }
 
+  public void addOrder(Order order) {
+    this.orders.add(order);
+  }
+
   public ShipmentStatus getStatus() {
     return status;
   }
@@ -148,12 +163,14 @@ public class Shipment {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     Shipment shipment = (Shipment) o;
     return destinationX == shipment.destinationX && destinationY == shipment.destinationY
-           && Objects.equals(id, shipment.id)
-           && Objects.equals(orders, shipment.orders) && status == shipment.status;
+        && Objects.equals(id, shipment.id)
+        && Objects.equals(orders, shipment.orders) && status == shipment.status;
   }
 
   @Override
@@ -164,12 +181,12 @@ public class Shipment {
   @Override
   public String toString() {
     return "Shipment{" +
-           "id=" + id +
-           ", destinationX=" + destinationX +
-           ", destinationY=" + destinationY +
-           ", truckId=" + truckId +
-//           ", orders=" + Objects.requireNonNullElse(orders,"") +
-           ", status=" + status +
-           '}';
+        "id=" + id +
+        ", destinationX=" + destinationX +
+        ", destinationY=" + destinationY +
+        ", truckId=" + truckId +
+        // ", orders=" + Objects.requireNonNullElse(orders,"") +
+        ", status=" + status +
+        '}';
   }
 }

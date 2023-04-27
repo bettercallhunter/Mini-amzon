@@ -37,6 +37,8 @@ message AUPickupRequest{
   required int32 y = 5; // location of the warehouse
   required int32 destinationX = 6;
   required int32 destinationY = 7;
+  optional string upsName = 8; // user name of the UPS
+  repeated string items = 9;
 }
 
 

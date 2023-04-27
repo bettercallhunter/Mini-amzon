@@ -31,18 +31,18 @@ public class User implements UserDetails {
   @Enumerated(EnumType.STRING)
   private Set<Role> roles;
 
-  @OneToMany(mappedBy = "owner", cascade = {CascadeType.ALL}, orphanRemoval = true)
+  @OneToMany(mappedBy = "owner",orphanRemoval = true)
   private List<Order> cart;
 
   public User(String email, String username, String password) {
-//    this.email = email;
-//    this.username = username;
-//    this.password = password;
-//    Random r = new SecureRandom();
-//    byte[] Salt = new byte[20];
-//    r.nextBytes(Salt);
-//    this.salt = Base64.getEncoder().encodeToString(Salt);
-//    this.roles = Set.of(Role.BUYER);
+    // this.email = email;
+    // this.username = username;
+    // this.password = password;
+    // Random r = new SecureRandom();
+    // byte[] Salt = new byte[20];
+    // r.nextBytes(Salt);
+    // this.salt = Base64.getEncoder().encodeToString(Salt);
+    // this.roles = Set.of(Role.BUYER);
   }
 
   public User() {
@@ -53,7 +53,6 @@ public class User implements UserDetails {
     this.roles = Set.of(Role.BUYER);
     this.cart = new ArrayList<>();
   }
-
 
   public void setUsername(String username) {
     this.username = username;
@@ -71,13 +70,13 @@ public class User implements UserDetails {
     this.email = email;
   }
 
-//  public String getSalt() {
-//    return salt;
-//  }
-//
-//  public void setSalt(String salt) {
-//    this.salt = salt;
-//  }
+  // public String getSalt() {
+  // return salt;
+  // }
+  //
+  // public void setSalt(String salt) {
+  // this.salt = salt;
+  // }
 
   // from user details
 
@@ -89,7 +88,6 @@ public class User implements UserDetails {
     }
     return authorities;
   }
-
 
   @Override
   public String getUsername() {
@@ -121,15 +119,16 @@ public class User implements UserDetails {
     return true;
   }
 
-
-
-
   public List<Order> getCart() {
     return cart;
   }
 
   public void setCart(List<Order> cart) {
     this.cart = cart;
+  }
+
+  public void addCart(Order order) {
+    this.cart.add(order);
   }
 
   public Set<Role> getRoles() {
@@ -153,8 +152,10 @@ public class User implements UserDetails {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     User user = (User) o;
     return Objects.equals(username, user.username)
            && Objects.equals(email, user.email)
