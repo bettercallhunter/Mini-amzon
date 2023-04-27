@@ -57,7 +57,7 @@ const Index = () => {
 
     const handlePageChange = (event, value) => {
         setItems({ ...items, number: value });
-    };
+    };  
 
     useEffect(() => {
         retriveItems();
