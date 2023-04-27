@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.mini_amazon.controllers.*;
 import jakarta.annotation.Resource;
 
 @RestController
@@ -27,14 +27,16 @@ public class ShipmentController {
   @Resource
   private ShipmentService shipmentService;
 
-  record ShipmentRequest(int destinationX, int destinationY,
-                         List<OrderController.OrderRequest> orderRequests) {
+  record ShipmentRequest(
+      int destinationX,
+      int destinationY, String upsName,
+      List<OrderController.OrderRequest> orderRequests) {
   }
 
   @PostMapping("/placeShipment")
   public ResponseEntity<Shipment> placeShipment(@RequestBody ShipmentRequest request) throws ServiceError {
     Shipment shipment = shipmentService.createShipment(request.orderRequests(), request.destinationX(),
-            request.destinationY());
+        request.destinationY());
     // UNCOMMENT ME!!!!!!!!!!!!!!
     // long seqNum = amazonDaemon.getSeqNum();
     List<WorldAmazonProtocol.AProduct> products = new ArrayList<>();
@@ -45,8 +47,9 @@ public class ShipmentController {
       productBuilder.setDescription(order.getItem().getDescription());
       products.add(productBuilder.build());
     }
+
     // amazonDaemon.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(shipment.getWarehouse().getId(),
-    // products, seqNum)), seqNum);
+    // products, seqNum)),seqNum);
     return ResponseEntity.ok().body(shipment);
   }
 
@@ -59,6 +62,16 @@ public class ShipmentController {
     long shipmentNumber = request.shipmentNumber();
     List<Order> orders = shipmentService.getOrdersByShipment(shipmentNumber);
     return ResponseEntity.ok().body(orders);
+
+  }
+
+  record editShipmentRequest(long orderId, int destinationX, int destinationY) {
+  }
+
+  @PostMapping("/editShipment")
+  public ResponseEntity<String> editShipment(@RequestBody editShipmentRequest request) throws ServiceError {
+    shipmentService.updateShipmentAddress(request.orderId(), request.destinationX(), request.destinationY());
+    return ResponseEntity.ok().body("Shipment updated");
 
   }
 

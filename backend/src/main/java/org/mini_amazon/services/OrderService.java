@@ -34,6 +34,14 @@ public class OrderService {
     // System.out.println(pagedResult);
     return pagedResult;
   }
+  public Order findOrderById(long id) throws ServiceError {
+    Optional<Order> orderOptional = orderRepository.findById(id);
+    if (orderOptional.isEmpty()) {
+      throw new ServiceError("Order does not exist.");
+    } else {
+      return orderOptional.get();
+    }
+  }
 
   @Transactional // long shipmentId
   public Order createOrder(long itemId, int quantity) throws ServiceError {

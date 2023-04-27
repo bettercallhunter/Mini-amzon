@@ -1,7 +1,5 @@
 package org.mini_amazon.services;
 
-import com.google.protobuf.ServiceException;
-
 import java.util.List;
 
 import org.mini_amazon.enums.OrderStatus;
@@ -27,18 +25,26 @@ public class ShoppingCartService {
 
     @Resource
     private ItemService itemService;
+    @Resource
+    private OrderService orderService;
 
-    public List<Order> getShoppingCart() throws ServiceError{
+    public List<Order> getShoppingCart() throws ServiceError {
         User parsedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = parsedUser.getUsername();
         User currentUser = userService.getUserByUsername(username);
         List<Order> orders = currentUser.getCart();
-        return orders;
+        List<Order> cartOrders = new java.util.ArrayList<>();
+        for (Order order : orders) {
+            if (order.getStatus() == OrderStatus.SHIPPINGCART) {
+                cartOrders.add(order);
+            }
+        }
+        return cartOrders;
     }
 
     public Order addCart(long item_id, int quantity) throws ServiceError {
         Item item = itemService.getItemById(item_id);
-//        System.out.println(item);
+        // System.out.println(item);
         User parsedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = parsedUser.getUsername();
         User currentUser = userService.getUserByUsername(username);
@@ -54,5 +60,10 @@ public class ShoppingCartService {
         orderRepository.save(order);
 
         return order;
+    }
+
+    public void deleteCart(long order_id) throws ServiceError {
+        Order order = orderService.findOrderById(order_id);
+        orderRepository.delete(order);
     }
 }

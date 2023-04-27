@@ -11,6 +11,7 @@ import Orders from './Pages/Orders';
 import Login from './User/Login';
 import Register from './User/Register';
 import Cart from './Pages/Cart';
+import EditOrder from './Pages/EditOrder';
 function App() {
   return (
     <Router>
@@ -22,6 +23,7 @@ function App() {
         <Route exact path="/orders" element={<Orders />} />
         <Route exact path="/findorder" element={<FindOrder />} />
         <Route exact path="/cart" element={<Cart />} />
+        <Route exact path="/editOrder/:id" element={<EditOrder />} />
       </Routes>
     </Router>
   );

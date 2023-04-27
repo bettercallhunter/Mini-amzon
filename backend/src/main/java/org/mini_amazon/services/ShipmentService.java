@@ -1,6 +1,11 @@
 package org.mini_amazon.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.mini_amazon.controllers.OrderController;
+import org.mini_amazon.enums.OrderStatus;
 import org.mini_amazon.enums.ShipmentStatus;
 import org.mini_amazon.errors.ServiceError;
 import org.mini_amazon.models.Item;
@@ -13,11 +18,6 @@ import org.mini_amazon.repositories.OrderRepository;
 import org.mini_amazon.repositories.ShipmentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 import jakarta.annotation.Resource;
 
@@ -51,37 +51,46 @@ public class ShipmentService {
   @Transactional
   // long itemId, double quantity
   public Shipment createShipment(List<OrderController.OrderRequest> orderRequests, int destinationX, int destinationY)
-          throws ServiceError {
+      throws ServiceError {
     User user = userService.getCurrentUser();
     if (orderRequests == null || orderRequests.isEmpty()) {
       throw new ServiceError("No order pairs provided");
     }
     Warehouse warehouse = warehouseService.getWarehouseByDestination(destinationX, destinationY);
-    List<Order> orders = new ArrayList<>();
     double totalPrice = 0;
     Shipment newShipment = new Shipment();
     for (OrderController.OrderRequest orderPair : orderRequests) {
-      Order order = orderService.createOrder(orderPair.itemId(), orderPair.quantity());
+      // *******
+      // Order order = orderService.createOrder(orderPair.itemId(),
+      // orderPair.quantity());
+      // ********
+      Order order = orderService.findOrderById(orderPair.id());
+      order.setStatus(OrderStatus.PROCESSING);
       // Order order = new Order();
       // order.setItem(itemService.getItemById(orderPair.itemId()));
       // order.setQuantity(orderPair.quantity());
-      orders.add(order);
-//      order
+      // orders.add(order);
+      // order
       // Order order =
       totalPrice += order.getItem().getUnitPrice() * order.getQuantity();
+
+      newShipment.addOrder(order);
+
     }
 
     newShipment.setDestinationX(destinationX);
     newShipment.setDestinationY(destinationY);
     newShipment.setTotalPrice(totalPrice);
     newShipment.setWarehouse(warehouse);
-    newShipment.setOrders(orders);
+    // newShipment.setOrders(orders);
     newShipment.setOwner(user);
     Shipment shipment = shipmentRepository.save(newShipment);
-    for (Order order : orders) {
+    for (OrderController.OrderRequest orderPair : orderRequests) {
+      Order order = orderService.findOrderById(orderPair.id());
       order.setShipment(shipment);
+      orderRepository.save(order);
     }
-    orderRepository.saveAll(orders);
+
     return shipment;
   }
 
@@ -93,7 +102,7 @@ public class ShipmentService {
       return shipmentRepository.save(shipment);
     } else {
       throw new ServiceError(
-              "Cannot update shipment status from " + shipment.getStatus() + " to " + status);
+          "Cannot update shipment status from " + shipment.getStatus() + " to " + status);
     }
   }
 
@@ -115,7 +124,7 @@ public class ShipmentService {
   public Shipment getPendingShipmentBySameOrder(WorldAmazonProtocol.APurchaseMore aPurchaseMore) throws ServiceError {
 
     List<Shipment> shipments = shipmentRepository.findShipmentsByStatusAndWarehouseId(ShipmentStatus.PENDING,
-            aPurchaseMore.getWhnum());
+        aPurchaseMore.getWhnum());
     // System.out.println("all shipments: " + shipmentRepository.findAll());
     // System.out.println("shipments: " + shipments);
     if (shipments.isEmpty()) {
@@ -164,7 +173,16 @@ public class ShipmentService {
 
   private boolean ifTwoOrderContainsSameItem(Order o1, Order o2) {
     return o1.getItem().getId() == o2.getItem().getId() && o1.getQuantity() == o2.getQuantity()
-           && o1.getItem().getDescription().equals(o2.getItem().getDescription());
+        && o1.getItem().getDescription().equals(o2.getItem().getDescription());
+  }
+
+  @Transactional
+  public void updateShipmentAddress(long orderId, int x, int y) throws ServiceError {
+    Order order = orderService.findOrderById(orderId);
+    Shipment shipment = getShipmentById(order.getShipment().getId());
+    shipment.setDestinationX(x);
+    shipment.setDestinationY(y);
+    shipmentRepository.save(shipment);
   }
 
 }

@@ -126,24 +126,6 @@ public class UserController {
     return ResponseEntity.ok().body("hello post email");
   }
 
-  @GetMapping("/cart")
-  public ResponseEntity<List<Order>> cart() throws ServiceError{
-    List<Order> cart = shoppingCartService.getShoppingCart();
-    return ResponseEntity.ok().body(cart);
-  }
 
-  public record addToCartRequest(int quantity, int id) {
-  }
-
-  @PostMapping("/cart")
-  public ResponseEntity<String> cart1(@RequestBody addToCartRequest request) throws ServiceError {
-//    System.out.println("reach cart");
-//    System.out.println(request.id() + " " + request.quantity());
-
-
-      shoppingCartService.addCart(request.id(), request.quantity());
-      return ResponseEntity.ok().body("niuzie gege");
-
-  }
 
 }

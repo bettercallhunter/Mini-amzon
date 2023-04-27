@@ -46,12 +46,10 @@ public class OrderController {
 
   // @PostMapping("addToCart")
   // public ResponseEntity<Order> addToCart(@RequestBody OrderRequest request) {
-    
+
   // }
 
-  public record OrderRequest(long itemId, int quantity) {
+  public record OrderRequest(long itemId, int quantity, long id) {
   }
-
-
 
 }
