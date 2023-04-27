@@ -31,7 +31,7 @@ public class User implements UserDetails {
   @Enumerated(EnumType.STRING)
   private Set<Role> roles;
 
-  @OneToMany(mappedBy = "owner", cascade = { CascadeType.ALL }, orphanRemoval = true)
+  @OneToMany(mappedBy = "owner",orphanRemoval = true)
   private List<Order> cart;
 
   public User(String email, String username, String password) {
@@ -142,12 +142,12 @@ public class User implements UserDetails {
   @Override
   public String toString() {
     return "User{" +
-        "username='" + username + '\'' +
-        ", email='" + email + '\'' +
-        ", password='" + password + '\'' +
-        ", roles=" + roles +
-        ", cart=" + cart +
-        '}';
+           "username='" + username + '\'' +
+           ", email='" + email + '\'' +
+           ", password='" + password + '\'' +
+           ", roles=" + roles +
+           ", cart=" + cart +
+           '}';
   }
 
   @Override
@@ -158,10 +158,10 @@ public class User implements UserDetails {
       return false;
     User user = (User) o;
     return Objects.equals(username, user.username)
-        && Objects.equals(email, user.email)
-        && Objects.equals(password, user.password)
-        && Objects.equals(roles, user.roles)
-        && Objects.equals(cart, user.cart);
+           && Objects.equals(email, user.email)
+           && Objects.equals(password, user.password)
+           && Objects.equals(roles, user.roles)
+           && Objects.equals(cart, user.cart);
   }
 
   @Override

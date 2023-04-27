@@ -2,13 +2,17 @@ package org.mini_amazon.controllers;
 
 import java.util.List;
 
+import org.mini_amazon.errors.ServiceError;
 import org.mini_amazon.models.Order;
+import org.mini_amazon.models.User;
 import org.mini_amazon.services.AuthService;
 //import org.mini_amazon.utils.JwtTokenUtil;
 import org.mini_amazon.services.EmailService;
+import org.mini_amazon.services.ShoppingCartService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -113,9 +117,6 @@ public class UserController {
 
   @PostMapping("/health")
   public ResponseEntity<String> healthPost() {
-//    System.out.println("token is " + token);
-//    System.out.println("reach health");
-//    User parsed_User = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     return ResponseEntity.ok().body("hello post");
   }
   @PostMapping("/emailCheck")
@@ -126,7 +127,7 @@ public class UserController {
   }
 
   @GetMapping("/cart")
-  public ResponseEntity<List<Order>> cart() {
+  public ResponseEntity<List<Order>> cart() throws ServiceError{
     List<Order> cart = shoppingCartService.getShoppingCart();
     return ResponseEntity.ok().body(cart);
   }
@@ -135,15 +136,14 @@ public class UserController {
   }
 
   @PostMapping("/cart")
-  public ResponseEntity<String> cart(@RequestBody addToCartRequest request)
-      throws Exception {
-    try {
+  public ResponseEntity<String> cart1(@RequestBody addToCartRequest request) throws ServiceError {
+//    System.out.println("reach cart");
+//    System.out.println(request.id() + " " + request.quantity());
+
 
       shoppingCartService.addCart(request.id(), request.quantity());
       return ResponseEntity.ok().body("niuzie gege");
-    } catch (Exception e) {
-      return ResponseEntity.status(404).body(e.getMessage());
-    }
+
   }
 
 }

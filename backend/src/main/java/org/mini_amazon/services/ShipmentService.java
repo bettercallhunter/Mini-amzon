@@ -6,6 +6,7 @@ import org.mini_amazon.errors.ServiceError;
 import org.mini_amazon.models.Item;
 import org.mini_amazon.models.Order;
 import org.mini_amazon.models.Shipment;
+import org.mini_amazon.models.User;
 import org.mini_amazon.models.Warehouse;
 import org.mini_amazon.proto.WorldAmazonProtocol;
 import org.mini_amazon.repositories.OrderRepository;
@@ -31,6 +32,8 @@ public class ShipmentService {
   private WarehouseService warehouseService;
   @Resource
   private ItemService itemService;
+  @Resource
+  private UserService userService;
 
   @Transactional(readOnly = true)
   public Shipment getShipmentById(long id) throws ServiceError {
@@ -48,7 +51,8 @@ public class ShipmentService {
   @Transactional
   // long itemId, double quantity
   public Shipment createShipment(List<OrderController.OrderRequest> orderRequests, int destinationX, int destinationY)
-      throws ServiceError {
+          throws ServiceError {
+    User user = userService.getCurrentUser();
     if (orderRequests == null || orderRequests.isEmpty()) {
       throw new ServiceError("No order pairs provided");
     }
@@ -62,6 +66,7 @@ public class ShipmentService {
       // order.setItem(itemService.getItemById(orderPair.itemId()));
       // order.setQuantity(orderPair.quantity());
       orders.add(order);
+//      order
       // Order order =
       totalPrice += order.getItem().getUnitPrice() * order.getQuantity();
     }
@@ -71,6 +76,7 @@ public class ShipmentService {
     newShipment.setTotalPrice(totalPrice);
     newShipment.setWarehouse(warehouse);
     newShipment.setOrders(orders);
+    newShipment.setOwner(user);
     Shipment shipment = shipmentRepository.save(newShipment);
     for (Order order : orders) {
       order.setShipment(shipment);
@@ -87,7 +93,7 @@ public class ShipmentService {
       return shipmentRepository.save(shipment);
     } else {
       throw new ServiceError(
-          "Cannot update shipment status from " + shipment.getStatus() + " to " + status);
+              "Cannot update shipment status from " + shipment.getStatus() + " to " + status);
     }
   }
 
@@ -109,7 +115,7 @@ public class ShipmentService {
   public Shipment getPendingShipmentBySameOrder(WorldAmazonProtocol.APurchaseMore aPurchaseMore) throws ServiceError {
 
     List<Shipment> shipments = shipmentRepository.findShipmentsByStatusAndWarehouseId(ShipmentStatus.PENDING,
-        aPurchaseMore.getWhnum());
+            aPurchaseMore.getWhnum());
     // System.out.println("all shipments: " + shipmentRepository.findAll());
     // System.out.println("shipments: " + shipments);
     if (shipments.isEmpty()) {
@@ -158,7 +164,7 @@ public class ShipmentService {
 
   private boolean ifTwoOrderContainsSameItem(Order o1, Order o2) {
     return o1.getItem().getId() == o2.getItem().getId() && o1.getQuantity() == o2.getQuantity()
-        && o1.getItem().getDescription().equals(o2.getItem().getDescription());
+           && o1.getItem().getDescription().equals(o2.getItem().getDescription());
   }
 
 }

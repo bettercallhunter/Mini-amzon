@@ -4125,6 +4125,35 @@ public final class AmazonUPSProtocol {
      * @return The destinationY.
      */
     int getDestinationY();
+
+    /**
+     * <pre>
+     * user name of the UPS
+     * </pre>
+     *
+     * <code>optional string upsName = 8;</code>
+     * @return Whether the upsName field is set.
+     */
+    boolean hasUpsName();
+    /**
+     * <pre>
+     * user name of the UPS
+     * </pre>
+     *
+     * <code>optional string upsName = 8;</code>
+     * @return The upsName.
+     */
+    java.lang.String getUpsName();
+    /**
+     * <pre>
+     * user name of the UPS
+     * </pre>
+     *
+     * <code>optional string upsName = 8;</code>
+     * @return The bytes for upsName.
+     */
+    com.google.protobuf.ByteString
+        getUpsNameBytes();
   }
   /**
    * <pre>
@@ -4143,6 +4172,7 @@ public final class AmazonUPSProtocol {
       super(builder);
     }
     private AUPickupRequest() {
+      upsName_ = "";
     }
 
     @java.lang.Override
@@ -4315,6 +4345,67 @@ public final class AmazonUPSProtocol {
       return destinationY_;
     }
 
+    public static final int UPSNAME_FIELD_NUMBER = 8;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object upsName_ = "";
+    /**
+     * <pre>
+     * user name of the UPS
+     * </pre>
+     *
+     * <code>optional string upsName = 8;</code>
+     * @return Whether the upsName field is set.
+     */
+    @java.lang.Override
+    public boolean hasUpsName() {
+      return ((bitField0_ & 0x00000080) != 0);
+    }
+    /**
+     * <pre>
+     * user name of the UPS
+     * </pre>
+     *
+     * <code>optional string upsName = 8;</code>
+     * @return The upsName.
+     */
+    @java.lang.Override
+    public java.lang.String getUpsName() {
+      java.lang.Object ref = upsName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          upsName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * user name of the UPS
+     * </pre>
+     *
+     * <code>optional string upsName = 8;</code>
+     * @return The bytes for upsName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getUpsNameBytes() {
+      java.lang.Object ref = upsName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        upsName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -4378,6 +4469,9 @@ public final class AmazonUPSProtocol {
       if (((bitField0_ & 0x00000040) != 0)) {
         output.writeInt32(7, destinationY_);
       }
+      if (((bitField0_ & 0x00000080) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, upsName_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -4414,6 +4508,9 @@ public final class AmazonUPSProtocol {
       if (((bitField0_ & 0x00000040) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(7, destinationY_);
+      }
+      if (((bitField0_ & 0x00000080) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, upsName_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -4465,6 +4562,11 @@ public final class AmazonUPSProtocol {
         if (getDestinationY()
             != other.getDestinationY()) return false;
       }
+      if (hasUpsName() != other.hasUpsName()) return false;
+      if (hasUpsName()) {
+        if (!getUpsName()
+            .equals(other.getUpsName())) return false;
+      }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -4505,6 +4607,10 @@ public final class AmazonUPSProtocol {
       if (hasDestinationY()) {
         hash = (37 * hash) + DESTINATIONY_FIELD_NUMBER;
         hash = (53 * hash) + getDestinationY();
+      }
+      if (hasUpsName()) {
+        hash = (37 * hash) + UPSNAME_FIELD_NUMBER;
+        hash = (53 * hash) + getUpsName().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -4646,6 +4752,7 @@ public final class AmazonUPSProtocol {
         y_ = 0;
         destinationX_ = 0;
         destinationY_ = 0;
+        upsName_ = "";
         return this;
       }
 
@@ -4708,6 +4815,10 @@ public final class AmazonUPSProtocol {
           result.destinationY_ = destinationY_;
           to_bitField0_ |= 0x00000040;
         }
+        if (((from_bitField0_ & 0x00000080) != 0)) {
+          result.upsName_ = upsName_;
+          to_bitField0_ |= 0x00000080;
+        }
         result.bitField0_ |= to_bitField0_;
       }
 
@@ -4743,6 +4854,11 @@ public final class AmazonUPSProtocol {
         }
         if (other.hasDestinationY()) {
           setDestinationY(other.getDestinationY());
+        }
+        if (other.hasUpsName()) {
+          upsName_ = other.upsName_;
+          bitField0_ |= 0x00000080;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -4826,6 +4942,11 @@ public final class AmazonUPSProtocol {
                 bitField0_ |= 0x00000040;
                 break;
               } // case 56
+              case 66: {
+                upsName_ = input.readBytes();
+                bitField0_ |= 0x00000080;
+                break;
+              } // case 66
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -5151,6 +5272,110 @@ public final class AmazonUPSProtocol {
       public Builder clearDestinationY() {
         bitField0_ = (bitField0_ & ~0x00000040);
         destinationY_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object upsName_ = "";
+      /**
+       * <pre>
+       * user name of the UPS
+       * </pre>
+       *
+       * <code>optional string upsName = 8;</code>
+       * @return Whether the upsName field is set.
+       */
+      public boolean hasUpsName() {
+        return ((bitField0_ & 0x00000080) != 0);
+      }
+      /**
+       * <pre>
+       * user name of the UPS
+       * </pre>
+       *
+       * <code>optional string upsName = 8;</code>
+       * @return The upsName.
+       */
+      public java.lang.String getUpsName() {
+        java.lang.Object ref = upsName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            upsName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * user name of the UPS
+       * </pre>
+       *
+       * <code>optional string upsName = 8;</code>
+       * @return The bytes for upsName.
+       */
+      public com.google.protobuf.ByteString
+          getUpsNameBytes() {
+        java.lang.Object ref = upsName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          upsName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * user name of the UPS
+       * </pre>
+       *
+       * <code>optional string upsName = 8;</code>
+       * @param value The upsName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUpsName(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        upsName_ = value;
+        bitField0_ |= 0x00000080;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * user name of the UPS
+       * </pre>
+       *
+       * <code>optional string upsName = 8;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearUpsName() {
+        upsName_ = getDefaultInstance().getUpsName();
+        bitField0_ = (bitField0_ & ~0x00000080);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * user name of the UPS
+       * </pre>
+       *
+       * <code>optional string upsName = 8;</code>
+       * @param value The bytes for upsName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUpsNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        upsName_ = value;
+        bitField0_ |= 0x00000080;
         onChanged();
         return this;
       }
@@ -7939,17 +8164,17 @@ public final class AmazonUPSProtocol {
       "delivered\030\002 \003(\0132\030.mini_amazon.UADelivere" +
       "d\022\014\n\004acks\030\003 \003(\003\022\037\n\005error\030\004 \003(\0132\020.mini_am" +
       "azon.Err\"*\n\007UAStart\022\017\n\007worldid\030\001 \002(\003\022\016\n\006" +
-      "seqnum\030\002 \002(\003\"\210\001\n\017AUPickupRequest\022\016\n\006seqN" +
+      "seqnum\030\002 \002(\003\"\231\001\n\017AUPickupRequest\022\016\n\006seqN" +
       "um\030\001 \002(\003\022\016\n\006shipId\030\002 \002(\003\022\023\n\013warehouseId\030" +
       "\003 \002(\005\022\t\n\001x\030\004 \002(\005\022\t\n\001y\030\005 \002(\005\022\024\n\014destinati" +
-      "onX\030\006 \002(\005\022\024\n\014destinationY\030\007 \002(\005\"@\n\rUALoa" +
-      "dRequest\022\016\n\006seqNum\030\001 \002(\003\022\017\n\007truckId\030\002 \002(" +
-      "\005\022\016\n\006shipId\030\003 \002(\003\"2\n\020AUDeliverRequest\022\016\n" +
-      "\006seqNum\030\001 \002(\003\022\016\n\006shipId\030\002 \002(\003\"-\n\013UADeliv" +
-      "ered\022\016\n\006seqNum\030\001 \002(\003\022\016\n\006shipId\030\002 \002(\003\"8\n\003" +
-      "Err\022\013\n\003err\030\001 \002(\t\022\024\n\014originSeqNum\030\002 \002(\003\022\016" +
-      "\n\006seqNum\030\003 \002(\003B*\n\025org.mini_amazon.protoB" +
-      "\021AmazonUPSProtocol"
+      "onX\030\006 \002(\005\022\024\n\014destinationY\030\007 \002(\005\022\017\n\007upsNa" +
+      "me\030\010 \001(\t\"@\n\rUALoadRequest\022\016\n\006seqNum\030\001 \002(" +
+      "\003\022\017\n\007truckId\030\002 \002(\005\022\016\n\006shipId\030\003 \002(\003\"2\n\020AU" +
+      "DeliverRequest\022\016\n\006seqNum\030\001 \002(\003\022\016\n\006shipId" +
+      "\030\002 \002(\003\"-\n\013UADelivered\022\016\n\006seqNum\030\001 \002(\003\022\016\n" +
+      "\006shipId\030\002 \002(\003\"8\n\003Err\022\013\n\003err\030\001 \002(\t\022\024\n\014ori" +
+      "ginSeqNum\030\002 \002(\003\022\016\n\006seqNum\030\003 \002(\003B*\n\025org.m" +
+      "ini_amazon.protoB\021AmazonUPSProtocol"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7978,7 +8203,7 @@ public final class AmazonUPSProtocol {
     internal_static_mini_amazon_AUPickupRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_mini_amazon_AUPickupRequest_descriptor,
-        new java.lang.String[] { "SeqNum", "ShipId", "WarehouseId", "X", "Y", "DestinationX", "DestinationY", });
+        new java.lang.String[] { "SeqNum", "ShipId", "WarehouseId", "X", "Y", "DestinationX", "DestinationY", "UpsName", });
     internal_static_mini_amazon_UALoadRequest_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_mini_amazon_UALoadRequest_fieldAccessorTable = new

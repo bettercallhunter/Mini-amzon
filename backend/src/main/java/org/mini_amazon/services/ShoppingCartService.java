@@ -1,8 +1,11 @@
 package org.mini_amazon.services;
 
+import com.google.protobuf.ServiceException;
+
 import java.util.List;
 
 import org.mini_amazon.enums.OrderStatus;
+import org.mini_amazon.errors.ServiceError;
 import org.mini_amazon.models.Item;
 import org.mini_amazon.models.Order;
 import org.mini_amazon.models.User;
@@ -19,29 +22,37 @@ public class ShoppingCartService {
     private UserRepository userRepository;
     @Resource
     private OrderRepository orderRepository;
+    @Resource
+    private UserService userService;
 
     @Resource
     private ItemService itemService;
 
-    public List<Order> getShoppingCart() {
-        User parsed_User = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Order> orders = parsed_User.getCart();
+    public List<Order> getShoppingCart() throws ServiceError{
+        User parsedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = parsedUser.getUsername();
+        User currentUser = userService.getUserByUsername(username);
+        List<Order> orders = currentUser.getCart();
         return orders;
     }
 
-    public void addCart(long item_id, int quantity) throws Exception {
+    public Order addCart(long item_id, int quantity) throws ServiceError {
         Item item = itemService.getItemById(item_id);
-        User parsed_User = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        System.out.println(item);
+        User parsedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = parsedUser.getUsername();
+        User currentUser = userService.getUserByUsername(username);
+
         Order order = new Order();
         order.setItem(item);
         order.setQuantity(quantity);
 
         order.setStatus(OrderStatus.SHIPPINGCART);
-        parsed_User.addCart(order);
-        userRepository.save(parsed_User);
-        order.setOwner(parsed_User);
+        currentUser.addCart(order);
+        userRepository.save(currentUser);
+        order.setOwner(currentUser);
         orderRepository.save(order);
 
-        return;
+        return order;
     }
 }

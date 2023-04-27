@@ -28,13 +28,13 @@ public class ShipmentController {
   private ShipmentService shipmentService;
 
   record ShipmentRequest(int destinationX, int destinationY,
-      List<OrderController.OrderRequest> orderRequests) {
+                         List<OrderController.OrderRequest> orderRequests) {
   }
 
   @PostMapping("/placeShipment")
   public ResponseEntity<Shipment> placeShipment(@RequestBody ShipmentRequest request) throws ServiceError {
     Shipment shipment = shipmentService.createShipment(request.orderRequests(), request.destinationX(),
-        request.destinationY());
+            request.destinationY());
     // UNCOMMENT ME!!!!!!!!!!!!!!
     // long seqNum = amazonDaemon.getSeqNum();
     List<WorldAmazonProtocol.AProduct> products = new ArrayList<>();
@@ -55,16 +55,10 @@ public class ShipmentController {
 
   // need fixing
   @PostMapping("/findShipment")
-  public ResponseEntity<?> findOrder(@RequestBody findShipmentRequest request) {
+  public ResponseEntity<Object> findOrder(@RequestBody findShipmentRequest request) throws ServiceError {
     long shipmentNumber = request.shipmentNumber();
-    try {
-
-      List<Order> orders = shipmentService.getOrdersByShipment(shipmentNumber);
-      return ResponseEntity.ok().body(orders);
-    } catch (Exception e) {
-      String errorMessage = "Failed to retrieve order with shipmentNumber: " + shipmentNumber;
-      return ResponseEntity.badRequest().body(errorMessage);
-    }
+    List<Order> orders = shipmentService.getOrdersByShipment(shipmentNumber);
+    return ResponseEntity.ok().body(orders);
 
   }
 

@@ -41,6 +41,7 @@ public class Order {
   private Shipment shipment;
 
   @ManyToOne
+  @JsonIgnore
   private User owner;
 
   public Long getId() {

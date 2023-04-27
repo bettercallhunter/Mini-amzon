@@ -4,6 +4,7 @@ import org.mini_amazon.enums.OrderStatus;
 import org.mini_amazon.errors.ServiceError;
 import org.mini_amazon.models.Item;
 import org.mini_amazon.models.Order;
+import org.mini_amazon.models.User;
 import org.mini_amazon.repositories.OrderRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +24,8 @@ public class OrderService {
   private OrderRepository orderRepository;
   @Resource
   private ItemService itemService;
-  // @Resource
-  // private ShipmentService shipmentService;
+  @Resource
+  private UserService userService;
 
   @Transactional(readOnly = true)
   public Page<Order> listOrders(Integer pageNo, Integer pageSize, String... sortBy) {
@@ -32,16 +33,17 @@ public class OrderService {
     Page<Order> pagedResult = orderRepository.findAll(paging);
     // System.out.println(pagedResult);
     return pagedResult;
-
   }
 
   @Transactional // long shipmentId
   public Order createOrder(long itemId, int quantity) throws ServiceError {
+    User user = userService.getCurrentUser();
     Item item = itemService.getItemById(itemId);
     Order newOrder = new Order();
     newOrder.setItem(item);
     newOrder.setQuantity(quantity);
     newOrder.setStatus(OrderStatus.PROCESSING);
+    newOrder.setOwner(user);
     // newOrder.setShipment(shipmentService.getShipmentById(shipmentId));
     return orderRepository.save(newOrder);
   }
@@ -59,9 +61,7 @@ public class OrderService {
       order.setShipment(newOrder.getShipment());
       return orderRepository.save(order);
     }
-
   }
-
 
 
   // // if two order lists contains the same elements, return true, order does not
