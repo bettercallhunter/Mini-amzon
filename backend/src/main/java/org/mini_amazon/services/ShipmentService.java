@@ -16,6 +16,7 @@ import org.mini_amazon.models.Warehouse;
 import org.mini_amazon.proto.WorldAmazonProtocol;
 import org.mini_amazon.repositories.OrderRepository;
 import org.mini_amazon.repositories.ShipmentRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,8 @@ public class ShipmentService {
   private ItemService itemService;
   @Resource
   private UserService userService;
+  @Resource
+  private EmailService emailService;
 
   @Transactional(readOnly = true)
   public Shipment getShipmentById(long id) throws ServiceError {
@@ -91,15 +94,17 @@ public class ShipmentService {
       order.setShipment(shipment);
       orderRepository.save(order);
     }
-
+    emailService.sendEmail(user.getEmail(), "shipment status","shipment created. ");
     return shipment;
   }
 
   @Transactional
   public Shipment updateShipmentStatus(long id, ShipmentStatus status) throws ServiceError {
+    User user = userService.getCurrentUser();
     Shipment shipment = getShipmentById(id);
     if (shipment.canUpdatedTo(status)) {
       shipment.setStatus(status);
+      emailService.sendEmail(user.getEmail(), "shipment status", status.name());
       return shipmentRepository.save(shipment);
     } else {
       throw new ServiceError(

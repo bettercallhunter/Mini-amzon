@@ -1,19 +1,16 @@
 # syntax=docker/dockerfile:1.4
 
-FROM --platform=$BUILDPLATFORM node:lts AS development
+FROM --platform= node:lts AS development
 
 WORKDIR /code
 COPY package.json /code/package.json
 COPY package-lock.json /code/package-lock.json
 
-RUN npm ci
 COPY . /code
 
-ENV CI=true
-ENV PORT=3000
 
 CMD [ "npm", "start" ]
-EXPOSE 3000
+# EXPOSE 3000
 
 # FROM development AS dev-envs
 # RUN <<EOF
