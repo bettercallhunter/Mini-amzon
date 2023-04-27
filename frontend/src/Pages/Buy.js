@@ -22,7 +22,8 @@ const Buy = () => {
             body: JSON.stringify({ quantity, id }),
             credentials: 'include'
         });
-        console.log(quantity);
+        const data = await response.text();
+        console.log(data);
 
         if (response.status === 200) {
             alert('Item purchased successfully');
