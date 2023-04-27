@@ -50,7 +50,7 @@ public class ShipmentService {
 
   @Transactional
   // long itemId, double quantity
-  public Shipment createShipment(List<OrderController.OrderRequest> orderRequests, int destinationX, int destinationY)
+  public Shipment createShipment(List<OrderController.OrderRequest> orderRequests, int destinationX, int destinationY,String upsName)
       throws ServiceError {
     User user = userService.getCurrentUser();
     if (orderRequests == null || orderRequests.isEmpty()) {
@@ -84,6 +84,7 @@ public class ShipmentService {
     newShipment.setWarehouse(warehouse);
     // newShipment.setOrders(orders);
     newShipment.setOwner(user);
+    newShipment.setUpsName(upsName);
     Shipment shipment = shipmentRepository.save(newShipment);
     for (OrderController.OrderRequest orderPair : orderRequests) {
       Order order = orderService.findOrderById(orderPair.id());

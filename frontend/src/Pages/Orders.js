@@ -22,7 +22,7 @@ const Orders = () => {
     return (
         <React.Fragment>
             <h1>Orders</h1>
-            {orders.length >= 1 && orders.filter(order => order.status !== "SHOPPINGCART").map(order => <Order {...order} />)}
+            {orders.length >= 1 && orders.filter(order => order.status !== "SHIPPINGCART").map(order => <Order {...order} />)}
             <Link to={"/"}>
                 <button>Back</button>
             </Link>

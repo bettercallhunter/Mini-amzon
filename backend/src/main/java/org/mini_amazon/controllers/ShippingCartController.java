@@ -41,6 +41,9 @@ public class ShippingCartController {
     public ResponseEntity<String> cart(@RequestBody addToCartRequest request) throws ServiceError {
         // System.out.println("reach cart");
         // System.out.println(request.id() + " " + request.quantity());
+        if (request.quantity() <= 0) {
+            throw new ServiceError("quantity must be positive");
+        }
 
         shoppingCartService.addCart(request.id(), request.quantity());
         return ResponseEntity.ok().body("niuzie gege");

@@ -26,6 +26,8 @@ const Buy = () => {
         if (response.status === 200) {
             alert('Add to Cart Successfully');
             setRedirect(true);
+        }else{
+            alert('Error');
         }
     }
     if (redirect) {

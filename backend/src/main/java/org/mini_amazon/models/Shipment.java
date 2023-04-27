@@ -46,7 +46,17 @@ public class Shipment {
   // @Column(nullable = false)
   private Warehouse warehouse;
 
-  @OneToMany(mappedBy = "shipment", cascade = { CascadeType.ALL })
+  private String upsName;
+
+  public String getUpsName() {
+    return upsName;
+  }
+
+  public void setUpsName(String upsName) {
+    this.upsName = upsName;
+  }
+
+  @OneToMany(mappedBy = "shipment", cascade = {CascadeType.ALL })
   @Column(nullable = false)
   @JsonIgnore
   private List<Order> orders;

@@ -71,6 +71,18 @@ public class OrderService {
     }
   }
 
+  @Transactional
+  public Order updateOrderStatus(long orderId, OrderStatus status) throws ServiceError {
+    Optional<Order> orderOptional = orderRepository.findById(orderId);
+    if (orderOptional.isEmpty()) {
+      throw new ServiceError("Order does not exist.");
+    } else {
+      Order order = orderOptional.get();
+      order.setStatus(status);
+      return orderRepository.save(order);
+    }
+  }
+
 
   // // if two order lists contains the same elements, return true, order does not
   // matter

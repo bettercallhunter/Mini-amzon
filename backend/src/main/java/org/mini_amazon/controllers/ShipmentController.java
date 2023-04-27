@@ -8,13 +8,15 @@ import org.mini_amazon.models.Order;
 import org.mini_amazon.models.Shipment;
 import org.mini_amazon.proto.WorldAmazonProtocol;
 import org.mini_amazon.services.ShipmentService;
+import org.mini_amazon.socket_servers.AmazonDaemon;
+import org.mini_amazon.utils.AMessageBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.mini_amazon.controllers.*;
+
 import jakarta.annotation.Resource;
 
 @RestController
@@ -22,23 +24,23 @@ import jakarta.annotation.Resource;
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class ShipmentController {
   // UNCOMMENT ME!!!!!!!!!!!!!!
-  // @Resource
-  // private AmazonDaemon amazonDaemon;
+  @Resource
+  private AmazonDaemon amazonDaemon;
   @Resource
   private ShipmentService shipmentService;
 
   record ShipmentRequest(
-      int destinationX,
-      int destinationY, String upsName,
-      List<OrderController.OrderRequest> orderRequests) {
+          int destinationX,
+          int destinationY, String upsName,
+          List<OrderController.OrderRequest> orderRequests) {
   }
 
   @PostMapping("/placeShipment")
   public ResponseEntity<Shipment> placeShipment(@RequestBody ShipmentRequest request) throws ServiceError {
     Shipment shipment = shipmentService.createShipment(request.orderRequests(), request.destinationX(),
-        request.destinationY());
-    // UNCOMMENT ME!!!!!!!!!!!!!!
-    // long seqNum = amazonDaemon.getSeqNum();
+            request.destinationY(), request.upsName());
+            // UNCOMMENT ME!!!!!!!!!!!!!!
+    long seqNum = amazonDaemon.getSeqNum();
     List<WorldAmazonProtocol.AProduct> products = new ArrayList<>();
     for (Order order : shipment.getOrders()) {
       WorldAmazonProtocol.AProduct.Builder productBuilder = WorldAmazonProtocol.AProduct.newBuilder();
@@ -48,8 +50,8 @@ public class ShipmentController {
       products.add(productBuilder.build());
     }
 
-    // amazonDaemon.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(shipment.getWarehouse().getId(),
-    // products, seqNum)),seqNum);
+    amazonDaemon.sendBuyRequest(List.of(AMessageBuilder.createAPurchaseMore(shipment.getWarehouse().getId(),
+            products, seqNum)), seqNum);
     return ResponseEntity.ok().body(shipment);
   }
 
