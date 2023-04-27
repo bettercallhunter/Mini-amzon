@@ -272,7 +272,7 @@ public class AmazonDaemon {
       Shipment shipment = shipmentService.getShipmentById(uaDelivered.getShipId());
       shipmentService.updateShipmentStatus(shipment.getId(), ShipmentStatus.DELIVERED);
       for (Long orderId : shipment.getOrders().stream().map(Order::getId).toList()) {
-        orderService.updateOrderStatus(orderId, OrderStatus.DELIVERED);
+        orderService.updateOrderStatus(orderId, OrderStatus.COMPLETED);
       }
     } catch (ServiceError e) {
       AmazonUPSProtocol.AUCommand.Builder aCommand = AmazonUPSProtocol.AUCommand.newBuilder();
