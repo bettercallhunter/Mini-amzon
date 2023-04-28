@@ -14,4 +14,6 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Long> {
   Shipment findUnfinishedShipmentById(long id);
 
   List<Shipment> findShipmentsByStatusAndWarehouseId(ShipmentStatus status, int warehouseId);
+
+  Shipment getShipmentByIdAndOwnerUsername(long id, String userName);
 }

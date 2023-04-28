@@ -28,12 +28,15 @@ public class OrderService {
   private UserService userService;
 
   @Transactional(readOnly = true)
-  public Page<Order> listOrders(Integer pageNo, Integer pageSize, String... sortBy) {
+  public Page<Order> listOrders(Integer pageNo, Integer pageSize, String... sortBy) throws ServiceError {
     Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-    Page<Order> pagedResult = orderRepository.findAll(paging);
+//    Page<Order> pagedResult = orderRepository.findAllByOwnerusername(paging);
+    User user = userService.getCurrentUser();
+    Page<Order> pagedResult = orderRepository.findAllByOwnerUsername(user.getUsername(), paging);
     // System.out.println(pagedResult);
     return pagedResult;
   }
+
   public Order findOrderById(long id) throws ServiceError {
     Optional<Order> orderOptional = orderRepository.findById(id);
     if (orderOptional.isEmpty()) {

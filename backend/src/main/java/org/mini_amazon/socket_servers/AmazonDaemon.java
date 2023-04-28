@@ -26,8 +26,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -47,6 +45,7 @@ public class AmazonDaemon {
   public static final int TIME_OUT = 10000;
   private static final String WORLD_HOST = "vcm-32169.vm.duke.edu";
   private static final int WORLD_PORT = 23456;
+  private static final int SOCKET_PORT=8080;
   //  private static final String UPS_HOST = "localhost";
 //  private static final int UPS_PORT = 8081;
   // public static final int AMAZON_SERVER_PORT = 9999;
@@ -79,7 +78,7 @@ public class AmazonDaemon {
   public AmazonDaemon() {
     try {
       this.AWSocket = new Socket(WORLD_HOST, WORLD_PORT);
-      this.serverSocket = new ServerSocket(8080);
+      this.serverSocket = new ServerSocket(SOCKET_PORT);
       // this.AUSocket = null;
 //       this.AUInputStream = AUSocket.getInputStream();
 //       this.AUOutputStream = AUSocket.getOutputStream();
@@ -89,6 +88,7 @@ public class AmazonDaemon {
       this.msgTracker = new ConcurrentHashMap<>();
       this.receivedSeq = new HashMap<>();
       this.seqNum = 0;
+      System.out.println("Amazon Socket Server is running on port " + SOCKET_PORT);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -211,7 +211,7 @@ public class AmazonDaemon {
     this.ackHandler(aResponses.getAcksList());
     this.sendAckToWorld(aResponses);
 
-    aResponses.getArrivedList().stream().forEach(this::handleAPurchaseMore);
+    aResponses.getArrivedList().forEach(this::handleAPurchaseMore);
     aResponses.getReadyList().forEach(this::handleAPacked);
     aResponses.getLoadedList().forEach(this::handleALoaded);
     aResponses.getErrorList().forEach(this::handleAError);
@@ -220,6 +220,11 @@ public class AmazonDaemon {
 
     if (aResponses.hasFinished()) {
       System.out.println("Amazon disconnect finished. ");
+      try {
+        this.AWSocket.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 

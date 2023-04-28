@@ -53,8 +53,8 @@ public class ShipmentService {
 
   @Transactional
   // long itemId, double quantity
-  public Shipment createShipment(List<OrderController.OrderRequest> orderRequests, int destinationX, int destinationY,String upsName)
-      throws ServiceError {
+  public Shipment createShipment(List<OrderController.OrderRequest> orderRequests, int destinationX, int destinationY, String upsName)
+          throws ServiceError {
     User user = userService.getCurrentUser();
     if (orderRequests == null || orderRequests.isEmpty()) {
       throw new ServiceError("No order pairs provided");
@@ -94,7 +94,7 @@ public class ShipmentService {
       order.setShipment(shipment);
       orderRepository.save(order);
     }
-    emailService.sendEmail(user.getEmail(), "shipment status","shipment created. ");
+    emailService.sendEmail(user.getEmail(), "shipment status", "shipment created. ");
     return shipment;
   }
 
@@ -108,7 +108,7 @@ public class ShipmentService {
       return shipmentRepository.save(shipment);
     } else {
       throw new ServiceError(
-          "Cannot update shipment status from " + shipment.getStatus() + " to " + status);
+              "Cannot update shipment status from " + shipment.getStatus() + " to " + status);
     }
   }
 
@@ -120,8 +120,9 @@ public class ShipmentService {
   }
 
   @Transactional
-  public List<Order> getOrdersByShipment(long shipmentId) throws ServiceError {
-    Shipment shipment = getShipmentById(shipmentId);
+  public List<Order> getOrdersByShipmentIdAndUserId(long shipmentId) throws ServiceError {
+    User user = userService.getCurrentUser();
+    Shipment shipment = shipmentRepository.getShipmentByIdAndOwnerUsername(shipmentId, user.getUsername());
     return shipment.getOrders();
 
   }
@@ -130,7 +131,7 @@ public class ShipmentService {
   public Shipment getPendingShipmentBySameOrder(WorldAmazonProtocol.APurchaseMore aPurchaseMore) throws ServiceError {
 
     List<Shipment> shipments = shipmentRepository.findShipmentsByStatusAndWarehouseId(ShipmentStatus.PENDING,
-        aPurchaseMore.getWhnum());
+            aPurchaseMore.getWhnum());
     // System.out.println("all shipments: " + shipmentRepository.findAll());
     // System.out.println("shipments: " + shipments);
     if (shipments.isEmpty()) {
@@ -179,7 +180,7 @@ public class ShipmentService {
 
   private boolean ifTwoOrderContainsSameItem(Order o1, Order o2) {
     return o1.getItem().getId() == o2.getItem().getId() && o1.getQuantity() == o2.getQuantity()
-        && o1.getItem().getDescription().equals(o2.getItem().getDescription());
+           && o1.getItem().getDescription().equals(o2.getItem().getDescription());
   }
 
   @Transactional

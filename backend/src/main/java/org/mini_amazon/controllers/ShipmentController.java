@@ -62,7 +62,7 @@ public class ShipmentController {
   @PostMapping("/findShipment")
   public ResponseEntity<Object> findOrder(@RequestBody findShipmentRequest request) throws ServiceError {
     long shipmentNumber = request.shipmentNumber();
-    List<Order> orders = shipmentService.getOrdersByShipment(shipmentNumber);
+    List<Order> orders = shipmentService.getOrdersByShipmentIdAndUserId(shipmentNumber);
     return ResponseEntity.ok().body(orders);
 
   }
