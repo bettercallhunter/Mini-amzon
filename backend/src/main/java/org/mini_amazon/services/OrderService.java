@@ -32,7 +32,7 @@ public class OrderService {
     Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 //    Page<Order> pagedResult = orderRepository.findAllByOwnerusername(paging);
     User user = userService.getCurrentUser();
-    Page<Order> pagedResult = orderRepository.findAllByOwnerUsername(user.getUsername(), paging);
+    Page<Order> pagedResult = orderRepository.findAllByOwnerUsername(paging, user.getUsername());
     // System.out.println(pagedResult);
     return pagedResult;
   }

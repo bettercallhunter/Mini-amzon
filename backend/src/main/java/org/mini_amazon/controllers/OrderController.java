@@ -5,6 +5,7 @@ import jakarta.annotation.Resource;
 import java.util.List;
 
 import org.mini_amazon.enums.OrderStatus;
+import org.mini_amazon.errors.ServiceError;
 import org.mini_amazon.models.Item;
 import org.mini_amazon.models.Order;
 import org.mini_amazon.models.Shipment;
@@ -37,8 +38,8 @@ public class OrderController {
 
   @GetMapping("/orders")
   public ResponseEntity<Page<Order>> getOrders(@RequestParam(defaultValue = "0") Integer page,
-      @RequestParam(defaultValue = "10") Integer size,
-      @RequestParam(defaultValue = "id") String... sortBy) {
+                                               @RequestParam(defaultValue = "10") Integer size,
+                                               @RequestParam(defaultValue = "id") String... sortBy) throws ServiceError {
     // TODO: list my orders
     Page<Order> orders = orderService.listOrders(page, size, sortBy);
     return ResponseEntity.ok().body(orders);
