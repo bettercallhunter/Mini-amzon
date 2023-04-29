@@ -72,8 +72,8 @@ const NavBar = (props) => {
             </a>
             <ul className="dropdown-menu">
               <li>
-                <a className="dropdown-item" href="#">
-                  Action
+                <a className="dropdown-item" href="/findOrder">
+                  Find Shipment
                 </a>
               </li>
               <li>

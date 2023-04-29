@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Order from "../Elements/Order";
+import authHeader from "../utils/authHeader";
 
 const FindOrder = () => {
     const [shipmentNumber, setShipmentNumber] = useState('');
@@ -18,7 +19,8 @@ const FindOrder = () => {
             const response = await fetch('/api/findShipment', {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    ...authHeader()
                 },
                 body: JSON.stringify({ shipmentNumber }),
                 credentials: 'include'
