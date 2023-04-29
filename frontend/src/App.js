@@ -6,7 +6,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import Buy from './Pages/Buy';
 import FindOrder from './Pages/FindOrder';
-import Index from './Pages/Index';
+import Index from './Pages/Home';
 import Orders from './Pages/Orders';
 import Login from './User/Login';
 import Register from './User/Register';

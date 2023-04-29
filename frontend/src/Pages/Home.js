@@ -5,6 +5,7 @@ import Pagination from "@mui/material/Pagination";
 import ItemGroups from "../components/ItemGroups";
 import NavBar from "../components/NavBar";
 import HealthCheck from "../components/HealthCheck";
+import LogoutButton from "../components/LogoutButton";
 
 const Index = () => {
     const [items, setItems] = React.useState({
@@ -76,6 +77,7 @@ const Index = () => {
             />
             <h1> Welcome</h1>
             <HealthCheck />
+            <LogoutButton />
 
             <div className="form-floating mb-3">
                 <select

@@ -6,18 +6,16 @@ const HealthCheck = () => {
   const navigate = useNavigate();
   const handleOnClickGet = async (e) => {
     e.preventDefault();
-    const header = { 
-        "Content-Type": "application/json",
-      ...authHeader() };
+    const header = {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    };
 
-    const response = await fetch("/api/health", 
-        {
+    const response = await fetch("/api/health", {
       method: "GET",
       credentials: "include",
-      headers:header
-       }
-     
-    );
+      headers: header,
+    });
     if (response.status === 200) {
       alert("healthcheck successful");
     } else {
@@ -28,18 +26,16 @@ const HealthCheck = () => {
 
   const handleOnClickPost = async (e) => {
     e.preventDefault();
-    const header = { 
-        "Content-Type": "application/json",
-      ...authHeader() };
+    const header = {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    };
 
-    const response = await fetch("/api/health", 
-        {
+    const response = await fetch("/api/health", {
       method: "Post",
       credentials: "include",
-      headers:header
-       }
-     
-    );
+      headers: header,
+    });
     if (response.status === 200) {
       alert("healthcheck successful");
     } else {
@@ -50,18 +46,16 @@ const HealthCheck = () => {
 
   const handleOnClickEmail = async (e) => {
     e.preventDefault();
-    const header = { 
-        "Content-Type": "application/json",
-      ...authHeader() };
+    const header = {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    };
 
-    const response = await fetch("/api/emailCheck", 
-        {
+    const response = await fetch("/api/emailCheck", {
       method: "Post",
       credentials: "include",
-      headers:header
-       }
-     
-    );
+      headers: header,
+    });
     if (response.status === 200) {
       alert("healthcheck successful");
     } else {
@@ -71,17 +65,28 @@ const HealthCheck = () => {
   };
   return (
     <div>
-    <button type="button" className="btn btn-primary" onClick={handleOnClickGet}>
-      Health Check Button (Get)
-    </button>
-    <button type="button" className="btn btn-primary" onClick={handleOnClickPost}>
-    Health Check Button (Post)
-  </button>
-  <button type="button" className="btn btn-primary" onClick={handleOnClickEmail}>
-    Email Check Button (Post)
-  </button>
-  </div>
-
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={handleOnClickGet}
+      >
+        Health Check Button (Get)
+      </button>
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={handleOnClickPost}
+      >
+        Health Check Button (Post)
+      </button>
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={handleOnClickEmail}
+      >
+        Email Check Button (Post)
+      </button>
+    </div>
   );
 };
 
