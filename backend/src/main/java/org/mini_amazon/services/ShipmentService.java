@@ -100,11 +100,15 @@ public class ShipmentService {
 
   @Transactional
   public Shipment updateShipmentStatus(long id, ShipmentStatus status) throws ServiceError {
-    User user = userService.getCurrentUser();
+//    User user = userService.getCurrentUser();
     Shipment shipment = getShipmentById(id);
+    User user = shipment.getOwner();
     if (shipment.canUpdatedTo(status)) {
       shipment.setStatus(status);
       emailService.sendEmail(user.getEmail(), "shipment status", status.name());
+      for (Long orderId : shipment.getOrders().stream().map(Order::getId).toList()) {
+        orderService.updateOrderStatus(orderId, OrderStatus.COMPLETED);
+      }
       return shipmentRepository.save(shipment);
     } else {
       throw new ServiceError(

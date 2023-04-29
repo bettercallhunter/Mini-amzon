@@ -42,10 +42,10 @@ import jakarta.annotation.Resource;
 @Component
 public class AmazonDaemon {
 
-  public static final int TIME_OUT = 10000;
+  public static final int TIME_OUT = 200;
   private static final String WORLD_HOST = "vcm-32169.vm.duke.edu";
   private static final int WORLD_PORT = 23456;
-  private static final int SOCKET_PORT=8080;
+  private static final int SOCKET_PORT = 8080;
   //  private static final String UPS_HOST = "localhost";
 //  private static final int UPS_PORT = 8081;
   // public static final int AMAZON_SERVER_PORT = 9999;
@@ -61,6 +61,8 @@ public class AmazonDaemon {
   private long seqNum;
   // at most one
   private final HashMap<Long, Object> receivedSeq;
+
+  private Long worldId;
 
   //  BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(100);
 //  ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 100, 5,
@@ -88,6 +90,7 @@ public class AmazonDaemon {
       this.msgTracker = new ConcurrentHashMap<>();
       this.receivedSeq = new HashMap<>();
       this.seqNum = 0;
+//      this.wordId =
       System.out.println("Amazon Socket Server is running on port " + SOCKET_PORT);
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -105,22 +108,34 @@ public class AmazonDaemon {
       this.AUInputStream = client_socket.getInputStream();
       this.AUOutputStream = client_socket.getOutputStream();
       AmazonUPSProtocol.UAStart.Builder uaStart = AmazonUPSProtocol.UAStart.newBuilder();
-      GPBUtil.receiveFrom(uaStart, this.AUInputStream);
+      boolean received = GPBUtil.receiveFrom(uaStart, this.AUInputStream);
+      if (!received) {
+        System.out.println("UAStart not received");
+//        throw new RuntimeException("UAStart not received");
+        client_socket.close();
+        run();
+        return;
+      }
       System.out.println("worldId: " + uaStart.getWorldid());
+      this.worldId = uaStart.getWorldid();
       this.connect(uaStart.getWorldid());
       taskExecutor1.execute(this::startWorldReceiverThread);
       taskExecutor1.execute(this::startUPSReceiverThread);
     } catch (IOException e) {
       e.printStackTrace();
-      throw new RuntimeException(e);
+//      throw new RuntimeException(e);
     }
   }
 
   //  @Async("taskExecutor1")
   public void startWorldReceiverThread() {
     while (true) {
+
       WorldAmazonProtocol.AResponses.Builder responses = WorldAmazonProtocol.AResponses.newBuilder();
-      GPBUtil.receiveFrom(responses, AmazonDaemon.this.AWInputStream);
+      boolean received = GPBUtil.receiveFrom(responses, AmazonDaemon.this.AWInputStream);
+      if (!received) {
+        this.connect(this.worldId);
+      }
       this.handleAResponses(responses.build());
     }
   }
@@ -193,7 +208,8 @@ public class AmazonDaemon {
     if (isSuccess) {
       System.out.println("connected to world");
     } else {
-      throw new RuntimeException("failed to connect to world");
+      System.out.println("failed to connect to world");
+//      throw new RuntimeException("failed to connect to world");
     }
   }
 
@@ -276,9 +292,7 @@ public class AmazonDaemon {
     try {
       Shipment shipment = shipmentService.getShipmentById(uaDelivered.getShipId());
       shipmentService.updateShipmentStatus(shipment.getId(), ShipmentStatus.DELIVERED);
-      for (Long orderId : shipment.getOrders().stream().map(Order::getId).toList()) {
-        orderService.updateOrderStatus(orderId, OrderStatus.COMPLETED);
-      }
+
     } catch (ServiceError e) {
       AmazonUPSProtocol.AUCommand.Builder aCommand = AmazonUPSProtocol.AUCommand.newBuilder();
       AmazonUPSProtocol.Err.Builder err = AmazonUPSProtocol.Err.newBuilder().setErr(
@@ -480,7 +494,12 @@ public class AmazonDaemon {
   }
 
   private void sendToWorld(WorldAmazonProtocol.ACommands command, long seq) {
-    this.sendTo(command, this.AWOutputStream, seq);
+    try {
+      this.sendTo(command, this.AWOutputStream, seq);
+    } catch (IllegalArgumentException e) {
+      this.connect(this.worldId);
+      this.sendTo(command, this.AWOutputStream, seq);
+    }
   }
 
   private void sendToUPS(AmazonUPSProtocol.AUCommand command) {
@@ -497,13 +516,16 @@ public class AmazonDaemon {
     }
   }
 
-  private void sendTo(Message message, OutputStream outputStream, long seqNum) {
+  private void sendTo(Message message, OutputStream outputStream, long seqNum) throws IllegalArgumentException {
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
         synchronized (AmazonDaemon.this) {
-          GPBUtil.send(message, outputStream);
+          boolean success = GPBUtil.send(message, outputStream);
+          if (!success) {
+            throw new IllegalArgumentException("Failed to send message to world");
+          }
         }
       }
     }, 0, TIME_OUT);

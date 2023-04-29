@@ -34,7 +34,7 @@ public class DataSetUp implements CommandLineRunner {
   }
 
   private void sendDatabase() throws ServiceError {
-    List<Pair<Integer, Integer>> positions = List.of(Pair.of(0, 0), Pair.of(1, 1));
+    List<Pair<Integer, Integer>> positions = List.of(Pair.of(0, 0), Pair.of(1, 1),Pair.of(200,200));
     List<String> categoryList = List.of("food", "electronics");
     List<String> foodList = List.of("apple", "banana", "orange");
     List<String> electronicsList = List.of("computer", "phone", "tv");
