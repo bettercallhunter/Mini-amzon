@@ -42,7 +42,7 @@ import jakarta.annotation.Resource;
 @Component
 public class AmazonDaemon {
 
-  public static final int TIME_OUT = 200;
+  public static final int TIME_OUT = 5000;
   private static final String WORLD_HOST = "vcm-32169.vm.duke.edu";
   private static final int WORLD_PORT = 23456;
   private static final int SOCKET_PORT = 8080;
@@ -238,6 +238,7 @@ public class AmazonDaemon {
       System.out.println("Amazon disconnect finished. ");
       try {
         this.AWSocket.close();
+//        this.AU
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -271,7 +272,7 @@ public class AmazonDaemon {
     long seqNum = this.getSeqNum();
     try {
       Shipment shipment = shipmentService.getShipmentById(uaLoadRequest.getShipId());
-      shipmentService.updateShipmentTruckId(shipment.getId(), uaLoadRequest.getTruckId());
+      shipment = shipmentService.updateShipmentTruckId(shipment.getId(), uaLoadRequest.getTruckId());
       if (shipment.getStatus() == ShipmentStatus.PACKED) {
         this.sendLoadRequest(List.of(AMessageBuilder.createAPutOnTruck(shipment.getWarehouse().getId(),
                 shipment.getTruckId(), shipment.getId(), seqNum)), seqNum);

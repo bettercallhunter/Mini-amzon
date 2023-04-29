@@ -106,8 +106,10 @@ public class ShipmentService {
     if (shipment.canUpdatedTo(status)) {
       shipment.setStatus(status);
       emailService.sendEmail(user.getEmail(), "shipment status", status.name());
-      for (Long orderId : shipment.getOrders().stream().map(Order::getId).toList()) {
-        orderService.updateOrderStatus(orderId, OrderStatus.COMPLETED);
+      if (status == ShipmentStatus.DELIVERED) {
+        for (Long orderId : shipment.getOrders().stream().map(Order::getId).toList()) {
+          orderService.updateOrderStatus(orderId, OrderStatus.COMPLETED);
+        }
       }
       return shipmentRepository.save(shipment);
     } else {
@@ -117,7 +119,7 @@ public class ShipmentService {
   }
 
   @Transactional
-  public Shipment updateShipmentTruckId(long id, int truckId) throws ServiceError {
+  public Shipment updateShipmentTruckId(long id, Integer truckId) throws ServiceError {
     Shipment shipment = getShipmentById(id);
     shipment.setTruckId(truckId);
     return shipmentRepository.save(shipment);
